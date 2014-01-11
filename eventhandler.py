@@ -66,6 +66,10 @@ class Event_handler():
                 if not collided:
                     return
                 item = collided[len(collided)-1]
+                if item.type == "nicknamewindow":
+                    return
+                if item.type == "healthwindow":
+                    return 
                 if item.type == 'outer':
                     return
                 if item.type == 'button' or item.type == 'txtinput' or item.type == 'checkbox':

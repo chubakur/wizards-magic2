@@ -321,6 +321,7 @@ globals.cardinfo = cardinfo.CardInfo()
 globals.screen.blit(globals.background, (0, 0))
 
 pygame.display.flip()
+# noinspection PyPackageRequirements
 while 1:
     for event in pygame.event.get():
         globals.event_handler.event(event)
