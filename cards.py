@@ -14,9 +14,6 @@ import globals
 import player
 import sys
 current_folder = os.path.dirname(os.path.abspath(__file__))
-#from WizardsMagic import cardbox0
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
 __author__ = "chubakur"
 __date__ = "$13.02.2011 18:46:32$"
 try:
@@ -34,12 +31,6 @@ earth_cards_deck = ["Satyr", "Golem", "Dryad", "Centaur", "Elemental", "Ent", "E
 life_cards_deck = ["Priest", "Paladin", "Pegasus", "Unicorn", "Apostate", "MagicHealer", "Chimera", "Bless", "GodsWrath", "LifeSacrifice", "Purify", "Rejuvenation"]
 death_cards_deck = ["Zombie", "Vampire", "GrimReaper", "Ghost", "Werewolf", "Banshee", "Darklord", "Lich", "ChaosVortex", "CoverOfDarkness", "Curse", "StealLife", "TotalWeakness"]
 
-#water_cards = list([c for c in water_cards_deck])
-#fire_cards = list([c for c in fire_cards_deck]) 
-#air_cards = list([c for c in air_cards_deck]) 
-#earth_cards = list([c for c in earth_cards_deck]) 
-#life_cards = list([c for c in life_cards_deck]) 
-#death_cards = list([c for c in death_cards_deck])
 if yes_pygame: 
     pygame.font.init()
     font = pygame.font.Font(None, 25)
@@ -49,7 +40,6 @@ if yes_pygame:
             self.cast_disabled = pygame.image.load(current_folder+"/misc/card_cast_logo_disabled.png").convert_alpha()
     class Prototype(pygame.sprite.Sprite): #Прототип карты воина
         def __init__(self):
-            #self.group = group #Группа, в которой лежит эта карта
             pygame.sprite.Sprite.__init__(self)
             self.parent = 0
             self.light = False
@@ -82,9 +72,6 @@ if yes_pygame:
                 self.info
             except AttributeError:
                 self.info = ""
-            #self.cast_button = pygame.Surface((30,20))
-            #self.cast_button = self.cast_button.convert()
-            #self.cast_button.fill((0,0,255))
         def set_health(self, health):
             self.health = health
             self.update()
@@ -244,7 +231,6 @@ if yes_pygame:
         def additional_turn_action(self): # Turn action, but with higher priority.
             return
         def die(self): #Смерть персонажа
-            #print sys.getrefcount(self.image)
             for spell in self.spells:
                 spell.unset(self)
             self.parent.card = self.parent.player #Обнуляем карту в объекте-родителе
@@ -262,10 +248,7 @@ if yes_pygame:
             self.killed += 1
         def turn(self):
             self.power = self.default_power
-            #self.moves_alive += 1
             self.update()
-            #print 1
-            #print self.playerscards[self.parent.player.id-1].sprites() # Функция, которая вызывается каждый ход. Например для ледяного голема, у которого отнимаются жизни каждый ход.
         def heal(self, health, max_health):
             self.health += health
             if self.health > max_health:
@@ -288,12 +271,9 @@ if yes_pygame:
                 if self.field:
                     if globals.player == self.parent.player:
                         if not self.used_cast:
-                            #text_cast = font.render("Cast", True, (0, 0, 255))
                             self.image.blit(globals.castlabel.cast_active, (0, 10))
                         else:
-                            #text_cast = font.render("Cast", True, (0, 0, 0))
                             self.image.blit(globals.castlabel.cast_disabled, (0, 10))
-            #print text_power
             self.image.blit(text_level, (90, -7))
             self.image.blit(text_power, (5, 137))
             self.image.blit(text_health, (90, 137))
@@ -302,7 +282,6 @@ if yes_pygame:
             if not self.field: #Рисование в колоде
                 self.parent = globals.background
                 xshift = 324 + self.position_in_deck * self.image.get_size()[0] + globals.cardofelementsshower.shift * self.position_in_deck + 2 * self.position_in_deck
-                #xshift = 389 + (self.position_in_deck - 1) * self.image.get_size()[0] + globals.cardofelementsshower.shift * (self.position_in_deck - 1)
                 yshift = 431
                 self.parent.blit(self.image, (xshift, yshift))
                 self.rect = self.image.get_rect()
@@ -950,10 +929,6 @@ if yes_pygame:
                 for enemy_card in self.get_enemy_cards():
                     if enemy_card.element == "earth":
                         enemy_card.damage(3, self, True)
-    #    def enemy_die(self): #Перепутал способность
-    #        Prototype.enemy_die(self)
-    #        self.power+=1
-    #        self.update()
     class Satyr(Prototype):
         def __init__(self):
             self.name = "Satyr"
@@ -1417,7 +1392,6 @@ if yes_pygame:
                 self.power *= 2
     class Banshee(Prototype):
         def __init__(self):
-            #self.field = field
             self.name = "Banshee"
             self.element = "death"
             self.info = _("When summoned, deals 8 damage to enemy. Once it attacks enemy player, dies and enemy player suffers 10 points of extra damage. If Banshee dies from other creature or spell, enemy player doesn't suffer.")
