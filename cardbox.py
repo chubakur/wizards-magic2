@@ -9,6 +9,7 @@ class Cardbox(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.type = 'cardbox'
         self.position = position
+        self.animation_tick = 0
         self.location = rect
         self.player = player #ссылка на игрока
         self.opposite = False
@@ -40,7 +41,10 @@ class Cardbox(pygame.sprite.Sprite):
     def draw(self):
         #self.image = self.surface_backup.copy()
         self.light_image = self.light_images[self.animation_point]
-        self.animation_point += 1
+        self.animation_tick += 1
+        if not self.animation_tick % 2:
+            self.animation_tick = 0
+            self.animation_point += 1
         if self.animation_point > len(self.light_images) - 1:
             self.animation_point = 0
         if self.light:
