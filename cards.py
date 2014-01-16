@@ -1290,6 +1290,8 @@ if yes_pygame:
             return
         def damage(self, damage, enemy, cast=False):
             self.owner.damage(damage, enemy, cast)
+        def update(self):
+            return
     class Chimera(Prototype):
         def __init__(self):
             self.name = "Chimera"
