@@ -218,6 +218,8 @@ if yes_pygame:
             pass
         def spell_used(self, spell):
             pass
+        def for_each_self_card(self):
+            pass
         def summon(self): # когда призывают
             #TODO: use something else instead of turn function.
             self.play_summon_sound()
@@ -226,13 +228,13 @@ if yes_pygame:
             if self.parent.player.id == 1:
                 for card in globals.ccards_1:
                     Prototype.turn(card)
-                for card in globals.ccards_1:
-                    card.additional_turn_action()
+                #for card in globals.ccards_1:
+                #    card.additional_turn_action()
             else:
                 for card in globals.ccards_2:
                     Prototype.turn(card)
-                for card in globals.ccards_2:
-                    card.additional_turn_action()
+                #for card in globals.ccards_2:
+                #    card.additional_turn_action()
         def summon_speaker(self): #tell to other cards about summon
             for card in globals.ccards_1.sprites() + globals.ccards_2.sprites():
                 card.card_summoned(self)
