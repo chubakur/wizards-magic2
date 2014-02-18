@@ -1265,48 +1265,9 @@ if yes_pygame:
             self.security_slots = []
             self.image = pygame.image.load(current_folder+'/misc/cards/life/magic_healer.gif')
             Prototype.__init__(self)
-        def summon(self):
-            self.play_summon_sound()
-            for cardbox in self.get_self_cardboxes():
-                if cardbox.card.name == "player":
-                    cardbox.card = MagicHealerChakra(self)
-                    cardbox.card.parent = cardbox
-                    self.security_slots.append(cardbox)
-        def card_summoned(self, card):
-            if card.parent.player.id == self.parent.player.id:
-                for slot in self.security_slots:
-                    if slot.position == card.parent.position:
-                        self.security_slots.remove(slot)
-        def card_died(self, card):
-            if card.parent.player.id == self.parent.player.id:
-                card.parent.card = MagicHealerChakra(self)
-                card.parent.card.parent = card.parent
-                self.security_slots.append(card.parent)
-        def die(self):
-            for slot in self.security_slots:
-                slot.card.die()
-            self.security_slots = []
-            Prototype.die(self)
-    class MagicHealerChakra(Prototype):
-        def __init__(self, owner):
-            self.name = "player"
-            self.level = 0
-            self.element = "life"
-            self.power = 0
-            self.health = 10
-            self.owner = owner
-            self.field = True
-            self.image = pygame.image.load(current_folder+'/misc/cards/life/magic_healer.gif')
-            Prototype.__init__(self)
-        def die(self):
-            self.parent.card = self.parent.player
-            del self
-        def attack(self):
-            return
-        def damage(self, damage, enemy, cast=False):
-            self.owner.damage(damage, enemy, cast)
-        def update(self):
-            return
+        def owner_gets_damage(self,damage):
+            self.parent.player.heal(damage)
+            self.damage(damage, self)
     class Chimera(Prototype):
         def __init__(self):
             self.name = "Chimera"
