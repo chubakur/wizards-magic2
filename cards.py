@@ -346,8 +346,8 @@ if yes_pygame:
                 self.parent.player.mana['fire'] -= 1
                 self.parent.player.mana['water'] += 1
                 self.used_cast = True
-            #Наносит картам элемента огня урон 200%
-            #КАСТ:уменьшает ману огня на 1, увеличивает ману воды на 1
+        def turn(self):
+            self.parent.player.mana['water'] += 1
     class Hydra(Prototype):
         def __init__(self):
             self.name = "Hydra"
