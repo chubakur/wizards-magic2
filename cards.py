@@ -962,10 +962,7 @@ if yes_pygame:
             self.parent.player.mana['earth'] += 1
         def cast_action(self):
             self.play_cast_sound()
-            if self.parent.position < 5:
-                attack_position = self.parent.position + 5 #Id - блока, куда атаковать
-            else:
-                attack_position = self.parent.position-5
+            attack_position = self.get_attack_position();
             globals.cardboxes[attack_position].card.damage(5, self, True)
             self.die()
     class Golem(Prototype):
