@@ -53,24 +53,33 @@ if yes_pygame:
         def __init__(self):
             self.cast_active = pygame.image.load(current_folder+"/misc/card_cast_logo_active.png").convert_alpha()
             self.cast_disabled = pygame.image.load(current_folder+"/misc/card_cast_logo_disabled.png").convert_alpha()
-    class Prototype(pygame.sprite.Sprite): #Прототип карты воина
+    ## Basic class for the creatures
+    class Prototype(pygame.sprite.Sprite):
         def __init__(self):
             pygame.sprite.Sprite.__init__(self)
+            ## cardbox where card is
             self.parent = 0
             self.light = False
+            ## image
             self.image = self.image.convert_alpha()
             self.light_image = pygame.image.load(current_folder+'/misc/light.gif').convert_alpha()
             self.surface_backup = self.image.copy()
             self.font = pygame.font.Font(None, 19)
+            ## type of card ( creature or spell )
             self.type = "warrior_card"
+            ## count of killed creatures by this card
             self.killed = 0
+            ## array of long term spells
             self.spells = []
             self.default_power = self.power
-            self.moves_alive = 0 #Сколько ходов прожила карта
-            self.max_health = self.health #Максимальное кол-во жизней
+            ## count of turns how cards alive
+            self.moves_alive = 0
+            self.max_health = self.health
             self.default_power = self.power
+            ## Boolean. Card in field, on in deck.
             self.field = False
-            self.used_cast = False #Использовал cast
+            ## True if card has cast action
+            self.used_cast = False
             if self.element == "death" or self.element == "fire" or self.element == "earth" or self.element == "water":
                 self.font_color = (255, 255, 255)
             else:
@@ -87,43 +96,52 @@ if yes_pygame:
                 self.info
             except AttributeError:
                 self.info = ""
+        ## Set Health
         def set_health(self, health):
             self.health = health
             self.update()
+        ## Set Power
         def set_power(self, power):
             self.power = power
             self.update()
+        ## Turn off/On label on card.
+        # for example to distinguish cards for cast action
         def light_switch(self, on):
             if on:
                 self.light = True
             else:
                 self.light = False
             self.update()
+        ## play cast sound if sounds turned on in options
         def play_cast_sound(self):
             pygame.mixer.music.load(current_folder+'/misc/sounds/card_cast.mp3')
             globals.playmusic()
             return
+        ## play summon sound if sounds turned on in options
         def play_summon_sound(self):
             pygame.mixer.music.load(current_folder+'/misc/sounds/card_summon.wav')
             globals.playmusic()
             return
+        ## returns opposite cardbox Id.
         def get_attack_position(self):
             if self.parent.position < 5:
-                attack_position = self.parent.position + 5 #Id - блока, куда атаковать
+                attack_position = self.parent.position + 5
             else:
                 attack_position = self.parent.position-5
             return attack_position
+        ## returns array of cards of player, who has this card
         def get_self_cards(self):
             cards = []
             if self.parent.position < 5:
                 for cardbox in globals.cardboxes[0:5]:
-                    if cardbox.card.name != "player": #если есть карта
+                    if cardbox.card.name != "player":
                         cards.append(cardbox.card)
             else:
                 for cardbox in globals.cardboxes[5:10]:
                     if cardbox.card.name != "player":
                         cards.append(cardbox.card)
             return cards
+        ## returns cardboxes of player, who has this card
         def get_self_cardboxes(self):
             cardboxes = []
             if self.parent.position < 5:
@@ -133,6 +151,7 @@ if yes_pygame:
                 for cardbox in globals.cardboxes[5:10]:
                     cardboxes.append(cardbox)
             return cardboxes
+        ## returns cardboxes of enemy of player, who has this card
         def get_enemy_cardboxes(self):
             cardboxes = []
             if self.parent.position < 5:
@@ -142,6 +161,7 @@ if yes_pygame:
                 for cardbox in globals.cardboxes[0:5]:
                     cardboxes.append(cardbox)
             return cardboxes
+        ## returns enemy cards
         def get_enemy_cards(self):
             cards = []
             if self.parent.position < 5:
@@ -153,6 +173,10 @@ if yes_pygame:
                     if cardbox.card.name != "player":
                         cards.append(cardbox.card)
             return cards
+        ## return adjacent cardboxes ids
+        # for example we has cardboxes [1, 2, 3, 4 ,5]
+        # If we call this method from card, which is on cardbox with ID=4 this function returns [3,5]
+        # If we call this method from card, which is on cardbox with ID=5 this function returns [4]
         def get_adjacent_position(self):
             adjacent_position = []
             self_position = self.parent.position
@@ -171,6 +195,12 @@ if yes_pygame:
                     if globals.cardboxes[self_position + 1].card.name != "player":
                         adjacent_position.append(self_position + 1)
             return adjacent_position
+        ## return adjacent cardboxes ids of opposite cardbox
+        # for example we has cardboxes:
+        # [0, 1, 2, 3, 4]
+        # [5, 6, 7, 8, 9]
+        # if we call this method from card, which is on cardbox with ID=2, function returns [6, 8]
+        # if we call this method from card, which is on cardbox with ID=9, function returns [3]
         def get_attack_adjacent_position(self, attack_position):
             adjacent_position = []
             if attack_position < 5:
@@ -188,6 +218,7 @@ if yes_pygame:
                     if globals.cardboxes[attack_position + 1].card.name != "player":
                         adjacent_position.append(attack_position + 1)
             return adjacent_position
+        ## start attack animation
         def run_attack_animation(self):
             cardbox_location = (globals.cardboxes[self.parent.position].rect[0],globals.cardboxes[self.parent.position].rect[1])
             attack_animation = animations.CustomAnimation(self.image,cardbox_location) #Instantiating a animation object
@@ -198,6 +229,7 @@ if yes_pygame:
             else:
                 attack_animation.path = [(cardbox_location[0], cardbox_location[1]+30)]
             attack_animation.attacking() #Selecting Method
+        ## Function called when card in Attack phase
         def attack(self): #Функция , срабатываемая при атаке персонажа
             if self.moves_alive:
                 attack_position = self.get_attack_position()
@@ -206,21 +238,28 @@ if yes_pygame:
                 return kill
             else:
                 return 0
+        ## Function which called if card has some "cast action" and player press on this card. Without choosing target!
         def cast_action(self):
             if self.focus_cast: #тут буду пробовать организовывать фокусированный каст
                 globals.cast_focus = True #говорим программе, что будет использоваться фокусированный каст
                 globals.cast_focus_wizard = self #создаем ссылку на себя
+        ## function for cast which needs on target
         def focus_cast_action(self, target):
             pass
-        def card_summoned(self, card): #when any card summon to the field
+        ## function which calls when any card summoned
+        def card_summoned(self, card):
             pass
-        def card_died(self, card): #when any card dies
+        ## function which calls when any card dies
+        def card_died(self, card):
             pass
+        ## function which calls when any spell used
         def spell_used(self, spell):
             pass
+        ## function for each friendly cards on field. ( FUTURE FEATURE! NOT CODED YET )
         def for_each_self_card(self):
             pass
-        def summon(self): # когда призывают
+        ## function which call when card in summon phase
+        def summon(self):
             #TODO: use something else instead of turn function.
             self.play_summon_sound()
             for card in self.get_self_cards() + self.get_enemy_cards():
@@ -235,24 +274,28 @@ if yes_pygame:
                     Prototype.turn(card)
                 #for card in globals.ccards_2:
                 #    card.additional_turn_action()
-        def summon_speaker(self): #tell to other cards about summon
+        ## tell to other cards about summon. Calls card_summoned from each card on field.
+        def summon_speaker(self):
             for card in globals.ccards_1.sprites() + globals.ccards_2.sprites():
                 card.card_summoned(self)
-        def damage(self, damage, enemy, cast=False): #Функция, срабатываемая при получении урона.
+        ## function which calls when card in damage phase.
+        def damage(self, damage, enemy, cast=False):
             self.health -= damage
             self.update()
             if self.health <= 0:
                 self.die()
                 return 1
             return 0
-        def additional_turn_action(self): # Turn action, but with higher priority.
+        ## Turn action, but with higher priority. Deprecated! We will needs on new mechanism
+        def additional_turn_action(self):
             return
-        def die(self): #Смерть персонажа
+        ## function which calls when card in Die Phase
+        def die(self):
             for spell in self.spells:
                 spell.unset(self)
-            self.parent.card = self.parent.player #Обнуляем карту в объекте-родителе
-            self.parent.image.blit(self.parent.surface_backup, (0, 0)) #Рисуем объект-родитель поверх карты
-            self.kill() #Выкидываем карту из всех групп
+            self.parent.card = self.parent.player
+            self.parent.image.blit(self.parent.surface_backup, (0, 0))
+            self.kill()
             for card in self.get_enemy_cards() + self.get_self_cards():
                 card.card_died(self)
             try:
@@ -261,16 +304,21 @@ if yes_pygame:
                 print "Unexpected error: while trying load die sound"
             globals.playmusic()
             del self.image
+        ## function which calls when card kill card in opposite cardbox
         def enemy_die(self): #когда карта убивает противолежащего юнита
             self.killed += 1
+        ## function which called when card in Turn Phase ( Beginning of player turn )
         def turn(self):
             self.power = self.default_power
             self.update()
+        ## Heal card.
         def heal(self, health, max_health):
             self.health += health
             if self.health > max_health:
                 self.health = max_health
             self.update()
+        ## function that calculating factor of utility this card for some type(summon, cast, etc) to some card.
+        # For example this can to determine which card we should summon againist Fire Drake
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
                 if globals.player.mana[self.element] >= self.level:
@@ -279,7 +327,8 @@ if yes_pygame:
                     return 0
             elif type == 'cast':
                 return 0
-        def update(self): #Field - True если рисовать на поле, false - если рисовать в таблице выбора
+        ## Redraw
+        def update(self):
             text_level = globals.font2.render(str(self.level), True, self.font_color)
             text_power = globals.font2.render(str(self.power), True, self.font_color)
             text_health = globals.font2.render(str(self.health), True, self.font_color)
@@ -305,6 +354,7 @@ if yes_pygame:
                 self.rect = self.rect.move(xshift, yshift)
             else:
                 self.parent.image.blit(self.image, (0, 0))
+        ## function which called when the card`s owner gets damage
         def owner_gets_damage(self,damage):
             pass
     class Nixie(Prototype):
