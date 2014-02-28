@@ -1040,7 +1040,7 @@ if yes_pygame:
             self.power = 4
             self.cast = False
             self.health = 12
-            self.info = _("Adjacent owner creatures attack increases by 1, and if it`s Earth creature, by 2 whenever anyone casts Earth spell of summons Earth creature.")
+            self.info = _("Adjacent owner creatures attack increases by 1, and if it`s Earth creature, by 2 whenever anyone casts Earth spell or summons Earth creature.")
             self.image = pygame.image.load(current_folder+'/misc/cards/earth/dryad.gif')
             Prototype.__init__(self)
         def additional_turn_action(self):
