@@ -1157,7 +1157,7 @@ if yes_pygame:
             Prototype.__init__(self)
         def turn(self):
             Prototype.turn(self)
-            count = self.parent.mana['death']
+            count = self.parent.player.mana['death']
             if count > 2:
                 count = 2
             self.parent.player.mana['death'] -= count
