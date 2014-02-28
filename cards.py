@@ -1152,16 +1152,14 @@ if yes_pygame:
             self.cast = False
             self.power = 1
             self.health = 9
-            self.info = _("Increases owner`s Life by 2 every turn, decreasing Death by the same amount. Decreases owner`s Life by 3 every time owner casts Death spells.")
+            self.info = _("Increases owner`s Life by 1 every turn, decreasing Death by the same amount. Decreases owner`s Life by 3 every time owner casts Death spells.")
             self.image = pygame.image.load(current_folder+'/misc/cards/life/priest.gif')
             Prototype.__init__(self)
         def turn(self):
             Prototype.turn(self)
-            count = self.parent.player.mana['death']
-            if count > 2:
-                count = 2
-            self.parent.player.mana['death'] -= count
-            self.parent.player.mana['life'] += count
+            if self.parent.player.mana['death']:
+                self.parent.player.mana['death'] -= 1
+                self.parent.player.mana['life'] += 1
         def spell_used(self, spell):
             if spell.element == 'death' and spell.player is self.parent.player:
                 self.parent.player.mana['life'] -= 3
