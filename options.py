@@ -105,7 +105,7 @@ def read_configuration():
         try:
             globals.language = config.get('WizardsMagic', 'language')
             globals.language = globals.language.lower()
-            if not globals.language in ['ru','en']:
+            if not globals.language in ['ru','en','de']:
                 globals.language = 'en'
         except:
             globals.language = 'en'

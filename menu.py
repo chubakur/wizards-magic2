@@ -169,6 +169,7 @@ def menu_select_language():
     globals.menu_group.empty()
     MenuButton(0, "English", "select_language('en')")
     MenuButton(1, "Russian", "select_language('ru')")
+    MenuButton(2, "German", "select_language('de')")
     MenuButton(3, "Back", "options.options_main()")
     globals.menu_group.update()
 def menu_main(): 
