@@ -15,44 +15,44 @@
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import pygame
-import globals
+import wzglobals
 class HealthWindow(pygame.sprite.Sprite):
     def __init__(self, rect):
         pygame.sprite.Sprite.__init__(self)
         self.type = 'healthwindow'
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
         self.font = pygame.font.Font(None, 22)
         text = self.font.render('1', True, (1,1,1))
         self.rect = text.get_rect().move(rect)
     def draw(self):
         #cb3b3a
-        if not globals.cli:
-            text = self.font.render(str(globals.player.health), True, (203, 59, 58))
+        if not wzglobals.cli:
+            text = self.font.render(str(wzglobals.player.health), True, (203, 59, 58))
         else:
-            if globals.player_id == 1:
-                text = self.font.render(str(globals.player1.health), True, (203, 59, 58))
+            if wzglobals.player_id == 1:
+                text = self.font.render(str(wzglobals.player1.health), True, (203, 59, 58))
             else:
-                text = self.font.render(str(globals.player2.health), True, (203, 59, 58))
-        globals.background.blit(text, self.rect)
+                text = self.font.render(str(wzglobals.player2.health), True, (203, 59, 58))
+        wzglobals.background.blit(text, self.rect)
     def update(self):
         self.draw()
 class HealthWindowEnemy(pygame.sprite.Sprite):
     def __init__(self, rect):
         pygame.sprite.Sprite.__init__(self)
         self.type = 'healthwindow'
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
         self.font = pygame.font.Font(None, 22)
         text = self.font.render('1', True, (1,1,1))
         self.rect = text.get_rect().move(rect)
     def draw(self):
         #cb3b3a
-        if not globals.cli:
-            text = self.font.render(str(globals.player.enemy.health), True, (203, 59, 58))
+        if not wzglobals.cli:
+            text = self.font.render(str(wzglobals.player.enemy.health), True, (203, 59, 58))
         else:
-            if globals.player_id == 1:
-                text = self.font.render(str(globals.player2.health), True, (203, 59, 58))
+            if wzglobals.player_id == 1:
+                text = self.font.render(str(wzglobals.player2.health), True, (203, 59, 58))
             else:
-                text = self.font.render(str(globals.player1.health), True, (203, 59, 58))
-        globals.background.blit(text, self.rect)
+                text = self.font.render(str(wzglobals.player1.health), True, (203, 59, 58))
+        wzglobals.background.blit(text, self.rect)
     def update(self):
         self.draw()

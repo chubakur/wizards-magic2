@@ -16,7 +16,7 @@
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import pygame
 import os
-import globals
+import wzglobals
 import player
 current_folder = os.path.dirname(os.path.abspath(__file__))
 
@@ -30,25 +30,25 @@ class CompleteTheCourseButton(pygame.sprite.Sprite):
         self.image = self.image_normal
         self.relative_rect = self.image.get_rect().move((rect[0], rect[1]))
         self.rect = self.relative_rect #.move(self.panel.rect[0], self.panel.rect[1])
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
     def onmouse(self):
         return
     def onmouseout(self):
         return
     def onmousedown(self):
         self.image = self.image_pressed
-        if globals.cli:
-            if globals.player_id != globals.player.id:
+        if wzglobals.cli:
+            if wzglobals.player_id != wzglobals.player.id:
                 return
-        for cardbox in globals.cardboxes:
+        for cardbox in wzglobals.cardboxes:
             cardbox.light = False
         player.finish_turn()
     def onmouseup(self):
         self.image = self.image_normal
     def draw(self):
-        if globals.cli:
-            if globals.player_id != globals.player.id:
+        if wzglobals.cli:
+            if wzglobals.player_id != wzglobals.player.id:
                 return
-        globals.background.blit(self.image, self.relative_rect)
+        wzglobals.background.blit(self.image, self.relative_rect)
     def update(self):
         self.draw()

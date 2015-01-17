@@ -15,7 +15,7 @@
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import pygame
-import globals
+import wzglobals
 import os
 pygame.font.init()
 current_folder = os.path.dirname(os.path.abspath(__file__))
@@ -23,22 +23,22 @@ current_folder = os.path.dirname(os.path.abspath(__file__))
 class ElementShower(pygame.sprite.Sprite):
     def __init__(self):
         self.type = 'outer'
-        self.init_text = globals.font2.render('',False,(0,0,0))
+        self.init_text = wzglobals.font2.render('',False,(0,0,0))
         pygame.sprite.Sprite.__init__(self)
     def draw(self):
         #self.image = self.surface_backup.copy()
-        if not globals.cli:
-            text = globals.font2.render(str(globals.player.enemy.mana[self.element]),True,self.color)
+        if not wzglobals.cli:
+            text = wzglobals.font2.render(str(wzglobals.player.enemy.mana[self.element]),True,self.color)
         else:
-            if not globals.player_id:
+            if not wzglobals.player_id:
                 return
-            #exec("text = self.font.render(str(globals.player"+str(globals.player_id)+".enemy" + "." + self.element + "_mana),True,"+self.color+")")
-            if globals.player_id == 1:
-                text = globals.font2.render(str(globals.player2.mana[self.element]),True,self.color)
+            #exec("text = self.font.render(str(wzglobals.player"+str(wzglobals.player_id)+".enemy" + "." + self.element + "_mana),True,"+self.color+")")
+            if wzglobals.player_id == 1:
+                text = wzglobals.font2.render(str(wzglobals.player2.mana[self.element]),True,self.color)
             else:
-                text = globals.font2.render(str(globals.player1.mana[self.element]),True,self.color)
+                text = wzglobals.font2.render(str(wzglobals.player1.mana[self.element]),True,self.color)
         #self.image.blit(text, (2, 9))
-        globals.background.blit(text, self.rect)
+        wzglobals.background.blit(text, self.rect)
     def update(self):
         self.draw()
 class WaterElementShower(ElementShower):
@@ -47,7 +47,7 @@ class WaterElementShower(ElementShower):
         self.element = 'water'
         self.color = (255,255,255)
         self.rect = self.init_text.get_rect().move((rect[0], rect[1]))
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class FireElementShower(ElementShower):
     def __init__(self, rect):
         ElementShower.__init__(self)
@@ -55,7 +55,7 @@ class FireElementShower(ElementShower):
         self.color = (255,255,255)
         self.rect = self.init_text.get_rect().move((rect[0], rect[1]))
         ElementShower.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class AirElementShower(ElementShower):
     def __init__(self, rect):
         ElementShower.__init__(self)
@@ -63,7 +63,7 @@ class AirElementShower(ElementShower):
         self.color = (255,255,255)
         self.rect = self.init_text.get_rect().move((rect[0], rect[1]))
         ElementShower.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class EarthElementShower(ElementShower):
     def __init__(self, rect):
         ElementShower.__init__(self)
@@ -71,7 +71,7 @@ class EarthElementShower(ElementShower):
         self.color = (255,255,255)
         self.rect = self.init_text.get_rect().move((rect[0], rect[1]))
         ElementShower.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class LifeElementShower(ElementShower):
     def __init__(self, rect):
         ElementShower.__init__(self)
@@ -79,7 +79,7 @@ class LifeElementShower(ElementShower):
         self.color = (255,255,255)
         self.rect = self.init_text.get_rect().move((rect[0], rect[1]))
         ElementShower.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class DeathElementShower(ElementShower):
     def __init__(self, rect):
         ElementShower.__init__(self)
@@ -87,7 +87,7 @@ class DeathElementShower(ElementShower):
         self.color = (255,255,255)
         self.rect = self.init_text.get_rect().move((rect[0], rect[1]))
         ElementShower.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class ElementButton(pygame.sprite.Sprite):
     def __init__(self):
         #Это прототип!
@@ -96,19 +96,19 @@ class ElementButton(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
     def draw(self):
         self.image = self.surface_backup.copy()
-        if not globals.cli:
-            #exec("text = self.font.render(str(globals.player" + "." + self.element + "_mana),True,"+self.color+")")
-            text = globals.font2.render(str(globals.player.mana[self.element]),True,self.color)
+        if not wzglobals.cli:
+            #exec("text = self.font.render(str(wzglobals.player" + "." + self.element + "_mana),True,"+self.color+")")
+            text = wzglobals.font2.render(str(wzglobals.player.mana[self.element]),True,self.color)
         else:
-            if not globals.player_id:
+            if not wzglobals.player_id:
                 return
-            if globals.player_id == 1:
-                text = globals.font2.render(str(globals.player1.mana[self.element]), True, self.color)
+            if wzglobals.player_id == 1:
+                text = wzglobals.font2.render(str(wzglobals.player1.mana[self.element]), True, self.color)
             else:
-                text = globals.font2.render(str(globals.player2.mana[self.element]), True, self.color)
-            #exec("text = self.font.render(str(globals.player"+ str(globals.player_id ) + "." + self.element + "_mana),True,"+self.color+")")
+                text = wzglobals.font2.render(str(wzglobals.player2.mana[self.element]), True, self.color)
+            #exec("text = self.font.render(str(wzglobals.player"+ str(wzglobals.player_id ) + "." + self.element + "_mana),True,"+self.color+")")
         self.image.blit(text, (12, 17))
-        globals.background.blit(self.image, self.rect)
+        wzglobals.background.blit(self.image, self.rect)
     def update(self):
         self.draw()
     def onmouse(self):
@@ -116,21 +116,21 @@ class ElementButton(pygame.sprite.Sprite):
     def onmouseout(self):
         pass
     def onmousedown(self):
-        globals.selected_card = False
-        for cardbox in globals.cardboxes:
+        wzglobals.selected_card = False
+        for cardbox in wzglobals.cardboxes:
             cardbox.light = False
         pygame.mixer.music.stop()
-        if self.element != globals.selected_elem:
-            globals.selected_elem = self.element
+        if self.element != wzglobals.selected_elem:
+            wzglobals.selected_elem = self.element
             #self.default()
-            exec('globals.'+globals.cards_of_element_shower_element+'_element_button.default()')
-            globals.cards_in_deck.empty()
-            globals.cards_of_element_shower_element = self.element
+            exec('wzglobals.'+wzglobals.cards_of_element_shower_element+'_element_button.default()')
+            wzglobals.cards_in_deck.empty()
+            wzglobals.cards_of_element_shower_element = self.element
             self.image = self.image_pressed
             self.surface_backup = self.image.copy()
             #elements sound
-            globals.set_element_sound(self.element) 
-            globals.playmusic(time=2500);
+            wzglobals.set_element_sound(self.element)
+            wzglobals.playmusic(time=2500);
     def onmouseup(self):
         pass
     def default(self):
@@ -145,7 +145,7 @@ class WaterElementButton(ElementButton):
         self.color = (255,255,255)
         self.rect = self.image.get_rect().move((rect[0], rect[1]))
         ElementButton.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class FireElementButton(ElementButton):
     def __init__(self, rect):
         self.element = 'fire'
@@ -155,7 +155,7 @@ class FireElementButton(ElementButton):
         self.color = (255,255,255)
         self.rect = self.image.get_rect().move((rect[0], rect[1]))
         ElementButton.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class AirElementButton(ElementButton):
     def __init__(self, rect):
         self.element = 'air'
@@ -165,7 +165,7 @@ class AirElementButton(ElementButton):
         self.color = (255,255,255)
         self.rect = self.image.get_rect().move((rect[0], rect[1]))
         ElementButton.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class EarthElementButton(ElementButton):
     def __init__(self, rect):
         self.element = 'earth'
@@ -176,7 +176,7 @@ class EarthElementButton(ElementButton):
         self.surface_backup = self.image.copy()
         self.rect = self.image.get_rect().move((rect[0], rect[1]))
         ElementButton.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class LifeElementButton(ElementButton):
     def __init__(self, rect):
         self.element = 'life'
@@ -186,7 +186,7 @@ class LifeElementButton(ElementButton):
         self.color = (255,255,255)
         self.rect = self.image.get_rect().move((rect[0], rect[1]))
         ElementButton.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)
 class DeathElementButton(ElementButton):
     def __init__(self, rect):
         self.element = 'death'
@@ -196,4 +196,4 @@ class DeathElementButton(ElementButton):
         self.color = (255,255,255)
         self.rect = self.image.get_rect().move((rect[0], rect[1]))
         ElementButton.__init__(self)
-        globals.interface.add(self)
+        wzglobals.interface.add(self)

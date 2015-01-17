@@ -27,7 +27,7 @@
 #200 - OK
 #300 - ping packag
 #400 - service message
-import sys
+
 import player
 try:
     import json
@@ -37,8 +37,8 @@ except ImportError:
 import socket
 import select
 import threading
-import cards 
-import globals
+import cards
+import wzglobals
 import options
 
 #host = ""
@@ -56,7 +56,7 @@ game_id = 1 # идентификатор игры game_id=0 reserved for single 
 class Connect(threading.Thread):
     def get_package(self):
         #trick to avoid blocking socket hang thread forever
-        while globals.running: 
+        while wzglobals.running:
             do_read = False
             try:
                 r, _, _ = select.select([self.sock], [], [], 1)
@@ -64,10 +64,10 @@ class Connect(threading.Thread):
             except socket.error:
                 return dict(action='socket_error')
             if do_read:
-                try: 
+                try:
                     MSGLEN, answ = int( self.sock.recv(8) ), ''
                     while len(answ)<MSGLEN: answ += self.sock.recv(MSGLEN - len(answ))
-                except ValueError: 
+                except ValueError:
                     return dict(action='value_error')
                 except socket.error:
                     return dict(action='socket_error')
@@ -102,53 +102,53 @@ class Connect(threading.Thread):
     def run(self):
         #global num_players,game_id
         global game_id
-        while globals.running:
+        while wzglobals.running:
             query = self.get_package()
             if query['action'] == "join":
                 # init deck if it is a new game
-                # if num_players == 0: 
-                if len(globals.players[self.game_id]) == 0: 
-                    globals.games_cards[self.game_id]['water'] = cards.water_cards_deck[:]
-                    globals.games_cards[self.game_id]['fire'] = cards.fire_cards_deck[:]
-                    globals.games_cards[self.game_id]['air'] = cards.air_cards_deck[:] 
-                    globals.games_cards[self.game_id]['earth'] = cards.earth_cards_deck[:]
-                    globals.games_cards[self.game_id]['life'] = cards.life_cards_deck[:] 
-                    globals.games_cards[self.game_id]['death'] = cards.death_cards_deck[:]
+                # if num_players == 0:
+                if len(wzglobals.players[self.game_id]) == 0:
+                    wzglobals.games_cards[self.game_id]['water'] = cards.water_cards_deck[:]
+                    wzglobals.games_cards[self.game_id]['fire'] = cards.fire_cards_deck[:]
+                    wzglobals.games_cards[self.game_id]['air'] = cards.air_cards_deck[:]
+                    wzglobals.games_cards[self.game_id]['earth'] = cards.earth_cards_deck[:]
+                    wzglobals.games_cards[self.game_id]['life'] = cards.life_cards_deck[:]
+                    wzglobals.games_cards[self.game_id]['death'] = cards.death_cards_deck[:]
 
                 #num_players+=1
                 self.nickname = query['nickname']
                 print "Nick: ", self.nickname
-                globals.players[self.game_id].append(player.Player(self.game_id))
-                self.id = len(globals.players[self.game_id]) - 1
-                #globals.players[self.game_id][id].id = num_players   
-                globals.players[self.game_id][self.id].id = len(globals.players[self.game_id])
+                wzglobals.players[self.game_id].append(player.Player(self.game_id))
+                self.id = len(wzglobals.players[self.game_id]) - 1
+                #wzglobals.players[self.game_id][id].id = num_players
+                wzglobals.players[self.game_id][self.id].id = len(wzglobals.players[self.game_id])
                 #массив игроки. Элемент 0 - 1 игрок , элемент 1 - второй игрок
                 #Отправляем сообщение , что все прошло Гуд, id игрока
-                self.send(self.sock, {"answ":200, "action":"join","id":globals.players[self.game_id][self.id].id})
+                self.send(self.sock, {"answ":200, "action":"join","id":wzglobals.players[self.game_id][self.id].id})
                 #if num_players == 2: #когда заходит второй игрок. раздаем карты и ману.
-                if len(globals.players[self.game_id]) == 2 and game_id == self.game_id: 
+                if len(wzglobals.players[self.game_id]) == 2 and game_id == self.game_id:
                     #p_id = 0
                     #num_players = 0
                     game_id += 1
                     sockets.append([])
                     connections.append([])
-                    globals.players.append([])
-                    globals.games_cards.append({})                    
+                    wzglobals.players.append([])
+                    wzglobals.games_cards.append({})
 #                    cards.water_cards = cards.water_cards_deck[:]
 #                    cards.fire_cards = cards.fire_cards_deck[:]
 #                    cards.air_cards = cards.air_cards_deck[:]
 #                    cards.earth_cards = cards.earth_cards_deck[:]
 #                    cards.life_cards = cards.life_cards_deck[:]
 #                    cards.death_cards = cards.death_cards_deck[:]
-#                    for gamer in globals.players[self.game_id]: #GAMER = PLAYER. просто почему-то питон неверно обрабатывает в таком случае сообщения
+#                    for gamer in wzglobals.players[self.game_id]: #GAMER = PLAYER. просто почему-то питон неверно обрабатывает в таком случае сообщения
 #                        gamer.get_mana()
 #                        gamer.get_cards()
                     deck_cards = []
-                    deck_cards.append({"water": globals.players[self.game_id][0].cards['water'].keys(),"fire":globals.players[self.game_id][0].cards['fire'].keys(), "air":globals.players[self.game_id][0].cards['air'].keys(),"earth":globals.players[self.game_id][0].cards['earth'].keys(), "life":globals.players[self.game_id][0].cards['life'].keys(), "death":globals.players[self.game_id][0].cards['death'].keys()})
-                    deck_cards.append({"water": globals.players[self.game_id][1].cards['water'].keys(),"fire":globals.players[self.game_id][1].cards['fire'].keys(), "air":globals.players[self.game_id][1].cards['air'].keys(),"earth":globals.players[self.game_id][1].cards['earth'].keys(), "life":globals.players[self.game_id][1].cards['life'].keys(), "death":globals.players[self.game_id][1].cards['death'].keys()})
+                    deck_cards.append({"water": wzglobals.players[self.game_id][0].cards['water'].keys(),"fire":wzglobals.players[self.game_id][0].cards['fire'].keys(), "air":wzglobals.players[self.game_id][0].cards['air'].keys(),"earth":wzglobals.players[self.game_id][0].cards['earth'].keys(), "life":wzglobals.players[self.game_id][0].cards['life'].keys(), "death":wzglobals.players[self.game_id][0].cards['death'].keys()})
+                    deck_cards.append({"water": wzglobals.players[self.game_id][1].cards['water'].keys(),"fire":wzglobals.players[self.game_id][1].cards['fire'].keys(), "air":wzglobals.players[self.game_id][1].cards['air'].keys(),"earth":wzglobals.players[self.game_id][1].cards['earth'].keys(), "life":wzglobals.players[self.game_id][1].cards['life'].keys(), "death":wzglobals.players[self.game_id][1].cards['death'].keys()})
                     for connection in connections[self.game_id]:
                         #p_id += 1
-                        self.send(connection.sock,{"answ":200,"nicknames":[connections[self.game_id][0].nickname,connections[self.game_id][1].nickname] ,"action":"update","mana":[globals.players[self.game_id][0].get_mana_count(), globals.players[self.game_id][1].get_mana_count()], "deck_cards":deck_cards})
+                        self.send(connection.sock,{"answ":200,"nicknames":[connections[self.game_id][0].nickname,connections[self.game_id][1].nickname] ,"action":"update","mana":[wzglobals.players[self.game_id][0].get_mana_count(), wzglobals.players[self.game_id][1].get_mana_count()], "deck_cards":deck_cards})
             elif query['action'] == "switch_turn":
                 if self.id:
                     self.send(sockets[self.game_id][0],{"answ":200,"action":"switch_turn"})
@@ -193,25 +193,25 @@ class Connect(threading.Thread):
                 self.sock.close()
                 break
             elif query['action'] == 'server_close':
-                try: 
+                try:
                     self.send(self.sock, {"answ":200, "action":"server_close"}) #send to client signal that server is going down
-                except: 
+                except:
                     pass
                 self.sock.close()
                 break
             elif query['action'] == 'value_error':
                 print 'Socket value error'
-                try: 
+                try:
                     self.send(self.sock, {"answ":200, "action":"bye"})
-                except: 
+                except:
                     pass
                 self.sock.close()
                 break
             elif query['action'] == 'socket_error':
                 print 'Socket error. Closing.'
-                try: 
+                try:
                     self.sock.close()
-                except: 
+                except:
                     pass
                 break
             else:
@@ -226,19 +226,19 @@ class Server(threading.Thread):
         self.socket = get_socket()
         threading.Thread.__init__(self)
     def run(self):
-        while globals.running:
+        while wzglobals.running:
             print "waiting for client"
             sock, addr = self.socket.accept()
             print "Client connected"
-            if globals.running:
+            if wzglobals.running:
                 Connect(sock, addr).start()
 #        print "Closing connections"
 #        global connections
 #        for game in connections:
 #            for conn in game:
-#                try: 
+#                try:
 #                    conn.send(conn.sock, {"answ":200, "action":"server_close"})
-#                except: 
+#                except:
 #                    pass
         print "Closing server"
         self.socket.close()
@@ -246,7 +246,7 @@ class Server(threading.Thread):
 def get_socket():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind(("", int(globals.port)))
+    s.bind(("", int(wzglobals.port)))
     s.listen(5)
     return s
 
@@ -255,8 +255,8 @@ def main():
     options.read_configuration()
     socket = get_socket()
     while True:
-        print "Waiting for clients on TCP port "+globals.port
+        print "Waiting for clients on TCP port "+wzglobals.port
         sock, addr = socket.accept()
         Connect(sock, addr).start()
 
-if __name__ == '__main__': main() 
+if __name__ == '__main__': main()

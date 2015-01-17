@@ -15,7 +15,7 @@
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import pygame
-import globals
+import wzglobals
 import threading
 import os
 current_folder = os.path.dirname(os.path.abspath(__file__))
@@ -26,19 +26,19 @@ class GameInformationPanel(pygame.sprite.Sprite):
         self.type = "gameinformationpanel"
         self.image = pygame.image.load(current_folder+'/misc/game_information.gif').convert_alpha()
         self.surface_backup = self.image.copy()
-        self.rect = (globals.screen.get_size()[0] / 2-self.image.get_size()[0] / 2, globals.screen.get_size()[1] / 2-self.image.get_size()[1] / 2)
+        self.rect = (wzglobals.screen.get_size()[0] / 2-self.image.get_size()[0] / 2, wzglobals.screen.get_size()[1] / 2-self.image.get_size()[1] / 2)
         self.show = False
         self.text = ""
         self.auto_hide_time = 3
         self.timer = threading.Timer(self.auto_hide_time, self.hide)
-        globals.information_group.add(self)
+        wzglobals.information_group.add(self)
     def draw(self):
         if not self.show:
-            return 
+            return
         self.image = self.surface_backup.copy()
-        text = globals.font.render(self.text, True, (255,255,255))
+        text = wzglobals.font.render(self.text, True, (255,255,255))
         self.image.blit(text, (0,0))
-        globals.background.blit(self.image, self.rect)
+        wzglobals.background.blit(self.image, self.rect)
     def update(self):
         self.draw()
     def hide(self):

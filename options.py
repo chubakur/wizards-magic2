@@ -15,115 +15,114 @@
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 try:
     import pygame
-    from pygame.locals import *
+    #from pygame.locals import *
     from widgets import TxtInput, CheckBox
     import menu
     yes_pygame = True
 except ImportError:
     yes_pygame = False
-import sys
-import globals
+import wzglobals
 import ConfigParser
 import os.path
 def launcher():
     #Something ,what we need to change after reset configuration
     try:
-        globals.bg_sound.stop()
+        wzglobals.bg_sound.stop()
     except AttributeError:
-        globals.bg_sound = pygame.mixer.Sound(globals.current_folder+'/misc/sounds/11_the_march_of_the_goblins__tobias_steinmann.ogg')
-    if globals.music == "Y":
-        globals.bg_sound.play(-1)
+        wzglobals.bg_sound = pygame.mixer.Sound(wzglobals.current_folder+'/misc/sounds/11_the_march_of_the_goblins__tobias_steinmann.ogg')
+    if wzglobals.music == "Y":
+        wzglobals.bg_sound.play(-1)
 def save():
     config = ConfigParser.RawConfigParser()
     config.add_section('WizardsMagic')
-    for item in globals.menu_group:
+    for item in wzglobals.menu_group:
         if item.type=='txtinput':
             config.set('WizardsMagic', item.key, item.text)
         if item.type=='checkbox':
             config.set('WizardsMagic', item.key, (item.value and 'Y' or 'N'))
-    config.set('WizardsMagic','language',globals.language)
-    configfile=open(globals.current_folder + '/wizardsmagic.cfg', 'wb')
+    config.set('WizardsMagic','language',wzglobals.language)
+    configfile=open(wzglobals.current_folder + '/wizardsmagic.cfg', 'wb')
     config.write(configfile)
     configfile.close()
     read_configuration()
     launcher()
     menu.menu_main()
 
-def cancel(): 
+def cancel():
     menu.menu_main()
 
 def read_configuration():
     config = ConfigParser.ConfigParser()
-    config.read(globals.current_folder + '/wizardsmagic.cfg')
+    config.read(wzglobals.current_folder + '/wizardsmagic.cfg')
 
     try:
-        globals.music = config.get('WizardsMagic', 'music')
-        globals.music = globals.music.upper()
-        if not globals.music in "YN":
-            globals.music = "Y"
+        wzglobals.music = config.get('WizardsMagic', 'music')
+        wzglobals.music = wzglobals.music.upper()
+        if not wzglobals.music in "YN":
+            wzglobals.music = "Y"
     except:
-        globals.music = "Y"
+        wzglobals.music = "Y"
     try:
-        globals.sound = config.get('WizardsMagic', 'sound')
-        globals.sound = globals.sound.upper()
-        if not globals.sound in "YN":
-            globals.sound = "Y"
+        wzglobals.sound = config.get('WizardsMagic', 'sound')
+        wzglobals.sound = wzglobals.sound.upper()
+        if not wzglobals.sound in "YN":
+            wzglobals.sound = "Y"
     except:
-        globals.sound = "Y"
+        wzglobals.sound = "Y"
     #try:
-    #    globals.ai = config.get('WizardsMagic', 'ai')
-    #    globals.ai = globals.ai.upper()
-    #    if not globals.ai in "YN":
-    #        globals.ai = "Y"
+    #    wzglobals.ai = config.get('WizardsMagic', 'ai')
+    #    wzglobals.ai = wzglobals.ai.upper()
+    #    if not wzglobals.ai in "YN":
+    #        wzglobals.ai = "Y"
     #except:
-    #    globals.ai = "Y"
+    #    wzglobals.ai = "Y"
     try:
-        globals.nick = config.get('WizardsMagic', 'nick')
+        wzglobals.nick = config.get('WizardsMagic', 'nick')
     except:
-        globals.nick = "myname"
+        wzglobals.nick = "myname"
     try:
-        globals.server = config.get('WizardsMagic', 'server')
+        wzglobals.server = config.get('WizardsMagic', 'server')
     except:
-        globals.server = "127.0.0.1"
+        wzglobals.server = "127.0.0.1"
     try:
-        globals.port = config.getint('WizardsMagic', 'port')
-        if globals.port<=0 or globals.port>65535:
-            globals.port = 7712
-        globals.port = str(globals.port)
+        wzglobals.port = config.getint('WizardsMagic', 'port')
+        if wzglobals.port<=0 or wzglobals.port>65535:
+            wzglobals.port = 7712
+        wzglobals.port = str(wzglobals.port)
     except:
-        globals.port = "7712"
+        wzglobals.port = "7712"
     try:
-        globals.animation = config.get('WizardsMagic', 'animation')
-        globals.animation = globals.animation.upper()
-        if not globals.animation in "YN":
-            globals.animation = "Y"
+        wzglobals.animation = config.get('WizardsMagic', 'animation')
+        wzglobals.animation = wzglobals.animation.upper()
+        if not wzglobals.animation in "YN":
+            wzglobals.animation = "Y"
     except:
-        globals.animation = "Y"
+        wzglobals.animation = "Y"
     try:
-        globals.language
+        wzglobals.language
     except:
         try:
-            globals.language = config.get('WizardsMagic', 'language')
-            globals.language = globals.language.lower()
-            if not globals.language in ['ru','en','de']:
-                globals.language = 'en'
+            wzglobals.language = config.get('WizardsMagic', 'language')
+            wzglobals.language = wzglobals.language.lower()
+            if not wzglobals.language in ['ru','en','de']:
+                wzglobals.language = 'en'
         except:
-            globals.language = 'en'
-def options_main(): 
+            wzglobals.language = 'en'
+def options_main():
     ''' display options menu '''
 
-    globals.menu_group.empty()
-    globals.background = pygame.image.load(globals.current_folder + '/misc/menu_bg.jpg').convert_alpha()
-    globals.background_backup = globals.background.copy()
-    globals.menu_bg = pygame.image.load(globals.current_folder + '/misc/menu_selections_bg.jpg').convert_alpha()
-    menupos = globals.menu_bg.get_rect()
-    menupos.centerx = globals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
-    menupos.centery = globals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
-    globals.background.blit(globals.menu_bg, menupos)
+    wzglobals.menu_group.empty()
+    wzglobals.background = pygame.image.load(wzglobals.current_folder + '/misc/menu_bg.jpg').convert_alpha()
+    wzglobals.background_backup = wzglobals.background.copy()
+    wzglobals.menu_bg = pygame.image.load(wzglobals.current_folder + '/misc/menu_selections_bg.jpg').convert_alpha()
+    menupos = wzglobals.menu_bg.get_rect()
+    menupos.centerx = wzglobals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
+    menupos.centery = wzglobals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
+    wzglobals.background.blit(wzglobals.menu_bg, menupos)
 
     #Configuration file:
     #create default configuration file
-    if not os.path.isfile(globals.current_folder + '/wizardsmagic.cfg'):
+    if not os.path.isfile(wzglobals.current_folder + '/wizardsmagic.cfg'):
         config = ConfigParser.RawConfigParser()
         config.add_section('WizardsMagic')
         config.set('WizardsMagic', 'music', 'Y')
@@ -134,21 +133,20 @@ def options_main():
         config.set('WizardsMagic', 'language', 'en')
         #config.set('WizardsMagic', 'ai', 'Y')
         config.set('WizardsMagic', 'animation', 'Y')
-        configfile = open(globals.current_folder + '/wizardsmagic.cfg', 'wb')
+        configfile = open(wzglobals.current_folder + '/wizardsmagic.cfg', 'wb')
         config.write(configfile)
         configfile.close()
 
     #read configuration file
     read_configuration()
-    option1 = CheckBox(2,"MUSIC:", (globals.music == 'Y'), key="music")
-    option1 = CheckBox(1,"SOUNDS:", (globals.sound == 'Y'), key="sound")
-    option0 = CheckBox(0, "ANIMATION:", (globals.animation == 'Y'), key='animation')
-    option2 = TxtInput(3,"NICK:", globals.nick, 8, key="nick")
-    option3 = TxtInput(4,"SERVER:", globals.server, 15, key="server")
-    option4 = TxtInput(5,"PORT:", globals.port, 5, key="port")
-    option5 = menu.MenuButton(5, "Select language", "menu_select_language()")
-    #option5 = CheckBox(6, "AI:", (globals.ai == 'Y'), key="ai")
-    option6 = menu.MenuButton(-1, "SAVE", "options.save()", loc=(70, menupos.height-50))
-    option7 = menu.MenuButton(-1, "CANCEL", "options.cancel()", loc=(160, menupos.height-50))
-    globals.menu_group.update()
+    CheckBox(2,"MUSIC:", (wzglobals.music == 'Y'), key="music")
+    CheckBox(1,"SOUNDS:", (wzglobals.sound == 'Y'), key="sound")
+    CheckBox(0, "ANIMATION:", (wzglobals.animation == 'Y'), key='animation')
+    TxtInput(3,"NICK:", wzglobals.nick, 8, key="nick")
+    TxtInput(4,"SERVER:", wzglobals.server, 15, key="server")
+    TxtInput(5,"PORT:", wzglobals.port, 5, key="port")
+    menu.MenuButton(5, "Select language", "menu_select_language()")
+    menu.MenuButton(-1, "SAVE", "options.save()", loc=(70, menupos.height-50))
+    menu.MenuButton(-1, "CANCEL", "options.cancel()", loc=(160, menupos.height-50))
+    wzglobals.menu_group.update()
 

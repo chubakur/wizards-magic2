@@ -14,7 +14,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-try: 
+try:
     import pygame.sprite
     import pygame
     yes_pygame = True
@@ -24,18 +24,18 @@ import animations
 import os
 import gettext
 from options import read_configuration
-from math import *
-import globals
+from math import floor, ceil
+import wzglobals
 import player
 import sys
 current_folder = os.path.dirname(os.path.abspath(__file__))
 __author__ = "chubakur"
 __date__ = "$13.02.2011 18:46:32$"
 try:
-    t = gettext.translation('cards', current_folder+'/languages', languages=[globals.language])
+    t = gettext.translation('cards', current_folder+'/languages', languages=[wzglobals.language])
 except AttributeError:
     read_configuration()
-    t = gettext.translation('cards', current_folder+'/languages', languages=[globals.language])
+    t = gettext.translation('cards', current_folder+'/languages', languages=[wzglobals.language])
 _ = t.ugettext
 t.install()
 
@@ -46,7 +46,7 @@ earth_cards_deck = ["Satyr", "Golem", "Dryad", "Centaur", "Elemental", "Ent", "E
 life_cards_deck = ["Priest", "Paladin", "Pegasus", "Unicorn", "Apostate", "MagicHealer", "Chimera", "Bless", "GodsWrath", "LifeSacrifice", "Purify", "Rejuvenation"]
 death_cards_deck = ["Zombie", "Vampire", "GrimReaper", "Ghost", "Werewolf", "Banshee", "Darklord", "Lich", "ChaosVortex", "CoverOfDarkness", "Curse", "StealLife", "TotalWeakness"]
 
-if yes_pygame: 
+if yes_pygame:
     pygame.font.init()
     font = pygame.font.Font(None, 25)
     class CastLabel(pygame.sprite.Sprite):
@@ -114,13 +114,13 @@ if yes_pygame:
             self.update()
         ## play cast sound if sounds turned on in options
         def play_cast_sound(self):
-            pygame.mixer.music.load(current_folder+'/misc/sounds/card_cast.mp3')
-            globals.playmusic()
+            pygame.mixer.music.load(current_folder+'/misc/sounds/card_cast.ogg')
+            wzglobals.playmusic()
             return
         ## play summon sound if sounds turned on in options
         def play_summon_sound(self):
             pygame.mixer.music.load(current_folder+'/misc/sounds/card_summon.wav')
-            globals.playmusic()
+            wzglobals.playmusic()
             return
         ## returns opposite cardbox Id.
         def get_attack_position(self):
@@ -133,11 +133,11 @@ if yes_pygame:
         def get_self_cards(self):
             cards = []
             if self.parent.position < 5:
-                for cardbox in globals.cardboxes[0:5]:
+                for cardbox in wzglobals.cardboxes[0:5]:
                     if cardbox.card.name != "player":
                         cards.append(cardbox.card)
             else:
-                for cardbox in globals.cardboxes[5:10]:
+                for cardbox in wzglobals.cardboxes[5:10]:
                     if cardbox.card.name != "player":
                         cards.append(cardbox.card)
             return cards
@@ -145,31 +145,31 @@ if yes_pygame:
         def get_self_cardboxes(self):
             cardboxes = []
             if self.parent.position < 5:
-                for cardbox in globals.cardboxes[0:5]:
+                for cardbox in wzglobals.cardboxes[0:5]:
                     cardboxes.append(cardbox)
             else:
-                for cardbox in globals.cardboxes[5:10]:
+                for cardbox in wzglobals.cardboxes[5:10]:
                     cardboxes.append(cardbox)
             return cardboxes
         ## returns cardboxes of enemy of player, who has this card
         def get_enemy_cardboxes(self):
             cardboxes = []
             if self.parent.position < 5:
-                for cardbox in globals.cardboxes[5:10]:
+                for cardbox in wzglobals.cardboxes[5:10]:
                     cardboxes.append(cardbox)
             else:
-                for cardbox in globals.cardboxes[0:5]:
+                for cardbox in wzglobals.cardboxes[0:5]:
                     cardboxes.append(cardbox)
             return cardboxes
         ## returns enemy cards
         def get_enemy_cards(self):
             cards = []
             if self.parent.position < 5:
-                for cardbox in globals.cardboxes[5:10]:
+                for cardbox in wzglobals.cardboxes[5:10]:
                     if cardbox.card.name != "player": #если есть карта
                         cards.append(cardbox.card)
             else:
-                for cardbox in globals.cardboxes[0:5]:
+                for cardbox in wzglobals.cardboxes[0:5]:
                     if cardbox.card.name != "player":
                         cards.append(cardbox.card)
             return cards
@@ -182,17 +182,17 @@ if yes_pygame:
             self_position = self.parent.position
             if self_position < 5:
                 if self_position > 0:
-                    if globals.cardboxes[self_position - 1].card.name != "player":
+                    if wzglobals.cardboxes[self_position - 1].card.name != "player":
                         adjacent_position.append(self_position - 1)
                 if self_position < 4:
-                    if globals.cardboxes[self_position + 1].card.name != "player":
+                    if wzglobals.cardboxes[self_position + 1].card.name != "player":
                         adjacent_position.append(self_position + 1)
             else:
                 if self_position > 5:
-                    if globals.cardboxes[self_position - 1].card.name != "player":
+                    if wzglobals.cardboxes[self_position - 1].card.name != "player":
                         adjacent_position.append(self_position - 1)
                 if self_position < 9:
-                    if globals.cardboxes[self_position + 1].card.name != "player":
+                    if wzglobals.cardboxes[self_position + 1].card.name != "player":
                         adjacent_position.append(self_position + 1)
             return adjacent_position
         ## return adjacent cardboxes ids of opposite cardbox
@@ -205,25 +205,25 @@ if yes_pygame:
             adjacent_position = []
             if attack_position < 5:
                 if attack_position > 0:
-                    if globals.cardboxes[attack_position-1].card.name != "player":
+                    if wzglobals.cardboxes[attack_position-1].card.name != "player":
                         adjacent_position.append(attack_position-1)
                 if attack_position < 4:
-                    if globals.cardboxes[attack_position + 1].card.name != "player":
+                    if wzglobals.cardboxes[attack_position + 1].card.name != "player":
                         adjacent_position.append(attack_position + 1)
             else:
                 if attack_position > 5:
-                    if globals.cardboxes[attack_position-1].card.name != "player":
+                    if wzglobals.cardboxes[attack_position-1].card.name != "player":
                         adjacent_position.append(attack_position-1)
                 if attack_position < 9:
-                    if globals.cardboxes[attack_position + 1].card.name != "player":
+                    if wzglobals.cardboxes[attack_position + 1].card.name != "player":
                         adjacent_position.append(attack_position + 1)
             return adjacent_position
         ## start attack animation
         def run_attack_animation(self):
-            cardbox_location = (globals.cardboxes[self.parent.position].rect[0],globals.cardboxes[self.parent.position].rect[1])
+            cardbox_location = (wzglobals.cardboxes[self.parent.position].rect[0],wzglobals.cardboxes[self.parent.position].rect[1])
             attack_animation = animations.CustomAnimation(self.image,cardbox_location) #Instantiating a animation object
             # dump method to determine which cardbox is used (top/enemy or button/your)
-            # TODO make different attack animation which not depend from Y axis value.  
+            # TODO make different attack animation which not depend from Y axis value.
             if (cardbox_location[1] > 200):
                 attack_animation.path = [(cardbox_location[0], cardbox_location[1]-30)]
             else:
@@ -233,7 +233,7 @@ if yes_pygame:
         def attack(self): #Функция , срабатываемая при атаке персонажа
             if self.moves_alive:
                 attack_position = self.get_attack_position()
-                kill = globals.cardboxes[attack_position].card.damage(self.power, self)
+                kill = wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 self.run_attack_animation()
                 return kill
             else:
@@ -241,8 +241,8 @@ if yes_pygame:
         ## Function which called if card has some "cast action" and player press on this card. Without choosing target!
         def cast_action(self):
             if self.focus_cast: #тут буду пробовать организовывать фокусированный каст
-                globals.cast_focus = True #говорим программе, что будет использоваться фокусированный каст
-                globals.cast_focus_wizard = self #создаем ссылку на себя
+                wzglobals.cast_focus = True #говорим программе, что будет использоваться фокусированный каст
+                wzglobals.cast_focus_wizard = self #создаем ссылку на себя
         ## function for cast which needs on target
         def focus_cast_action(self, target):
             pass
@@ -265,18 +265,18 @@ if yes_pygame:
             for card in self.get_self_cards() + self.get_enemy_cards():
                 card.card_summoned(self)
             if self.parent.player.id == 1:
-                for card in globals.ccards_1:
+                for card in wzglobals.ccards_1:
                     Prototype.turn(card)
-                #for card in globals.ccards_1:
+                #for card in wzglobals.ccards_1:
                 #    card.additional_turn_action()
             else:
-                for card in globals.ccards_2:
+                for card in wzglobals.ccards_2:
                     Prototype.turn(card)
-                #for card in globals.ccards_2:
+                #for card in wzglobals.ccards_2:
                 #    card.additional_turn_action()
         ## tell to other cards about summon. Calls card_summoned from each card on field.
         def summon_speaker(self):
-            for card in globals.ccards_1.sprites() + globals.ccards_2.sprites():
+            for card in wzglobals.ccards_1.sprites() + wzglobals.ccards_2.sprites():
                 card.card_summoned(self)
         ## function which calls when card in damage phase.
         def damage(self, damage, enemy, cast=False):
@@ -299,10 +299,10 @@ if yes_pygame:
             for card in self.get_enemy_cards() + self.get_self_cards():
                 card.card_died(self)
             try:
-                pygame.mixer.music.load(current_folder+'/misc/sounds/card_die.mp3')
+                pygame.mixer.music.load(current_folder+'/misc/sounds/card_die.ogg')
             except:
                 print "Unexpected error: while trying load die sound"
-            globals.playmusic()
+            wzglobals.playmusic()
             del self.image
         ## function which calls when card kill card in opposite cardbox
         def enemy_die(self): #когда карта убивает противолежащего юнита
@@ -321,33 +321,33 @@ if yes_pygame:
         # For example this can to determine which card we should summon againist Fire Drake
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
-                if globals.player.mana[self.element] >= self.level:
-                    return globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    return wzglobals.player.mana[self.element]/float(self.level)
                 else:
                     return 0
             elif type == 'cast':
                 return 0
         ## Redraw
         def update(self):
-            text_level = globals.font2.render(str(self.level), True, self.font_color)
-            text_power = globals.font2.render(str(self.power), True, self.font_color)
-            text_health = globals.font2.render(str(self.health), True, self.font_color)
+            text_level = wzglobals.font2.render(str(self.level), True, self.font_color)
+            text_power = wzglobals.font2.render(str(self.power), True, self.font_color)
+            text_health = wzglobals.font2.render(str(self.health), True, self.font_color)
             self.image = self.surface_backup.copy()
             if self.cast:
                 if self.field:
-                    if globals.player == self.parent.player:
+                    if wzglobals.player == self.parent.player:
                         if not self.used_cast:
-                            self.image.blit(globals.castlabel.cast_active, (0, 10))
+                            self.image.blit(wzglobals.castlabel.cast_active, (0, 10))
                         else:
-                            self.image.blit(globals.castlabel.cast_disabled, (0, 10))
+                            self.image.blit(wzglobals.castlabel.cast_disabled, (0, 10))
             self.image.blit(text_level, (90, -7))
             self.image.blit(text_power, (5, 137))
             self.image.blit(text_health, (90, 137))
             if self.light:
                 self.image.blit(self.light_image, (5, 5))
             if not self.field: #Рисование в колоде
-                self.parent = globals.background
-                xshift = 324 + self.position_in_deck * self.image.get_size()[0] + globals.cardofelementsshower.shift * self.position_in_deck + 2 * self.position_in_deck
+                self.parent = wzglobals.background
+                xshift = 324 + self.position_in_deck * self.image.get_size()[0] + wzglobals.cardofelementsshower.shift * self.position_in_deck + 2 * self.position_in_deck
                 yshift = 431
                 self.parent.blit(self.image, (xshift, yshift))
                 self.rect = self.image.get_rect()
@@ -371,8 +371,8 @@ if yes_pygame:
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
                 eff = 0
-                if globals.player.mana[self.element] >= self.level:
-                    eff = globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    eff = wzglobals.player.mana[self.element]/float(self.level)
                     if enemy.name != 'player':
                         if enemy.element == 'fire':
                             eff += 2
@@ -382,13 +382,13 @@ if yes_pygame:
         def attack(self):
             if self.moves_alive:
                 attack_position = self.get_attack_position()
-                if globals.cardboxes[attack_position].card.name != "player": #если есть карта
-                    if globals.cardboxes[attack_position].card.element == "fire": #если стихия карты - огонь
-                        globals.cardboxes[attack_position].card.damage(self.power * 2, self)
+                if wzglobals.cardboxes[attack_position].card.name != "player": #если есть карта
+                    if wzglobals.cardboxes[attack_position].card.element == "fire": #если стихия карты - огонь
+                        wzglobals.cardboxes[attack_position].card.damage(self.power * 2, self)
                     else:
-                        globals.cardboxes[attack_position].card.damage(self.power, self)
+                        wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 else:
-                    globals.cardboxes[attack_position].card.damage(self.power, self)
+                    wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 self.run_attack_animation()
             else:
                 return
@@ -418,10 +418,10 @@ if yes_pygame:
         def attack(self):
             if self.moves_alive:
                 attack_position = self.get_attack_position()
-                globals.cardboxes[attack_position].card.damage(self.power, self)
+                wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 adjacent_positions = self.get_attack_adjacent_position(attack_position)
                 for adjacent_position in adjacent_positions:
-                    globals.cardboxes[adjacent_position].card.damage(self.power, self)
+                    wzglobals.cardboxes[adjacent_position].card.damage(self.power, self)
                 self.run_attack_animation()
             else:
                 return
@@ -496,8 +496,8 @@ if yes_pygame:
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
                 eff = 0
-                if globals.player.mana[self.element] >= self.level:
-                    eff = globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    eff = wzglobals.player.mana[self.element]/float(self.level)
                     if enemy.name != 'player':
                         if enemy.element == 'fire':
                             eff = 0.01
@@ -544,8 +544,8 @@ if yes_pygame:
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
                 eff = 0
-                if globals.player.mana[self.element] >= self.level:
-                    eff = globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    eff = wzglobals.player.mana[self.element]/float(self.level)
                     if enemy.name != 'player':
                         if enemy.element == 'fire':
                             eff = 0.01
@@ -603,8 +603,8 @@ if yes_pygame:
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
                 eff = 0
-                if globals.player.mana[self.element] >= self.level:
-                    eff = globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    eff = wzglobals.player.mana[self.element]/float(self.level)
                     if enemy.name != 'player':
                         if enemy.element == 'water':
                             eff = 0.01
@@ -630,7 +630,7 @@ if yes_pygame:
                         if target != self:
                             self.play_cast_sound()
                             self.used_cast = True
-                            globals.cast_focus = False
+                            wzglobals.cast_focus = False
                             self.parent.player.mana['fire'] += 3
                             self.parent.player.heal(target.health)
                             target.die()
@@ -660,8 +660,8 @@ if yes_pygame:
         def ai(self, type='summon', enemy=None):
             if type == 'summon':
                 eff = 0
-                if globals.player.mana[self.element] >= self.level:
-                    eff = globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    eff = wzglobals.player.mana[self.element]/float(self.level)
                     if enemy.element == 'fire':
                         eff += 2
                 return eff
@@ -748,7 +748,7 @@ if yes_pygame:
                 self.parent.player.enemy.mana['fire'] -= 3
             else:
                 self.parent.player.enemy.mana['fire'] = 0
-            opp_card = globals.cardboxes[self.get_attack_position()].card
+            opp_card = wzglobals.cardboxes[self.get_attack_position()].card
             if opp_card.name != 'player':
                 opp_card.damage(9, self)
         def turn(self):
@@ -773,13 +773,13 @@ if yes_pygame:
         def attack(self):
             if self.moves_alive:
                 attack_position = self.get_attack_position()
-                globals.cardboxes[attack_position].card.damage(self.power, self)
+                wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 adjacent_positions = self.get_attack_adjacent_position(attack_position)
                 for adjacent_position in adjacent_positions:
-                    if not globals.cardboxes[adjacent_position].card.power / 2:
-                        globals.cardboxes[adjacent_position].card.damage(1, self)
+                    if not wzglobals.cardboxes[adjacent_position].card.power / 2:
+                        wzglobals.cardboxes[adjacent_position].card.damage(1, self)
                     else:
-                        globals.cardboxes[adjacent_position].card.damage(int(ceil(float(globals.cardboxes[adjacent_position].card.power) / 2)), self)
+                        wzglobals.cardboxes[adjacent_position].card.damage(int(ceil(float(wzglobals.cardboxes[adjacent_position].card.power) / 2)), self)
                 self.run_attack_animation()
             else:
                 return
@@ -847,8 +847,8 @@ if yes_pygame:
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
                 eff = 0
-                if globals.player.mana[self.element] >= self.level:
-                    eff = globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    eff = wzglobals.player.mana[self.element]/float(self.level)
                     if enemy.name != 'player':
                         if enemy.element == 'fire':
                             eff += 2
@@ -887,7 +887,7 @@ if yes_pygame:
         def attack(self):
             if self.moves_alive:
                 attack_position = self.get_attack_position()
-                kill = globals.cardboxes[attack_position].card.damage(self.power, self)
+                kill = wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 if kill:
                     self.parent.player.mana['air'] += 1
             else:
@@ -942,13 +942,13 @@ if yes_pygame:
         def attack(self):
             if self.moves_alive:
                 attack_position = self.get_attack_position()
-                if globals.cardboxes[attack_position].card.name != 'player': #if card exist
-                    if globals.cardboxes[attack_position].card.cast:
-                        globals.cardboxes[attack_position].card.damage(self.power + 3, self)
+                if wzglobals.cardboxes[attack_position].card.name != 'player': #if card exist
+                    if wzglobals.cardboxes[attack_position].card.cast:
+                        wzglobals.cardboxes[attack_position].card.damage(self.power + 3, self)
                     else:
-                        globals.cardboxes[attack_position].card.damage(self.power, self)
+                        wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 else:
-                    globals.cardboxes[attack_position].card.damage(self.power, self)
+                    wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 self.run_attack_animation()
         def cast_action(self):
             if self.parent.player.mana['air'] >= 2: #if player have mana for cast
@@ -962,7 +962,7 @@ if yes_pygame:
                     if target.cast: #if it is caster
                         target.cast = False #target now can`t cast
                         self.used_cast = True #This means, that this card cast already
-                        globals.cast_focus = False #focus-cast off
+                        wzglobals.cast_focus = False #focus-cast off
                         self.parent.player.mana['air'] -= 2 #decrease player`s mana. It is payment for this action.
                         self.play_cast_sound() #play cast sound
                         for card in self.get_enemy_cards(): #disable lighting
@@ -1013,7 +1013,7 @@ if yes_pygame:
         def cast_action(self):
             self.play_cast_sound()
             attack_position = self.get_attack_position();
-            globals.cardboxes[attack_position].card.damage(5, self, True)
+            wzglobals.cardboxes[attack_position].card.damage(5, self, True)
             self.die()
     class Golem(Prototype):
         def __init__(self):
@@ -1047,7 +1047,7 @@ if yes_pygame:
             ids = self.get_adjacent_position()
             if ids:
                 for id in ids:
-                    globals.cardboxes[id].card.set_power( globals.cardboxes[id].card.power + 1)
+                    wzglobals.cardboxes[id].card.set_power( wzglobals.cardboxes[id].card.power + 1)
         def summon(self):
             Prototype.summon(self)
             self.additional_turn_action()
@@ -1122,7 +1122,7 @@ if yes_pygame:
             Prototype.__init__(self)
         def attack(self):
             if self.moves_alive:
-                e_card = globals.cardboxes[self.get_attack_position()].card
+                e_card = wzglobals.cardboxes[self.get_attack_position()].card
                 Prototype.attack(self)
                 if e_card.name != 'player':
                     self.parent.player.enemy.damage(self.power, self, True)
@@ -1181,8 +1181,8 @@ if yes_pygame:
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
                 eff = 0
-                if globals.player.mana[self.element] >= self.level:
-                    eff = globals.player.mana[self.element] / float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    eff = wzglobals.player.mana[self.element] / float(self.level)
                     if enemy.name != 'player':
                         if enemy.element == 'death':
                             eff += 2
@@ -1201,7 +1201,7 @@ if yes_pygame:
                     if target.element == "death":
                         #действие
                         self.used_cast = True
-                        globals.cast_focus = False
+                        wzglobals.cast_focus = False
                         target.die()
                         self.damage(10, self, True)
                         self.parent.player.mana['life'] -= 2
@@ -1244,7 +1244,7 @@ if yes_pygame:
                     else: #если любой другой стихии
                         target.damage(5, self, True) #наносим урон ей
                     self.used_cast = True #отмечаем, что заклинание уже использовано
-                    globals.cast_focus = False #отключаем фокус-каст
+                    wzglobals.cast_focus = False #отключаем фокус-каст
                     self.parent.player.mana['life'] -= 2 # отнимаем ману
                     self.play_cast_sound() #играем звук
                     for card in self.get_enemy_cards(): #отключаем подсветку
@@ -1285,8 +1285,8 @@ if yes_pygame:
         def ai(self, type='summon',enemy=None):
             if type == 'summon':
                 eff = 0
-                if globals.player.mana[self.element] >= self.level:
-                    eff = globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    eff = wzglobals.player.mana[self.element]/float(self.level)
                 return eff
             elif type == 'cast':
                 if enemy.power >= self.health and enemy.moves_alive == True:
@@ -1299,9 +1299,9 @@ if yes_pygame:
             self.parent.card = card
             self.kill()
             if self.parent.player.id == 1:
-                globals.ccards_1.add(self.parent.card)
+                wzglobals.ccards_1.add(self.parent.card)
             else:
-                globals.ccards_2.add(self.parent.card)
+                wzglobals.ccards_2.add(self.parent.card)
     class MagicHealer(Prototype):
         def __init__(self):
             self.name = "MagicHealer"
@@ -1383,10 +1383,10 @@ if yes_pygame:
         def attack(self):
             if self.moves_alive:
                 attack_position = self.get_attack_position()
-                if globals.cardboxes[attack_position].card.name != "player":
-                    if globals.cardboxes[attack_position].card.element != "death":
+                if wzglobals.cardboxes[attack_position].card.name != "player":
+                    if wzglobals.cardboxes[attack_position].card.element != "death":
                         self.heal(int(ceil(float(self.power / 2.0))), 30)
-                globals.cardboxes[attack_position].card.damage(self.power, self)
+                wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 self.run_attack_animation()
     class Werewolf(Prototype):
         def __init__(self):
@@ -1408,9 +1408,9 @@ if yes_pygame:
             for card in self.get_enemy_cards() + self.get_self_cards():
                 card.card_died(self)
             if self.parent.player.id == 1:
-                globals.ccards_1.add(self.parent.card)
+                wzglobals.ccards_1.add(self.parent.card)
             else:
-                globals.ccards_2.add(self.parent.card)
+                wzglobals.ccards_2.add(self.parent.card)
             card.update()
         def cast_action(self):
             if self.parent.player.mana['death'] >= 3:
@@ -1430,9 +1430,9 @@ if yes_pygame:
             Prototype.__init__(self)
         def attack(self):
             if self.moves_alive:
-                if globals.cardboxes[self.get_attack_position()].card.name == "player":
+                if wzglobals.cardboxes[self.get_attack_position()].card.name == "player":
                     self.run_attack_animation()
-                    globals.cardboxes[self.get_attack_position()].card.damage(self.power + 10, self)
+                    wzglobals.cardboxes[self.get_attack_position()].card.damage(self.power + 10, self)
                     self.die()
                 else:
                     Prototype.attack(self)
@@ -1464,7 +1464,7 @@ if yes_pygame:
                     self.parent.player.mana['death'] -= 3
                     target.die()
                     self.used_cast = True
-                    globals.cast_focus = False
+                    wzglobals.cast_focus = False
                     for card in self.get_enemy_cards():
                         card.light_switch(False)
             else:
@@ -1497,19 +1497,19 @@ if yes_pygame:
         def summon(self):
             Prototype.summon(self)
             attack_position = self.get_attack_position()
-            globals.cardboxes[attack_position].card.damage(10, self)
+            wzglobals.cardboxes[attack_position].card.damage(10, self)
             for adjacent_pos in self.get_attack_adjacent_position(attack_position):
-                globals.cardboxes[adjacent_pos].card.damage(10, self)
+                wzglobals.cardboxes[adjacent_pos].card.damage(10, self)
         def attack(self):
             if self.moves_alive:
                 attack_position = self.get_attack_position()
-                if globals.cardboxes[attack_position].card.name != 'player':
-                    if globals.cardboxes[attack_position].card.element == "life":
-                        globals.cardboxes[attack_position].card.damage(self.power + 5, self)
+                if wzglobals.cardboxes[attack_position].card.name != 'player':
+                    if wzglobals.cardboxes[attack_position].card.element == "life":
+                        wzglobals.cardboxes[attack_position].card.damage(self.power + 5, self)
                     else:
-                        globals.cardboxes[attack_position].card.damage(self.power, self)
+                        wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 else:
-                    globals.cardboxes[attack_position].card.damage(self.power, self)
+                    wzglobals.cardboxes[attack_position].card.damage(self.power, self)
                 self.run_attack_animation()
             else:
                 return
@@ -1538,8 +1538,8 @@ if yes_pygame:
             except AttributeError:
                 self.info = ""
         def cast(self):
-            pygame.mixer.music.load(current_folder+'/misc/sounds/card_cast.mp3')
-            globals.playmusic()
+            pygame.mixer.music.load(current_folder+'/misc/sounds/card_cast.ogg')
+            wzglobals.playmusic()
         def unset(self, card):
             self.cards.remove(card)
         def set(self, card):
@@ -1547,64 +1547,64 @@ if yes_pygame:
         def get_self_cardboxes(self):
             cardboxes = []
             if self.player.id == 1:
-                for cardbox in globals.cardboxes[0:5]:
+                for cardbox in wzglobals.cardboxes[0:5]:
                     cardboxes.append(cardbox)
             else:
-                for cardbox in globals.cardboxes[5:10]:
+                for cardbox in wzglobals.cardboxes[5:10]:
                     cardboxes.append(cardbox)
             return cardboxes
         def get_enemy_cardboxes(self):
             cardboxes = []
             if self.player.id == 1:
-                for cardbox in globals.cardboxes[5:10]:
+                for cardbox in wzglobals.cardboxes[5:10]:
                     cardboxes.append(cardbox)
             else:
-                for cardbox in globals.cardboxes[0:5]:
+                for cardbox in wzglobals.cardboxes[0:5]:
                     cardboxes.append(cardbox)
             return cardboxes
         def get_enemy_cards(self):
             cards = []
             if self.player.id == 1:
-                for cardbox in globals.cardboxes[5:10]:
+                for cardbox in wzglobals.cardboxes[5:10]:
                     if cardbox.card.name != "player": #если есть карта
                         cards.append(cardbox.card)
             else:
-                for cardbox in globals.cardboxes[0:5]:
+                for cardbox in wzglobals.cardboxes[0:5]:
                     if cardbox.card.name != "player":
                         cards.append(cardbox.card)
             return cards
         def get_self_cards(self):
             cards = []
             if self.player.id == 1:
-                for cardbox in globals.cardboxes[0:5]:
+                for cardbox in wzglobals.cardboxes[0:5]:
                     if cardbox.card.name != "player": #если есть карта
                         cards.append(cardbox.card)
             else:
-                for cardbox in globals.cardboxes[5:10]:
+                for cardbox in wzglobals.cardboxes[5:10]:
                     if cardbox.card.name != "player":
                         cards.append(cardbox.card)
             return cards
         def spell_speaker(self): #This function tell to each card on game field about spell using.
-            globals.gameinformationpanel.display(self.name)
+            wzglobals.gameinformationpanel.display(self.name)
             for card in self.get_enemy_cards() + self.get_self_cards():
                 card.spell_used(self)
         def periodical_cast(self):
             pass
         def ai(self,type='summon',enemy=None):
             if type == 'summon':
-                if globals.player.mana[self.element] >= self.level:
-                    return globals.player.mana[self.element]/float(self.level)
+                if wzglobals.player.mana[self.element] >= self.level:
+                    return wzglobals.player.mana[self.element]/float(self.level)
                 else:
                     return  0
             elif type == 'cast':
                 return 0
         def update(self): #Field - True если рисовать на поле, false - если рисовать в таблице выбора
-            text_level = globals.font2.render(str(self.level), True, self.font_color)
+            text_level = wzglobals.font2.render(str(self.level), True, self.font_color)
             self.image = self.surface_backup.copy()
             self.image.blit(text_level, (90, -7))
             if not self.field: #Рисование в колоде
-                self.parent = globals.background
-                xshift = 324 + self.position_in_deck * self.image.get_size()[0] + globals.cardofelementsshower.shift * self.position_in_deck + 2 * self.position_in_deck
+                self.parent = wzglobals.background
+                xshift = 324 + self.position_in_deck * self.image.get_size()[0] + wzglobals.cardofelementsshower.shift * self.position_in_deck + 2 * self.position_in_deck
                 yshift = 431
                 self.parent.blit(self.image, (xshift, yshift))
                 self.rect = self.image.get_rect()
@@ -1627,10 +1627,10 @@ if yes_pygame:
                 if card.element != "death":
                     card.spells.append(self) #говорим карте чтобы она начала креститься
                     card.damage(1,self,True)
-            globals.magic_cards.add(self) #добавляем периодизацию
+            wzglobals.magic_cards.add(self) #добавляем периодизацию
         def periodical_cast(self):
             if self.cards: #если еще остались карты, на которые надо действовать
-                if self.player.id != globals.player.id: #если начался вражеский ход
+                if self.player.id != wzglobals.player.id: #если начался вражеский ход
                     for card in self.cards:
                         card.damage(1, self, True) #раним карту
             else: #если кпд магии будет 0
@@ -1653,12 +1653,12 @@ if yes_pygame:
             enemy_cards = self.get_enemy_cards() #берем список вражеских карт
             for card in enemy_cards:
                 card.damage(card.power - 1, self, True)
-        def ai(type='summon',enemy=None):
+        def ai(self, type='summon',enemy=None):
             eff = Magic.ai(self)
             if not eff:
                 return eff
             for enemy in self.get_enemy_cards():
-                if ((enemy.health <= enemy.damage - 1) or (globals.cardboxes[enemy.get_attack_position()].card.name != player and enemy.health - enemy.power + 1 <= globals.cardboxes[enemy.get_attack_position()].card.power)):
+                if ((enemy.health <= enemy.damage - 1) or (wzglobals.cardboxes[enemy.get_attack_position()].card.name != player and enemy.health - enemy.power + 1 <= wzglobals.cardboxes[enemy.get_attack_position()].card.power)):
                     eff += 1
     class Paralyze(Magic):
         def __init__(self):
@@ -1672,7 +1672,7 @@ if yes_pygame:
         def cast(self):
             Magic.cast(self)
             self.nt = False
-            globals.magic_cards.add(self) #добавляем периодизацию
+            wzglobals.magic_cards.add(self) #добавляем периодизацию
         def periodical_cast(self):
             self.kill()
             #player.switch_position()
@@ -1867,11 +1867,11 @@ if yes_pygame:
                 if cardbox.card.name != "player": #if card exists
                     self.protected_cards[cardbox.position] = cardbox.card
                     cardbox.card = AbsoluteDefenceSpirit(cardbox.card)
-            globals.magic_cards.add(self)
+            wzglobals.magic_cards.add(self)
         def periodical_cast(self):
-            if self.player.id == globals.player.id:
+            if self.player.id == wzglobals.player.id:
                 for cardboxid in self.protected_cards:
-                    globals.cardboxes[cardboxid].card = self.protected_cards[cardboxid]
+                    wzglobals.cardboxes[cardboxid].card = self.protected_cards[cardboxid]
                 self.kill()
     class AbsoluteDefenceSpirit(Prototype):
         def __init__(self, card):
@@ -1968,10 +1968,10 @@ if yes_pygame:
                     self.cards.append(card)
                 else:
                     card.damage(10, self, True)
-            globals.magic_cards.add(self)
+            wzglobals.magic_cards.add(self)
         def periodical_cast(self):
             if self.cards: #if has cards
-                if self.player.id != globals.player.id: #if enemy turn started
+                if self.player.id != wzglobals.player.id: #if enemy turn started
                     for card in self.cards:
                         card.heal(1, card.max_health)
             else:
@@ -2022,7 +2022,7 @@ if yes_pygame:
             if has_life:
                 self.player.heal(5)
                 for e_card in self.get_enemy_cards():
-                    opp_card = globals.cardboxes[e_card.get_attack_position()].card
+                    opp_card = wzglobals.cardboxes[e_card.get_attack_position()].card
                     if opp_card.name != 'player': #if card in opposed slot exist
                         e_card.damage(4, self, True)
                         opp_card.heal(4, opp_card.max_health)
@@ -2041,11 +2041,11 @@ if yes_pygame:
             Magic.__init__(self)
         def cast(self):
             Magic.cast(self)
-            life_mana = globals.player.mana['life'] + self.level
-            globals.player.heal(life_mana * 3)
+            life_mana = wzglobals.player.mana['life'] + self.level
+            wzglobals.player.heal(life_mana * 3)
             for card in self.get_self_cards():
                 card.heal(3, card.max_health)
-            globals.player.mana['life'] = 0
+            wzglobals.player.mana['life'] = 0
     class ChaosVortex(Magic):
         def __init__(self):
             self.element = "death"
@@ -2086,18 +2086,18 @@ if yes_pygame:
             Magic.__init__(self)
         def cast(self):
             Magic.cast(self)
-            if globals.player.enemy.mana['water']:
-                globals.player.enemy.mana['water'] -= 1
-            if globals.player.enemy.mana['fire']:
-                globals.player.enemy.mana['fire'] -= 1
-            if globals.player.enemy.mana['air']:
-                globals.player.enemy.mana['air'] -= 1
-            if globals.player.enemy.mana['earth']:
-                globals.player.enemy.mana['earth'] -= 1
-            if globals.player.enemy.mana['life']:
-                globals.player.enemy.mana['life'] -= 1
-            if globals.player.enemy.mana['death']:
-                globals.player.enemy.mana['death'] -= 1
+            if wzglobals.player.enemy.mana['water']:
+                wzglobals.player.enemy.mana['water'] -= 1
+            if wzglobals.player.enemy.mana['fire']:
+                wzglobals.player.enemy.mana['fire'] -= 1
+            if wzglobals.player.enemy.mana['air']:
+                wzglobals.player.enemy.mana['air'] -= 1
+            if wzglobals.player.enemy.mana['earth']:
+                wzglobals.player.enemy.mana['earth'] -= 1
+            if wzglobals.player.enemy.mana['life']:
+                wzglobals.player.enemy.mana['life'] -= 1
+            if wzglobals.player.enemy.mana['death']:
+                wzglobals.player.enemy.mana['death'] -= 1
     class StealLife(Magic):
         def __init__(self):
             self.element = "death"
@@ -2108,13 +2108,13 @@ if yes_pygame:
             Magic.__init__(self)
         def cast(self):
             Magic.cast(self)
-            death_mana = globals.player.mana['death'] + self.level
+            death_mana = wzglobals.player.mana['death'] + self.level
             if death_mana < 8:
-                globals.player.enemy.damage(5, self, True)
-                globals.player.heal(5)
+                wzglobals.player.enemy.damage(5, self, True)
+                wzglobals.player.heal(5)
             else:
-                globals.player.enemy.damage(death_mana + 5, self, True)
-                globals.player.heal(death_mana + 5)
+                wzglobals.player.enemy.damage(death_mana + 5, self, True)
+                wzglobals.player.heal(death_mana + 5)
     class TotalWeakness(Magic):
         def __init__(self):
             self.element = "death"
@@ -2130,4 +2130,29 @@ if yes_pygame:
                 card.default_power = int(floor(card.power / 2.0))
                 card.set_power(int(floor(card.power / 2.0)))
 
-    links_to_cards = {"Nixie":Nixie, "Hydra":Hydra, "Waterfall":Waterfall, "Leviathan":Leviathan, "IceGuard":IceGuard, "Poseidon":Poseidon, "IceWizard":IceWizard, "Poison":Poison, "SeaJustice":SeaJustice, "Paralyze":Paralyze, "AcidStorm":AcidStorm, "IceBolt":IceBolt, "Demon":Demon, "Devil":Devil, "Firelord":Firelord, "RedDrake":RedDrake, "Efreet":Efreet, "Salamander":Salamander, "Vulcan":Vulcan, "Cerberus":Cerberus, "Armageddon":Armageddon, "Fireball":Fireball, "FireSpikes":FireSpikes, "FlamingArrow":FlamingArrow, "RitualFlame":RitualFlame, "Phoenix":Phoenix, "Zeus":Zeus, "Fairy":Fairy, "Nymph":Nymph, "Gargoyle":Gargoyle, "Manticore":Manticore, "Titan":Titan ,"Plague":Plague, "Spellbreaker":Spellbreaker, "BlackWind":BlackWind, "ChainLightning":ChainLightning, "Satyr":Satyr, "Golem":Golem, "Dryad":Dryad, "Centaur":Centaur, "Elemental":Elemental, "Ent":Ent, "Echidna":Echidna, "ForestSpirit":ForestSpirit, "AbsoluteDefence":AbsoluteDefence, "Earthquake":Earthquake, "Quicksands":Quicksands, "Restructure":Restructure, "Revival":Revival ,"Priest":Priest, "Paladin":Paladin, "Pegasus":Pegasus, "Unicorn":Unicorn, "Apostate":Apostate, "MagicHealer":MagicHealer, "Chimera":Chimera, "Bless":Bless, "GodsWrath":GodsWrath, "LifeSacrifice":LifeSacrifice, "Purify":Purify, "Rejuvenation":Rejuvenation, "Zombie":Zombie, "Vampire":Vampire, "GrimReaper":GrimReaper, "Ghost":Ghost, "Werewolf":Werewolf, "Banshee":Banshee, "Darklord":Darklord, "Lich":Lich, "ChaosVortex":ChaosVortex, "CoverOfDarkness":CoverOfDarkness, "Curse":Curse, "StealLife":StealLife, "TotalWeakness":TotalWeakness}
+    links_to_cards = {
+        "Nixie":Nixie, "Hydra":Hydra, "Waterfall":Waterfall,
+        "Leviathan":Leviathan, "IceGuard":IceGuard, "Poseidon":Poseidon,
+        "IceWizard":IceWizard, "Poison":Poison, "SeaJustice":SeaJustice,
+        "Paralyze":Paralyze, "AcidStorm":AcidStorm, "IceBolt":IceBolt, "Demon":Demon,
+        "Devil":Devil, "Firelord":Firelord, "RedDrake":RedDrake, "Efreet":Efreet,
+        "Salamander":Salamander, "Vulcan":Vulcan, "Cerberus":Cerberus,
+        "Armageddon":Armageddon, "Fireball":Fireball, "FireSpikes":FireSpikes,
+        "FlamingArrow":FlamingArrow, "RitualFlame":RitualFlame, "Phoenix":Phoenix,
+        "Zeus":Zeus, "Fairy":Fairy, "Nymph":Nymph, "Gargoyle":Gargoyle,
+        "Manticore":Manticore, "Titan":Titan ,"Plague":Plague,
+        "Spellbreaker":Spellbreaker, "BlackWind":BlackWind,
+        "ChainLightning":ChainLightning, "Satyr":Satyr, "Golem":Golem, "Dryad":Dryad,
+        "Centaur":Centaur, "Elemental":Elemental, "Ent":Ent, "Echidna":Echidna,
+        "ForestSpirit":ForestSpirit, "AbsoluteDefence":AbsoluteDefence,
+        "Earthquake":Earthquake, "Quicksands":Quicksands, "Restructure":
+        Restructure, "Revival":Revival ,"Priest":Priest, "Paladin":Paladin,
+        "Pegasus":Pegasus, "Unicorn":Unicorn, "Apostate":Apostate,
+        "MagicHealer":MagicHealer, "Chimera":Chimera, "Bless":Bless,
+        "GodsWrath":GodsWrath, "LifeSacrifice":LifeSacrifice, "Purify":Purify,
+        "Rejuvenation":Rejuvenation, "Zombie":Zombie, "Vampire":Vampire,
+        "GrimReaper":GrimReaper, "Ghost":Ghost, "Werewolf":Werewolf, "Banshee":Banshee,
+        "Darklord":Darklord, "Lich":Lich, "ChaosVortex":ChaosVortex,
+        "CoverOfDarkness":CoverOfDarkness, "Curse":Curse, "StealLife":StealLife,
+        "TotalWeakness":TotalWeakness
+    }

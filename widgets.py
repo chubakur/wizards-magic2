@@ -15,14 +15,14 @@
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # vim: set fileencoding=utf-8 :
-try: 
+try:
     import pygame
-    from pygame.locals import *
-    from pygame import Surface, draw
+    from pygame.locals import K_RETURN, QUIT
+    from pygame import draw
     yes_pygame = True
 except ImportError:
     yes_pygame = False
-import globals
+import wzglobals
 
 class TxtInput(pygame.sprite.Sprite):
     ''' class handling input box:
@@ -39,7 +39,7 @@ class TxtInput(pygame.sprite.Sprite):
         self.type = 'txtinput'
         self.color = (255,255,255)
         self.color_disable = (95,245,244)
-        self.font = pygame.font.Font(globals.current_folder + "/misc/DroidSans.ttf", 18)
+        self.font = pygame.font.Font(wzglobals.current_folder + "/misc/DroidSans.ttf", 18)
         self.pos = pos
         self.label = label
         self.text = text[:length]
@@ -59,13 +59,13 @@ class TxtInput(pygame.sprite.Sprite):
         self.text_rect = self.text_image.get_rect()
         self.image = None
         self.rect = None
-        globals.menu_group.add(self)
+        wzglobals.menu_group.add(self)
 
     def draw(self):
 
-        bgrect = globals.background.get_rect()
-        menupos = globals.menu_bg.get_rect()
-        menupos.centery = globals.background.get_rect().centery
+        bgrect = wzglobals.background.get_rect()
+        menupos = wzglobals.menu_bg.get_rect()
+        menupos.centery = wzglobals.background.get_rect().centery
 
         self.label_rect.left = bgrect.centerx - self.label_rect.width - 7  #label X coord (left side from center)
         self.label_rect.top = menupos.top + 50 + (self.label_rect.height + 5) * self.pos
@@ -86,7 +86,7 @@ class TxtInput(pygame.sprite.Sprite):
             cursorx += self.label_rect.width + 14
             draw.line(self.image, (255,255,255), (cursorx ,0),(cursorx , self.font.get_height()))
 
-        globals.background.blit(self.image, self.label_rect)
+        wzglobals.background.blit(self.image, self.label_rect)
     def update(self):
         self.draw()
     def enable(self):
@@ -104,7 +104,7 @@ class TxtInput(pygame.sprite.Sprite):
             if event.type == pygame.KEYUP:
                 if event.key==K_RETURN:
                     self.focus=False
-                    globals.itemfocus=None
+                    wzglobals.itemfocus=None
                 if event.key == pygame.K_BACKSPACE:
                     if self.currpos == 0:
                         return
@@ -140,10 +140,10 @@ class TxtInput(pygame.sprite.Sprite):
                 self.draw()
     def onmousedown(self):
         if self.enabled:
-            if globals.itemfocus:
-                globals.itemfocus.focus = False
+            if wzglobals.itemfocus:
+                wzglobals.itemfocus.focus = False
             self.focus = True
-            globals.itemfocus = self
+            wzglobals.itemfocus = self
     def onmouseup(self):
         pass
 
@@ -160,7 +160,7 @@ class CheckBox(pygame.sprite.Sprite):
         self.type = 'checkbox'
         self.color = (255,255,255)
         self.color_disable = (95,245,244)
-        self.font = pygame.font.Font(globals.current_folder + "/misc/DroidSans.ttf", 18)
+        self.font = pygame.font.Font(wzglobals.current_folder + "/misc/DroidSans.ttf", 18)
         self.pos = pos
         self.label = label
         self.value = value
@@ -172,8 +172,8 @@ class CheckBox(pygame.sprite.Sprite):
         else:
             self.label_image = self.font.render(self.label,True,(self.color_disable))
         self.label_rect = self.label_image.get_rect()
-        self.value_on = pygame.image.load(globals.current_folder + '/misc/checkbox_on.gif').convert()
-        self.value_off = pygame.image.load(globals.current_folder + '/misc/checkbox_off.gif').convert()
+        self.value_on = pygame.image.load(wzglobals.current_folder + '/misc/checkbox_on.gif').convert()
+        self.value_off = pygame.image.load(wzglobals.current_folder + '/misc/checkbox_off.gif').convert()
         if value:
             self.value_image = self.value_on
         else:
@@ -181,13 +181,13 @@ class CheckBox(pygame.sprite.Sprite):
 
         self.image = None
         self.rect = None
-        globals.menu_group.add(self)
+        wzglobals.menu_group.add(self)
 
     def draw(self):
 
-        bgrect = globals.background.get_rect()
-        menupos = globals.menu_bg.get_rect()
-        menupos.centery = globals.background.get_rect().centery
+        bgrect = wzglobals.background.get_rect()
+        menupos = wzglobals.menu_bg.get_rect()
+        menupos.centery = wzglobals.background.get_rect().centery
 
         self.label_rect.left = bgrect.centerx - self.label_rect.width - 7  #label X coord (left side from center)
         self.label_rect.top = menupos.top + 50 + (self.label_rect.height + 5) * self.pos
@@ -199,7 +199,7 @@ class CheckBox(pygame.sprite.Sprite):
         self.image.blit(self.label_image, (0,0))
         self.image.blit(self.value_image, (self.label_rect.width + 14,0))
 
-        globals.background.blit(self.image, self.label_rect)
+        wzglobals.background.blit(self.image, self.label_rect)
     def update(self):
         self.draw()
     def enable(self):
@@ -212,10 +212,10 @@ class CheckBox(pygame.sprite.Sprite):
         return 0
     def onmousedown(self):
         if self.enabled:
-            if globals.itemfocus:
-                globals.itemfocus.focus = False
+            if wzglobals.itemfocus:
+                wzglobals.itemfocus.focus = False
             self.focus = True
-            globals.itemfocus = self
+            wzglobals.itemfocus = self
         if self.value:
             self.value_image = self.value_off
             self.value = False
@@ -232,24 +232,23 @@ class CheckBox(pygame.sprite.Sprite):
 def main():
 
     pygame.init()
-    globals.screen = pygame.display.set_mode((800, 600))
+    wzglobals.screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('Wizards Magic')
-    globals.background = pygame.Surface(globals.screen.get_size())
-    globals.background = globals.background.convert()
-    globals.background.fill((250, 250, 250))
+    wzglobals.background = pygame.Surface(wzglobals.screen.get_size())
+    wzglobals.background = wzglobals.background.convert()
+    wzglobals.background.fill((250, 250, 250))
 
-    ti = TxtInput(0,"SOUND","192.168.111.255","",5)
-    globals.background = pygame.image.load(globals.current_folder + '/misc/menu_bg.jpg').convert_alpha()
-    globals.menu_bg = pygame.image.load(globals.current_folder + '/misc/menu_selections_bg.jpg').convert_alpha()
-    menupos = globals.menu_bg.get_rect()
-    menupos.centerx = globals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
-    menupos.centery = globals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
-    globals.background.blit(globals.menu_bg, menupos)
-    globals.screen.blit(globals.background, (0, 0))
+    wzglobals.background = pygame.image.load(wzglobals.current_folder + '/misc/menu_bg.jpg').convert_alpha()
+    wzglobals.menu_bg = pygame.image.load(wzglobals.current_folder + '/misc/menu_selections_bg.jpg').convert_alpha()
+    menupos = wzglobals.menu_bg.get_rect()
+    menupos.centerx = wzglobals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
+    menupos.centery = wzglobals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
+    wzglobals.background.blit(wzglobals.menu_bg, menupos)
+    wzglobals.screen.blit(wzglobals.background, (0, 0))
     pygame.display.flip()
 
     while 1:
-        globals.menu_group.update()
+        wzglobals.menu_group.update()
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
@@ -261,7 +260,7 @@ def main():
                 else:
                     print event.key
                     print pygame.key.name(event.key)
-        globals.screen.blit(globals.background, (0, 0))
+        wzglobals.screen.blit(wzglobals.background, (0, 0))
         pygame.display.flip()
         pygame.time.wait(200)
 if __name__ == '__main__': main()

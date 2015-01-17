@@ -16,9 +16,9 @@
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # vim: set fileencoding=utf-8 :
 
-try: 
+try:
     import pygame
-    from pygame.locals import *
+    from pygame.locals import _
     yes_pygame = True
 except ImportError:
     yes_pygame = False
@@ -28,7 +28,7 @@ import time
 import socket
 import sockets
 import WizardsMagicServer
-import globals
+import wzglobals
 import options
 current_folder = os.path.dirname(os.path.abspath(__file__))
 #t = gettext.translation('interface', current_folder+'/languages', languages=['ru'])
@@ -64,20 +64,20 @@ class MenuButton(pygame.sprite.Sprite):
             self.image = self.image_disabled.copy()
         self.rect=self.image.get_rect()
         self.surface_backup = self.image.copy()
-        globals.menu_group.add(self)
+        wzglobals.menu_group.add(self)
     def draw(self):
         self.image = self.surface_backup.copy()
-        bgrect = globals.background.get_rect()
-        menupos = globals.menu_bg.get_rect()
-        menupos.centery = globals.background.get_rect().centery
+        bgrect = wzglobals.background.get_rect()
+        menupos = wzglobals.menu_bg.get_rect()
+        menupos.centery = wzglobals.background.get_rect().centery
         if self.pos>=0:
             self.rect.centerx = bgrect.centerx
             self.rect.top = menupos.top + 50 + (self.rect.height+5)*self.pos
         else:
-            menupos.centerx = globals.background.get_rect().centerx
+            menupos.centerx = wzglobals.background.get_rect().centerx
             self.rect.top = menupos.top + self.loc[1]
             self.rect.left = menupos.left + self.loc[0]
-        globals.background.blit(self.image, self.rect)
+        wzglobals.background.blit(self.image, self.rect)
     def update(self):
         self.draw()
     def onmouse(self):
@@ -100,28 +100,28 @@ class MenuButton(pygame.sprite.Sprite):
         self.surface_backup = self.image.copy()
 
 def clean_question():
-    globals.question=False
-    globals.answer=""
-    globals.answer_cmd=""
-    globals.gameinformationpanel.show=False
+    wzglobals.question=False
+    wzglobals.answer=""
+    wzglobals.answer_cmd=""
+    wzglobals.gameinformationpanel.show=False
 
 def menu_esc_question():
-    globals.gameinformationpanel.display(_("  You are leaving the game. Are you sure? (Y/N)"), persistent=True)
-    globals.question=True
-    globals.answer=""
-    globals.answer_cmd="menu.menu_esc()"
-    globals.answer_maxchar=1
+    wzglobals.gameinformationpanel.display(_("  You are leaving the game. Are you sure? (Y/N)"), persistent=True)
+    wzglobals.question=True
+    wzglobals.answer=""
+    wzglobals.answer_cmd="menu.menu_esc()"
+    wzglobals.answer_maxchar=1
 
 def menu_esc():
     ''' function called after the user press ESC key and answer question '''
-    if globals.answer.upper()=='Y':
-        if globals.stage==0:
+    if wzglobals.answer.upper()=='Y':
+        if wzglobals.stage==0:
             exit_program()
-        elif globals.stage<=2:
-            globals.stage=0
-        if globals.cli:
-            if not globals.opponent_disconnect:
-                sockets.query({"action":"bye","player_id":globals.player_id})
+        elif wzglobals.stage<=2:
+            wzglobals.stage=0
+        if wzglobals.cli:
+            if not wzglobals.opponent_disconnect:
+                sockets.query({"action":"bye","player_id":wzglobals.player_id})
             else:
                 sockets.query({"action":"bbye"})
 
@@ -129,99 +129,99 @@ def menu_esc():
 
 def menu_startsinglegame():
     ''' function called after the user click start menu item'''
-    globals.stage=1
-    globals.cli = False
-    globals.ai = True
-    globals.gameinformationpanel.show=False
+    wzglobals.stage=1
+    wzglobals.cli = False
+    wzglobals.ai = True
+    wzglobals.gameinformationpanel.show=False
 def menu_startserver():
     ''' function called after the user click Start Server item '''
-    if not globals.server_thread: 
-        globals.server_thread = WizardsMagicServer.Server()
-        globals.server_thread.start()
-        globals.gameinformationpanel.display("  Server listening on "+globals.port+" TCP port")
+    if not wzglobals.server_thread:
+        wzglobals.server_thread = WizardsMagicServer.Server()
+        wzglobals.server_thread.start()
+        wzglobals.gameinformationpanel.display("  Server listening on "+wzglobals.port+" TCP port")
 
 def menu_startgame_onserver():
     ''' finction called after the user click Connect to Server item '''
-    globals.cli = True
-    globals.ai = False
-    globals.stage = 1
-    globals.gameinformationpanel.show=False
+    wzglobals.cli = True
+    wzglobals.ai = False
+    wzglobals.stage = 1
+    wzglobals.gameinformationpanel.show=False
 def menu_starthotseatgame():
-    globals.cli = False
-    globals.ai = False
-    globals.stage = 1
-    globals.gameinformationpanel.show = False
+    wzglobals.cli = False
+    wzglobals.ai = False
+    wzglobals.stage = 1
+    wzglobals.gameinformationpanel.show = False
 def menu_options():
     ''' function called after the user click options menu item'''
     options.options_main()
 def select_language(lang):
-    globals.language = lang
+    wzglobals.language = lang
     options.options_main()
-    globals.gameinformationpanel.display('Save settings and restart the game to accept changes')
+    wzglobals.gameinformationpanel.display('Save settings and restart the game to accept changes')
 def menu_select_language():
-    globals.background = pygame.image.load(current_folder+'/misc/menu_bg.jpg').convert_alpha()
-    globals.background_backup = globals.background.copy()
-    globals.menu_bg = pygame.image.load(current_folder+'/misc/menu_selections_bg.jpg').convert_alpha()
-    menupos = globals.menu_bg.get_rect()
-    menupos.centerx = globals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
-    menupos.centery = globals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
-    globals.background.blit(globals.menu_bg, menupos)
-    globals.menu_group.empty()
+    wzglobals.background = pygame.image.load(current_folder+'/misc/menu_bg.jpg').convert_alpha()
+    wzglobals.background_backup = wzglobals.background.copy()
+    wzglobals.menu_bg = pygame.image.load(current_folder+'/misc/menu_selections_bg.jpg').convert_alpha()
+    menupos = wzglobals.menu_bg.get_rect()
+    menupos.centerx = wzglobals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
+    menupos.centery = wzglobals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
+    wzglobals.background.blit(wzglobals.menu_bg, menupos)
+    wzglobals.menu_group.empty()
     MenuButton(0, "English", "select_language('en')")
     MenuButton(1, "Russian", "select_language('ru')")
     MenuButton(2, "German", "select_language('de')")
     MenuButton(3, "Back", "options.options_main()")
-    globals.menu_group.update()
-def menu_main(): 
+    wzglobals.menu_group.update()
+def menu_main():
     ''' display Main manu '''
 
     #http://www.feebleminds-gifs.com/wizard-flames.jpg
 
-    globals.background = pygame.image.load(current_folder+'/misc/menu_bg.jpg').convert_alpha()
-    globals.background_backup = globals.background.copy()
+    wzglobals.background = pygame.image.load(current_folder+'/misc/menu_bg.jpg').convert_alpha()
+    wzglobals.background_backup = wzglobals.background.copy()
 
-    globals.menu_bg = pygame.image.load(current_folder+'/misc/menu_selections_bg.jpg').convert_alpha()
-    menupos = globals.menu_bg.get_rect()
-    menupos.centerx = globals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
-    menupos.centery = globals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
-    globals.background.blit(globals.menu_bg, menupos)
+    wzglobals.menu_bg = pygame.image.load(current_folder+'/misc/menu_selections_bg.jpg').convert_alpha()
+    menupos = wzglobals.menu_bg.get_rect()
+    menupos.centerx = wzglobals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
+    menupos.centery = wzglobals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
+    wzglobals.background.blit(wzglobals.menu_bg, menupos)
 
-    globals.menu_group.empty()
-    menu1 = MenuButton(0,"Single Player","menu_startsinglegame()")
-    menu2 = MenuButton(1,"Start Server","menu_startserver()")
-    menu3 = MenuButton(2,"Multiplayer","menu_multiplayer()")
-    menu4 = MenuButton(3,"Options","menu_options()")
-    menu5 = MenuButton(6,"Quit","menu_esc_question()")
+    wzglobals.menu_group.empty()
+    MenuButton(0,"Single Player","menu_startsinglegame()")
+    MenuButton(1,"Start Server","menu_startserver()")
+    MenuButton(2,"Multiplayer","menu_multiplayer()")
+    MenuButton(3,"Options","menu_options()")
+    MenuButton(6,"Quit","menu_esc_question()")
 
-    globals.menu_group.update()
-    #globals.background_backup = globals.background.copy()
+    wzglobals.menu_group.update()
+    #wzglobals.background_backup = wzglobals.background.copy()
 def menu_multiplayer():
-    globals.menu_group.empty()
-    globals.background = pygame.image.load(globals.current_folder + '/misc/menu_bg.jpg').convert_alpha()
-    globals.background_backup = globals.background.copy()
-    globals.menu_bg = pygame.image.load(globals.current_folder + '/misc/menu_selections_bg.jpg').convert_alpha()
-    menupos = globals.menu_bg.get_rect()
-    menupos.centerx = globals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
-    menupos.centery = globals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
-    globals.background.blit(globals.menu_bg, menupos)
+    wzglobals.menu_group.empty()
+    wzglobals.background = pygame.image.load(wzglobals.current_folder + '/misc/menu_bg.jpg').convert_alpha()
+    wzglobals.background_backup = wzglobals.background.copy()
+    wzglobals.menu_bg = pygame.image.load(wzglobals.current_folder + '/misc/menu_selections_bg.jpg').convert_alpha()
+    menupos = wzglobals.menu_bg.get_rect()
+    menupos.centerx = wzglobals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
+    menupos.centery = wzglobals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
+    wzglobals.background.blit(wzglobals.menu_bg, menupos)
     MenuButton(0,"HotSeat","menu_starthotseatgame()")
     MenuButton(1,"Online","menu_startgame_onserver()")
     MenuButton(3,"Cancel","menu_main()")
 
-    globals.menu_group.update()
+    wzglobals.menu_group.update()
 def exit_program():
     ''' handle a clean exit of threads '''
-    globals.running = False
-    if globals.cli: 
-        if not globals.opponent_disconnect:
-            sockets.query({"action":"bye","player_id":globals.player_id})
+    wzglobals.running = False
+    if wzglobals.cli:
+        if not wzglobals.opponent_disconnect:
+            sockets.query({"action":"bye","player_id":wzglobals.player_id})
         else:
             sockets.query({"action":"bbye"})
-    if globals.server_thread: 
+    if wzglobals.server_thread:
         time.sleep(2) #wait for connect threads close itself
         #unblock server thread
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(("127.0.0.1", int(globals.port)))
+        sock.connect(("127.0.0.1", int(wzglobals.port)))
         sock.close()
-        globals.server_thread.join(5)
+        wzglobals.server_thread.join(5)
     sys.exit(0)

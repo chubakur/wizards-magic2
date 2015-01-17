@@ -17,9 +17,9 @@
 import cards
 import os
 import random
-import globals
+import wzglobals
 import sockets
-try: 
+try:
     import pygame
     yes_pygame = True
 except ImportError:
@@ -41,16 +41,16 @@ class Player(): #Прототип игрока
         self.cards_generated = False
         self.enemy = None
     def get_self_cards(self):
-        return globals.ccards_1.sprites() if self.id == 1 else globals.ccards_2.sprites()
+        return wzglobals.ccards_1.sprites() if self.id == 1 else wzglobals.ccards_2.sprites()
     def get_opponent_cards(self):
-        return globals.ccards_2.sprites() if self.id == 1 else globals.ccards_1.sprites()
+        return wzglobals.ccards_2.sprites() if self.id == 1 else wzglobals.ccards_1.sprites()
     def damage(self, damage, enemy, cast = False):
         for card in self.get_self_cards():
             card.owner_gets_damage(damage)
         self.health -= damage
         if self.health <= 0:
-            globals.gameinformationpanel.display("Game Over!")
-            globals.stage = False
+            wzglobals.gameinformationpanel.display("Game Over!")
+            wzglobals.stage = False
     def heal(self, health):
         self.health += health
     def get_mana(self):
@@ -72,24 +72,24 @@ class Player(): #Прототип игрока
         self.cards = {}
         tmpcards = {}
         cards_for_sort = {}
-        for element in ['water', 'fire', 'air', 'earth', 'life', 'death']: 
+        for element in ['water', 'fire', 'air', 'earth', 'life', 'death']:
             tmpcards[element] = {}
             cards_for_sort[element] = []
             for i in xrange(0, 4):
                 #получаем карту элемента воды
-                if not server_cards: 
-                    randnum = random.randint(0, len(globals.games_cards[self.game_id][element])-1)
-                    card = globals.games_cards[self.game_id][element][randnum]
-                    globals.games_cards[self.game_id][element].remove(card)
+                if not server_cards:
+                    randnum = random.randint(0, len(wzglobals.games_cards[self.game_id][element])-1)
+                    card = wzglobals.games_cards[self.game_id][element][randnum]
+                    wzglobals.games_cards[self.game_id][element].remove(card)
                 else:
                     card = server_cards[element][i]
-                if self.game_id == 0: 
+                if self.game_id == 0:
                     tmpcards[element][card] = cards.links_to_cards[card]()
                     cards_for_sort[element].append([tmpcards[element][card].level, tmpcards[element][card]])
-                else: 
+                else:
                     tmpcards[element][card] = card
 
-            if self.game_id == 0: 
+            if self.game_id == 0:
                 cards_for_sort[element].sort()
                 for i in xrange(0,4):
                     cards_for_sort[element][i][1].position_in_deck = i
@@ -107,72 +107,72 @@ class Player2(Player):
         self.id = 2
         Player.__init__(self)
 def switch_position():
-    #globals.attack_started = False
-    globals.attack_started.pop()
-    n = globals.nickname1.name
-    globals.nickname1.set_nickname(globals.nickname2.name)
-    globals.nickname2.set_nickname(n)
-    for cardbox in globals.cardboxes:
+    #wzglobals.attack_started = False
+    wzglobals.attack_started.pop()
+    n = wzglobals.nickname1.name
+    wzglobals.nickname1.set_nickname(wzglobals.nickname2.name)
+    wzglobals.nickname2.set_nickname(n)
+    for cardbox in wzglobals.cardboxes:
         cardbox.opposite = not cardbox.opposite
 def me_finish_turn():
     #Добавляем ману другому игроку.
-    #globals.attack_started = True
-    globals.attack_started.append(True)
-    globals.player.enemy.mana['water'] += 1
-    globals.player.enemy.mana['fire'] += 1
-    globals.player.enemy.mana['air'] += 1
-    globals.player.enemy.mana['earth'] += 1
-    globals.player.enemy.mana['life'] += 1
-    globals.player.enemy.mana['death'] += 1
+    #wzglobals.attack_started = True
+    wzglobals.attack_started.append(True)
+    wzglobals.player.enemy.mana['water'] += 1
+    wzglobals.player.enemy.mana['fire'] += 1
+    wzglobals.player.enemy.mana['air'] += 1
+    wzglobals.player.enemy.mana['earth'] += 1
+    wzglobals.player.enemy.mana['life'] += 1
+    wzglobals.player.enemy.mana['death'] += 1
     #Меняем игрока
     try:
-        pygame.mixer.music.load(current_folder+'/misc/sounds/card_attack.mp3')
+        pygame.mixer.music.load(current_folder+'/misc/sounds/card_attack.ogg')
     except:
         print "Unexpected error: while trying play attack sound"
-    globals.playmusic()
-    if globals.player.id == 1:
-        globals.player = globals.player2
-        globals.player.action_points = True
-        for card in globals.ccards_1: #Атакуем
+    wzglobals.playmusic()
+    if wzglobals.player.id == 1:
+        wzglobals.player = wzglobals.player2
+        wzglobals.player.action_points = True
+        for card in wzglobals.ccards_1: #Атакуем
             kill = card.attack()
             if kill:
                 card.enemy_die()
             card.used_cast = False
-        for spell in globals.magic_cards: #вызываем функцию повторения магия
+        for spell in wzglobals.magic_cards: #вызываем функцию повторения магия
             spell.periodical_cast()
-        for card in globals.ccards_2:
+        for card in wzglobals.ccards_2:
             card.turn()
             card.moves_alive += 1
-        for card in globals.ccards_2:
+        for card in wzglobals.ccards_2:
             card.additional_turn_action()
     else:
-        globals.player = globals.player1
-        globals.player.action_points = True
-        for card in globals.ccards_2: #Атакуем
+        wzglobals.player = wzglobals.player1
+        wzglobals.player.action_points = True
+        for card in wzglobals.ccards_2: #Атакуем
             kill = card.attack()
             if kill:
                 card.enemy_die()
             card.used_cast = False
-        for spell in globals.magic_cards: #вызываем функцию повторения магия
+        for spell in wzglobals.magic_cards: #вызываем функцию повторения магия
             spell.periodical_cast()
-        for card in globals.ccards_1:
+        for card in wzglobals.ccards_1:
             card.turn()
             card.moves_alive += 1
-        for card in globals.ccards_1:
+        for card in wzglobals.ccards_1:
             card.additional_turn_action()
-    if globals.player.ai:
+    if wzglobals.player.ai:
         cb = ai.select_cardbox()
         if cb:
             c = ai.select_card(cb.card)
             #print 'SELECTED',c
             cb.card = c()
             cb.card.field = True
-            globals.player.mana[cb.card.element] -= cb.card.level
+            wzglobals.player.mana[cb.card.element] -= cb.card.level
             cb.card.parent = cb
-            if globals.player.id == 1:
-                globals.ccards_1.add(cb.card)
+            if wzglobals.player.id == 1:
+                wzglobals.ccards_1.add(cb.card)
             else:
-                globals.ccards_2.add(cb.card)
+                wzglobals.ccards_2.add(cb.card)
             cb.card.summon()
         finish_turn()
 def finish_turn():

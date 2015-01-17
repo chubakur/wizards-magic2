@@ -25,8 +25,7 @@ import pygame.sprite
 __author__ = "chubakur"
 __date__ = "$12.02.2011 12:11:42$"
 import pygame
-from pygame.locals import *
-import sys
+#from pygame.locals import *
 import os
 import cards
 import time
@@ -34,7 +33,7 @@ import player
 if pygame.version.vernum < (1, 9, 1):
     import copy
 import animations
-import globals
+import wzglobals
 import elementbutton
 import cardinfo
 import cardsofelementshower
@@ -50,7 +49,7 @@ import nickname_window
 import thread
 import important_message
 current_folder = os.path.dirname(os.path.abspath(__file__))
-globals.current_folder = current_folder
+wzglobals.current_folder = current_folder
 def server_handler():
     handling = True
     while handling:
@@ -63,156 +62,156 @@ def server_handler():
         print gi
         if gi['action'] == 'join':
             print("Join to Game with Player_id " + str(gi['id']))
-            globals.player_id = gi['id']
-            if globals.player_id == 1:
+            wzglobals.player_id = gi['id']
+            if wzglobals.player_id == 1:
                 player.switch_position()
         elif gi['action'] == 'update':
             #Устанавливаем ники
-            #globals.player1.nickname = gi['nicknames'][0]
-            #globals.player2.nickname = gi['nicknames'][1]
-            globals.nickname1.set_nickname(gi['nicknames'][0])
-            globals.nickname2.set_nickname(gi['nicknames'][1])
+            #wzglobals.player1.nickname = gi['nicknames'][0]
+            #wzglobals.player2.nickname = gi['nicknames'][1]
+            wzglobals.nickname1.set_nickname(gi['nicknames'][0])
+            wzglobals.nickname2.set_nickname(gi['nicknames'][1])
             #TODO: draw nicknames
-            #nickname_window.NicknameWindow((200,10), globals.player1)
-            #nickname_window.NicknameWindow((200,400), globals.player2)
+            #nickname_window.NicknameWindow((200,10), wzglobals.player1)
+            #nickname_window.NicknameWindow((200,400), wzglobals.player2)
             #кидаем ману первому игроку
             manas = ["water","fire","air","earth","life","death"]
             for i, element in enumerate(manas):
-                globals.player1.mana[element] = gi['mana'][0][i]
-                globals.player2.mana[element] = gi['mana'][1][i]
-            if globals.player2.cards_generated == 0 and globals.player1.cards_generated == 0:
+                wzglobals.player1.mana[element] = gi['mana'][0][i]
+                wzglobals.player2.mana[element] = gi['mana'][1][i]
+            if wzglobals.player2.cards_generated == 0 and wzglobals.player1.cards_generated == 0:
                 print "Выдаем карты"
-                globals.player1.get_cards(gi['deck_cards'][0])
-                globals.player1.cards_generated = True
+                wzglobals.player1.get_cards(gi['deck_cards'][0])
+                wzglobals.player1.cards_generated = True
                 #а теперь второму
-                globals.player2.get_cards(gi['deck_cards'][1])
-                globals.player2.cards_generated = True
-            globals.information_group.remove(globals.importantmessage)
-            del globals.importantmessage
-            globals.gameinformationpanel.display('Battle started.')
+                wzglobals.player2.get_cards(gi['deck_cards'][1])
+                wzglobals.player2.cards_generated = True
+            wzglobals.information_group.remove(wzglobals.importantmessage)
+            del wzglobals.importantmessage
+            wzglobals.gameinformationpanel.display('Battle started.')
         elif gi['action'] == 'switch_turn':
             player.me_finish_turn()
         elif gi['action'] == 'card':
             #print gi
             #if gi['position'] == 0:
-                #cardbox = globals.cardbox0
+                #cardbox = wzglobals.cardbox0
             if gi['type'] == 'warrior':
                 #exec("tmp_card = cards." + gi['card'] + "()")
                 tmp_card = cards.links_to_cards[gi['card']]()
-                exec("globals.cardbox" + str(gi['position']) + ".card =  tmp_card")
-                exec("globals.cardbox" + str(gi['position']) + ".card.parent = globals.cardbox" + str(gi['position']))
-                exec("globals.cardbox" + str(gi['position']) + ".card.field = True")
-                exec("globals.cardbox" + str(gi['position']) + ".card.summon()")
-                globals.player.mana[tmp_card.element] -= tmp_card.level #Отнимаем ману
-                exec("globals.ccards_" + str(globals.player.id) + ".add(globals.cardbox" + str(gi['position']) + ".card)")
-                #exec("globals.ccards_2.add(globals.cardbox"+str(gi['position'])+".card)")
-                #print globals.player.id,tmp_card
+                exec("wzglobals.cardbox" + str(gi['position']) + ".card =  tmp_card")
+                exec("wzglobals.cardbox" + str(gi['position']) + ".card.parent = wzglobals.cardbox" + str(gi['position']))
+                exec("wzglobals.cardbox" + str(gi['position']) + ".card.field = True")
+                exec("wzglobals.cardbox" + str(gi['position']) + ".card.summon()")
+                wzglobals.player.mana[tmp_card.element] -= tmp_card.level #Отнимаем ману
+                exec("wzglobals.ccards_" + str(wzglobals.player.id) + ".add(wzglobals.cardbox" + str(gi['position']) + ".card)")
+                #exec("wzglobals.ccards_2.add(wzglobals.cardbox"+str(gi['position'])+".card)")
+                #print wzglobals.player.id,tmp_card
             elif gi['type'] == 'magic':
                 #exec("tmp_card = cards." + gi['card'] + "()")
                 tmp_card = cards.links_to_cards[gi['card']]()
-                globals.player.mana[tmp_card.element] -= tmp_card.level #Отнимаем ману
-                globals.player.action_points = False #ставим запись, что ход сделан
-                tmp_card.player = globals.player
+                wzglobals.player.mana[tmp_card.element] -= tmp_card.level #Отнимаем ману
+                wzglobals.player.action_points = False #ставим запись, что ход сделан
+                tmp_card.player = wzglobals.player
                 tmp_card.cast()
-                globals.gameinformationpanel.display('Enemy used ' + gi['card'])
+                wzglobals.gameinformationpanel.display('Enemy used ' + gi['card'])
         elif gi['action'] == 'cast':
             if not gi['focus']:
-                exec('globals.cardbox' + str(gi['position']) + ".card.cast_action()")
+                exec('wzglobals.cardbox' + str(gi['position']) + ".card.cast_action()")
             else:#фокус каст
-                exec('globals.cardbox' + str(gi['position']) + ".card.focus_cast_action(" + "globals.cardbox" + str(gi['target']) + ".card)")
+                exec('wzglobals.cardbox' + str(gi['position']) + ".card.focus_cast_action(" + "wzglobals.cardbox" + str(gi['target']) + ".card)")
                     # if not item.card.used_cast: # если еще не кастовали
                                 #  item.card.cast_action()
         elif gi['action'] == "opponent_disconnect":
             handling = False
-            globals.opponent_disconnect = True
-            globals.importantmessage = important_message.MessageWindow('Sorry, your opponent was disconnected from game.')
+            wzglobals.opponent_disconnect = True
+            wzglobals.importantmessage = important_message.MessageWindow('Sorry, your opponent was disconnected from game.')
             time.sleep(3)
-            for s in globals.information_group.sprites(): 
+            for s in wzglobals.information_group.sprites():
                 if type(s) == important_message.MessageWindow:
-                    globals.information_group.remove(s)
-            del globals.importantmessage
-            globals.stage = 0
-            globals.cli = False
+                    wzglobals.information_group.remove(s)
+            del wzglobals.importantmessage
+            wzglobals.stage = 0
+            wzglobals.cli = False
         elif gi['action'] == "server_close":
             handling = False
-            globals.importantmessage = important_message.MessageWindow('Sorry, server is closing.')
+            wzglobals.importantmessage = important_message.MessageWindow('Sorry, server is closing.')
             time.sleep(3)
-            for s in globals.information_group.sprites(): 
+            for s in wzglobals.information_group.sprites():
                 if type(s) == important_message.MessageWindow:
-                    globals.information_group.remove(s)
-            del globals.importantmessage
-            globals.stage = 0
-            globals.cli = False
+                    wzglobals.information_group.remove(s)
+            del wzglobals.importantmessage
+            wzglobals.stage = 0
+            wzglobals.cli = False
         elif gi['action'] == "value_error":
             handling = False
-            globals.importantmessage = important_message.MessageWindow('Socket error. String Null')
+            wzglobals.importantmessage = important_message.MessageWindow('Socket error. String Null')
             time.sleep(3)
-            for s in globals.information_group.sprites(): 
+            for s in wzglobals.information_group.sprites():
                 if type(s) == important_message.MessageWindow:
-                    globals.information_group.remove(s)
-            del globals.importantmessage
-            globals.stage = 0
-            globals.cli = False
+                    wzglobals.information_group.remove(s)
+            del wzglobals.importantmessage
+            wzglobals.stage = 0
+            wzglobals.cli = False
         elif gi['action'] == "socket_error":
             handling = False
-            globals.importantmessage = important_message.MessageWindow('Socket error.')
+            wzglobals.importantmessage = important_message.MessageWindow('Socket error.')
             time.sleep(3)
-            for s in globals.information_group.sprites(): 
+            for s in wzglobals.information_group.sprites():
                 if type(s) == important_message.MessageWindow:
-                    globals.information_group.remove(s)
-            del globals.importantmessage
-            globals.stage = 0
-            globals.cli = False
+                    wzglobals.information_group.remove(s)
+            del wzglobals.importantmessage
+            wzglobals.stage = 0
+            wzglobals.cli = False
     sockets.sock.close()
 def load_and_start_bg_music():
-    globals.bg_sound = pygame.mixer.Sound(current_folder+'/misc/sounds/11_the_march_of_the_goblins__tobias_steinmann.ogg')
-    globals.bg_sound.play(-1)
+    wzglobals.bg_sound = pygame.mixer.Sound(current_folder+'/misc/sounds/11_the_march_of_the_goblins__tobias_steinmann.ogg')
+    wzglobals.bg_sound.play(-1)
 def start_game(cli=False,ai=False):
-    globals.attack_started = [True]
-    globals.background = pygame.image.load(current_folder+'/misc/bg_sample.gif')
-    #globals.background = globals.background.convert()
-    #globals.background = pygame.Surface(globals.screen.get_size())
-    globals.background = globals.background.convert_alpha()
-    globals.cards_of_element_shower_element = "water"
-    #globals.background.fill((0, 0, 0))
-    background_backup = globals.background.copy()
+    wzglobals.attack_started = [True]
+    wzglobals.background = pygame.image.load(current_folder+'/misc/bg_sample.gif')
+    #wzglobals.background = wzglobals.background.convert()
+    #wzglobals.background = pygame.Surface(wzglobals.screen.get_size())
+    wzglobals.background = wzglobals.background.convert_alpha()
+    wzglobals.cards_of_element_shower_element = "water"
+    #wzglobals.background.fill((0, 0, 0))
+    background_backup = wzglobals.background.copy()
     #font.set_bold(0)
-    globals.games_cards[0]['water'] = cards.water_cards_deck[:]
-    globals.games_cards[0]['fire'] = cards.fire_cards_deck[:]
-    globals.games_cards[0]['air'] = cards.air_cards_deck[:]
-    globals.games_cards[0]['earth'] = cards.earth_cards_deck[:]
-    globals.games_cards[0]['life'] = cards.life_cards_deck[:] 
-    globals.games_cards[0]['death'] = cards.death_cards_deck[:]
-    if globals.player1: 
-        globals.player1.enemy = None
-        globals.player2.enemy = None
-    globals.player1 = player.Player1()
-    globals.player2 = player.Player2()
-    globals.player1.enemy = globals.player2
-    globals.player2.enemy = globals.player1
-    globals.player = globals.player1
+    wzglobals.games_cards[0]['water'] = cards.water_cards_deck[:]
+    wzglobals.games_cards[0]['fire'] = cards.fire_cards_deck[:]
+    wzglobals.games_cards[0]['air'] = cards.air_cards_deck[:]
+    wzglobals.games_cards[0]['earth'] = cards.earth_cards_deck[:]
+    wzglobals.games_cards[0]['life'] = cards.life_cards_deck[:]
+    wzglobals.games_cards[0]['death'] = cards.death_cards_deck[:]
+    if wzglobals.player1:
+        wzglobals.player1.enemy = None
+        wzglobals.player2.enemy = None
+    wzglobals.player1 = player.Player1()
+    wzglobals.player2 = player.Player2()
+    wzglobals.player1.enemy = wzglobals.player2
+    wzglobals.player2.enemy = wzglobals.player1
+    wzglobals.player = wzglobals.player1
     # 0 1 2 3 4   //Расположение
     # 5 6 7 8 9
-    globals.cardbox0 = cardbox.Cardbox((22, 46), globals.player1, 0) #0 место на поле
-    globals.cardbox1 = cardbox.Cardbox((172, 46), globals.player1, 1) #1 место на поле
-    globals.cardbox2 = cardbox.Cardbox((322, 46), globals.player1, 2) #2 место на поле
-    globals.cardbox3 = cardbox.Cardbox((472, 46), globals.player1, 3) #3 место на поле
-    globals.cardbox4 = cardbox.Cardbox((622, 46), globals.player1, 4) #4 место на поле
-    globals.cardbox5 = cardbox.Cardbox((22, 238), globals.player2, 5) #5 место на поле
-    globals.cardbox6 = cardbox.Cardbox((172, 238), globals.player2, 6) #6 место на поле
-    globals.cardbox7 = cardbox.Cardbox((322, 238), globals.player2, 7) #7 место на поле
-    globals.cardbox8 = cardbox.Cardbox((472, 238), globals.player2, 8) #8 место на поле
-    globals.cardbox9 = cardbox.Cardbox((622, 238), globals.player2, 9) #9 место на поле
-    globals.cardboxes = [globals.cardbox0, globals.cardbox1, globals.cardbox2, globals.cardbox3, globals.cardbox4, globals.cardbox5, globals.cardbox6, globals.cardbox7, globals.cardbox8, globals.cardbox9] #Ссылки на объекты
+    wzglobals.cardbox0 = cardbox.Cardbox((22, 46), wzglobals.player1, 0) #0 место на поле
+    wzglobals.cardbox1 = cardbox.Cardbox((172, 46), wzglobals.player1, 1) #1 место на поле
+    wzglobals.cardbox2 = cardbox.Cardbox((322, 46), wzglobals.player1, 2) #2 место на поле
+    wzglobals.cardbox3 = cardbox.Cardbox((472, 46), wzglobals.player1, 3) #3 место на поле
+    wzglobals.cardbox4 = cardbox.Cardbox((622, 46), wzglobals.player1, 4) #4 место на поле
+    wzglobals.cardbox5 = cardbox.Cardbox((22, 238), wzglobals.player2, 5) #5 место на поле
+    wzglobals.cardbox6 = cardbox.Cardbox((172, 238), wzglobals.player2, 6) #6 место на поле
+    wzglobals.cardbox7 = cardbox.Cardbox((322, 238), wzglobals.player2, 7) #7 место на поле
+    wzglobals.cardbox8 = cardbox.Cardbox((472, 238), wzglobals.player2, 8) #8 место на поле
+    wzglobals.cardbox9 = cardbox.Cardbox((622, 238), wzglobals.player2, 9) #9 место на поле
+    wzglobals.cardboxes = [wzglobals.cardbox0, wzglobals.cardbox1, wzglobals.cardbox2, wzglobals.cardbox3, wzglobals.cardbox4, wzglobals.cardbox5, wzglobals.cardbox6, wzglobals.cardbox7, wzglobals.cardbox8, wzglobals.cardbox9] #Ссылки на объекты
 
-    for tcardbox in globals.cardboxes:
+    for tcardbox in wzglobals.cardboxes:
         if pygame.version.vernum < (1, 9, 1):
             tcardbox.normal_rect = copy.deepcopy(tcardbox.rect)
             tcardbox.opposite_rect = copy.deepcopy(tcardbox.get_opposite_cardbox().rect)
         else:
             tcardbox.normal_rect = tcardbox.rect.copy()
             tcardbox.opposite_rect = tcardbox.get_opposite_cardbox().rect.copy()
-    globals.castlabel = cards.CastLabel()
+    wzglobals.castlabel = cards.CastLabel()
     healthwindow.HealthWindowEnemy((175, 10)) #Окошко здоровья верхнего игрока
     healthwindow.HealthWindow((167, 557)) #Окошко здоровья нижнего игрока
     # Кнопки колод стихий первого игрока
@@ -223,79 +222,79 @@ def start_game(cli=False,ai=False):
     elementbutton.LifeElementShower((590, 2))
     elementbutton.DeathElementShower((668, 2))
     # Кнопки колод стихий второго игрока
-    globals.water_element_button = elementbutton.WaterElementButton((11, 427))
-    globals.fire_element_button = elementbutton.FireElementButton((56, 427))
-    globals.air_element_button = elementbutton.AirElementButton((101, 427))
-    globals.earth_element_button = elementbutton.EarthElementButton((146, 427))
-    globals.life_element_button = elementbutton.LifeElementButton((191, 427))
-    globals.death_element_button = elementbutton.DeathElementButton((236, 427))
+    wzglobals.water_element_button = elementbutton.WaterElementButton((11, 427))
+    wzglobals.fire_element_button = elementbutton.FireElementButton((56, 427))
+    wzglobals.air_element_button = elementbutton.AirElementButton((101, 427))
+    wzglobals.earth_element_button = elementbutton.EarthElementButton((146, 427))
+    wzglobals.life_element_button = elementbutton.LifeElementButton((191, 427))
+    wzglobals.death_element_button = elementbutton.DeathElementButton((236, 427))
     #Кнопки завершения хода первого и второго игрока.
     completethecoursebutton.CompleteTheCourseButton((758, 378))
     #Окна выбора карты стихии
-    globals.cardofelementsshower = cardsofelementshower.CardsOfElementShower()
-    globals.nickname2 = nickname_window.NicknameWindow((142, 530), 'Guest')
-    globals.nickname1 = nickname_window.NicknameWindow((22, 0), globals.nick)
+    wzglobals.cardofelementsshower = cardsofelementshower.CardsOfElementShower()
+    wzglobals.nickname2 = nickname_window.NicknameWindow((142, 530), 'Guest')
+    wzglobals.nickname1 = nickname_window.NicknameWindow((22, 0), wzglobals.nick)
     if ai:
-        globals.player2.ai = True
-        globals.nickname2.set_nickname('Computer')
+        wzglobals.player2.ai = True
+        wzglobals.nickname2.set_nickname('Computer')
     #стрелочки для сдвига карт в колоде
-    #globals.leftarrow = cardsofelementshower.LeftArrow((356, 489))
-    #globals.rightarrow = cardsofelementshower.RightArrow((739, 491))
+    #wzglobals.leftarrow = cardsofelementshower.LeftArrow((356, 489))
+    #wzglobals.rightarrow = cardsofelementshower.RightArrow((739, 491))
     if not cli:
-        globals.gameinformationpanel.display('Battle Started')
-        globals.cli = False
+        wzglobals.gameinformationpanel.display('Battle Started')
+        wzglobals.cli = False
         sockets.query = lambda x: x
     else:
         val = sockets.connect()
         if not val:
-            globals.gameinformationpanel.display('Cant connect to server.')
+            wzglobals.gameinformationpanel.display('Cant connect to server.')
             menu.menu_main()
-            globals.stage = False
+            wzglobals.stage = False
             return 0
         else:
-            globals.importantmessage = important_message.MessageWindow('We are waiting for another player')
+            wzglobals.importantmessage = important_message.MessageWindow('We are waiting for another player')
         sockets.query = sockets.query_
-        globals.cli = True
+        wzglobals.cli = True
         thread.start_new_thread(server_handler, ())
-    if not globals.cli:
+    if not wzglobals.cli:
         player.switch_position()
     #********************************************************************************
-    globals.screen.blit(globals.background, (0, 0))
-    globals.panels.update()
-    globals.interface.update()
+    wzglobals.screen.blit(wzglobals.background, (0, 0))
+    wzglobals.panels.update()
+    wzglobals.interface.update()
     pygame.display.flip()
-    sockets.query({"action":"join", "nickname":globals.nick}) #входим в игру
-    while globals.stage == 1:
-        #if globals.turn_ended and len(cards_attacking) = 0:
-        #    for cardbox in globals.cardboxes:
+    sockets.query({"action":"join", "nickname":wzglobals.nick}) #входим в игру
+    while wzglobals.stage == 1:
+        #if wzglobals.turn_ended and len(cards_attacking) = 0:
+        #    for cardbox in wzglobals.cardboxes:
         #        cardbox.opposite = not cardbox.opposite
         for event in pygame.event.get():
-            globals.event_handler.event(event)
-        globals.panels.update()
-        globals.interface.update()
-        globals.ccards_1.update()
-        globals.ccards_2.update()
-        globals.cardofelementsshower.update()
-        globals.cards_in_deck.update()
-        globals.card_info_group.update()
-        globals.information_group.update()
+            wzglobals.event_handler.event(event)
+        wzglobals.panels.update()
+        wzglobals.interface.update()
+        wzglobals.ccards_1.update()
+        wzglobals.ccards_2.update()
+        wzglobals.cardofelementsshower.update()
+        wzglobals.cards_in_deck.update()
+        wzglobals.card_info_group.update()
+        wzglobals.information_group.update()
         #interface_up_layer.update()
-        globals.screen.blit(globals.background, (0, 0))
-        #globals.background.fill((0,0,0))
-        globals.background = background_backup.copy()
-        if globals.animation == "N":
+        wzglobals.screen.blit(wzglobals.background, (0, 0))
+        #wzglobals.background.fill((0,0,0))
+        wzglobals.background = background_backup.copy()
+        if wzglobals.animation == "N":
             for item in animations.animations_running + animations.cards_attacking + animations.cards_dying:
                 del item
             animations.animations_running = []
             animations.cards_attacking = []
             animations.cards_dying = []
-        if len(animations.animations_running) == False and len(globals.attack_started):
-            if not globals.cli:
+        if len(animations.animations_running) == False and len(wzglobals.attack_started):
+            if not wzglobals.cli:
                 player.switch_position()
         for animation_running in animations.animations_running:
             animation_running.run()
-            if len(globals.attack_started) and len(globals.cards_attacking) == False:
-                if not globals.cli:
+            if len(wzglobals.attack_started) and len(wzglobals.cards_attacking) == False:
+                if not wzglobals.cli:
                     player.switch_position()
         pygame.display.flip()
         clock.tick(50)
@@ -303,40 +302,40 @@ def start_game(cli=False,ai=False):
 
 
 pygame.init()
-globals.screen = pygame.display.set_mode((800, 600))
+wzglobals.screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption('Wizards Magic')
 clock = pygame.time.Clock()
 
 #read configuration file
 options.read_configuration()
-if globals.music == "Y":
+if wzglobals.music == "Y":
     thread.start_new_thread(load_and_start_bg_music,())
 menu.menu_main()
 
-globals.event_handler = eventhandler.Event_handler()
-globals.point = eventhandler.Point()
-globals.gameinformationpanel = gameinformation.GameInformationPanel()
-globals.cardinfo = cardinfo.CardInfo()
+wzglobals.event_handler = eventhandler.Event_handler()
+wzglobals.point = eventhandler.Point()
+wzglobals.gameinformationpanel = gameinformation.GameInformationPanel()
+wzglobals.cardinfo = cardinfo.CardInfo()
 
-globals.screen.blit(globals.background, (0, 0))
+wzglobals.screen.blit(wzglobals.background, (0, 0))
 
 pygame.display.flip()
 # noinspection PyPackageRequirements
 while 1:
     for event in pygame.event.get():
-        globals.event_handler.event(event)
-    if globals.stage == 1:
-        if globals.cli: 
+        wzglobals.event_handler.event(event)
+    if wzglobals.stage == 1:
+        if wzglobals.cli:
             start_game(1)
         else:
-            start_game(ai=globals.ai)
-            #start_game(ai=(globals.ai == 'Y'))
-        globals.clean()
+            start_game(ai=wzglobals.ai)
+            #start_game(ai=(wzglobals.ai == 'Y'))
+        wzglobals.clean()
         menu.menu_main()
 
-    globals.menu_group.update()
-    globals.information_group.update()
-    globals.screen.blit(globals.background, (0, 0))
-    globals.background = globals.background_backup.copy()
+    wzglobals.menu_group.update()
+    wzglobals.information_group.update()
+    wzglobals.screen.blit(wzglobals.background, (0, 0))
+    wzglobals.background = wzglobals.background_backup.copy()
     pygame.display.flip()
-    clock.tick(50)    
+    clock.tick(50)

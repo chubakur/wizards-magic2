@@ -14,7 +14,7 @@
 #along with this program; if not, write to the Free Software
 #Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 import socket
-import globals
+import wzglobals
 try:
     import json
     print 'JSON'
@@ -26,8 +26,8 @@ except ImportError:
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def connect():
     global sock
-    host = globals.server
-    port = globals.port
+    host = wzglobals.server
+    port = wzglobals.port
     print host,port
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -38,7 +38,7 @@ def connect():
 def get_package():
     #print "SERVICE:"
     #print service_package
-    try: 
+    try:
         MSGLEN, answ = int( sock.recv(8) ), ''
     except ValueError: #empty string (socked closed?)
         return dict(action='value_error')
