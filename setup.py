@@ -34,7 +34,7 @@ for f in modules:
     os.environ['PYTHONOPTIMIZE'] = "1"
     py_compile.compile(f, f+'o')
 
-data_files=[
+data_files = [
     ('', modules + [f+'c' for f in modules] + [f+'o' for f in modules])
 ]
 
