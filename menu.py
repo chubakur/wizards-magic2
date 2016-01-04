@@ -278,7 +278,7 @@ def exit_program():
     wzglobals.running = False
     if wzglobals.cli:
         if not wzglobals.opponent_disconnect:
-            sockets.query({"action" "bye", "player_id": wzglobals.player_id})
+            sockets.query({"action": "bye", "player_id": wzglobals.player_id})
         else:
             sockets.query({"action": "bbye"})
     if wzglobals.server_thread:
