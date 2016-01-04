@@ -230,7 +230,7 @@ if yes_pygame:
         # play summon sound if sounds turned on in options
         def play_summon_sound(self):
             pygame.mixer.music.load(
-                current_folder + '/misc/sounds/card_summon.wav'
+                current_folder + '/misc/sounds/card_summon.ogg'
             )
             wzglobals.playmusic()
             return
