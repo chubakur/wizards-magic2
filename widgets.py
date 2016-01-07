@@ -1,19 +1,19 @@
 #!/usr/bin/env python
-#Wizards Magic
-#Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
-#This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
-#as published by the Free Software Foundation; either version 2
-#of the License, or (at your option) any later version.
+# Wizards Magic
+# Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # vim: set fileencoding=utf-8 :
 try:
     import pygame
@@ -23,6 +23,7 @@ try:
 except ImportError:
     yes_pygame = False
 import wzglobals
+
 
 class TxtInput(pygame.sprite.Sprite):
     ''' class handling input box:
@@ -34,12 +35,16 @@ class TxtInput(pygame.sprite.Sprite):
     enabled: false=disabled box
     key: configuration key
     '''
-    def __init__(self, pos=0, label="", text="", length=0, numeric=False, enabled=True, key=""):
+    def __init__(self, pos=0, label="", text="", length=0, numeric=False,
+                 enabled=True, key=""):
         pygame.sprite.Sprite.__init__(self)
         self.type = 'txtinput'
-        self.color = (255,255,255)
-        self.color_disable = (95,245,244)
-        self.font = pygame.font.Font(wzglobals.current_folder + "/misc/DroidSans.ttf", 18)
+        self.color = (255, 255, 255)
+        self.color_disable = (95, 245, 244)
+        self.font = pygame.font.Font(
+            wzglobals.current_folder + "/misc/DroidSans.ttf",
+            18
+        )
         self.pos = pos
         self.label = label
         self.text = text[:length]
@@ -50,11 +55,12 @@ class TxtInput(pygame.sprite.Sprite):
         self.currpos = len(self.text)
         self.numeric = numeric
         self.enabled = enabled
-        self.label_image = self.font.render(self.label,True,self.color)
+        self.label_image = self.font.render(self.label, True, self.color)
         if self.enabled:
-            self.text_image = self.font.render(self.text,True,self.color)
+            self.text_image = self.font.render(self.text, True, self.color)
         else:
-            self.text_image = self.font.render(self.text,True,(self.color_disable))
+            self.text_image = \
+                self.font.render(self.text, True, (self.color_disable))
         self.label_rect = self.label_image.get_rect()
         self.text_rect = self.text_image.get_rect()
         self.image = None
@@ -62,58 +68,71 @@ class TxtInput(pygame.sprite.Sprite):
         wzglobals.menu_group.add(self)
 
     def draw(self):
-
         bgrect = wzglobals.background.get_rect()
         menupos = wzglobals.menu_bg.get_rect()
         menupos.centery = wzglobals.background.get_rect().centery
-
-        self.label_rect.left = bgrect.centerx - self.label_rect.width - 7  #label X coord (left side from center)
-        self.label_rect.top = menupos.top + 50 + (self.label_rect.height + 5) * self.pos
-
-        self.text_rect.left = bgrect.centerx + 7 # text X coord (right size from center)
+        # label X coord (left side from center)
+        self.label_rect.left = bgrect.centerx - self.label_rect.width - 7
+        self.label_rect.top = menupos.top + 50 + \
+            (self.label_rect.height + 5) * self.pos
+        # text X coord (right size from center)
+        self.text_rect.left = bgrect.centerx + 7
         self.text_rect.top = self.label_rect.top
 
-        self.image = pygame.Surface((self.label_rect.width + 14 + self.size, self.font.get_linesize()), pygame.SRCALPHA)
+        self.image = pygame.Surface(
+            (self.label_rect.width + 14 + self.size, self.font.get_linesize()),
+            pygame.SRCALPHA
+        )
         self.rect = self.image.get_rect()
         self.rect.left = self.label_rect.left
         self.rect.top = self.label_rect.top
-        self.image.blit(self.label_image, (0,0))
-        self.image.blit(self.text_image, (self.label_rect.width + 14,0))
+        self.image.blit(self.label_image, (0, 0))
+        self.image.blit(self.text_image, (self.label_rect.width + 14, 0))
 
         if self.focus:
-            #X coordinate of the cursor
+            # X coordinate of the cursor
             cursorx = self.font.size(self.text[:self.currpos])[0]
             cursorx += self.label_rect.width + 14
-            draw.line(self.image, (255,255,255), (cursorx ,0),(cursorx , self.font.get_height()))
+            draw.line(
+                self.image,
+                (255, 255, 255),
+                (cursorx, 0),
+                (cursorx, self.font.get_height())
+            )
 
         wzglobals.background.blit(self.image, self.label_rect)
+
     def update(self):
         self.draw()
-    def enable(self):
-        self.enable=True
-        self.text_image = self.font.render(self.text,True,self.color)
-    def disable(self):
-        self.enable=False
-        self.text_image = self.font.render(self.text,True,self.color_disable)
-    def change(self, event):
 
+    def enable(self):
+        self.enable = True
+        self.text_image = self.font.render(self.text, True, self.color)
+
+    def disable(self):
+        self.enable = False
+        self.text_image = self.font.render(self.text, True, self.color_disable)
+
+    def change(self, event):
         if self.currpos > len(self.text):
             self.currpos = len(self.text)
 
         if self.enabled:
             if event.type == pygame.KEYUP:
-                if event.key==K_RETURN:
-                    self.focus=False
-                    wzglobals.itemfocus=None
+                if event.key == K_RETURN:
+                    self.focus = False
+                    wzglobals.itemfocus = None
                 if event.key == pygame.K_BACKSPACE:
                     if self.currpos == 0:
                         return
-                    self.text = self.text[:self.currpos-1] + self.text[self.currpos:]
+                    self.text = self.text[:self.currpos-1] + \
+                        self.text[self.currpos:]
                     self.currpos -= 1
                     if self.currpos < 0:
                         self.currpos = 0
                 elif event.key == pygame.K_DELETE:
-                    self.text = self.text[:self.currpos] + self.text[self.currpos+1:]
+                    self.text = self.text[:self.currpos] + \
+                        self.text[self.currpos+1:]
                 elif event.key == pygame.K_LEFT:
                     self.currpos -= 1
                     if self.currpos < 0:
@@ -126,26 +145,38 @@ class TxtInput(pygame.sprite.Sprite):
                     self.currpos = 0
                 elif event.key == pygame.K_END:
                     self.currpos = len(self.text)
-                elif event.key in (pygame.K_RSHIFT, pygame.K_LSHIFT, pygame.K_RETURN, pygame.K_TAB):
+                elif event.key in (
+                    pygame.K_RSHIFT,
+                    pygame.K_LSHIFT,
+                    pygame.K_RETURN,
+                    pygame.K_TAB
+                ):
                     pass
                 else:
-                    if len(self.text)<self.length:
-                        self.text = self.text[:self.currpos] + pygame.key.name(event.key) + self.text[self.currpos:]
+                    if len(self.text) < self.length:
+                        self.text = self.text[:self.currpos] + \
+                            pygame.key.name(event.key) + \
+                            self.text[self.currpos:]
                         self.currpos += 1
 
                 if self.enabled:
-                    self.text_image = self.font.render(self.text,True,self.color)
+                    self.text_image = \
+                        self.font.render(self.text, True, self.color)
                 else:
-                    self.text_image = self.font.render(self.text,True,(self.color_disable))
+                    self.text_image = \
+                        self.font.render(self.text, True, (self.color_disable))
                 self.draw()
+
     def onmousedown(self):
         if self.enabled:
             if wzglobals.itemfocus:
                 wzglobals.itemfocus.focus = False
             self.focus = True
             wzglobals.itemfocus = self
+
     def onmouseup(self):
         pass
+
 
 class CheckBox(pygame.sprite.Sprite):
     ''' class handling checkbox:
@@ -155,12 +186,16 @@ class CheckBox(pygame.sprite.Sprite):
     enabled: false=disabled box
     key: configuration key
     '''
+
     def __init__(self, pos=0, label="", value=False, enabled=True, key=""):
         pygame.sprite.Sprite.__init__(self)
         self.type = 'checkbox'
-        self.color = (255,255,255)
-        self.color_disable = (95,245,244)
-        self.font = pygame.font.Font(wzglobals.current_folder + "/misc/DroidSans.ttf", 18)
+        self.color = (255, 255, 255)
+        self.color_disable = (95, 245, 244)
+        self.font = pygame.font.Font(
+            wzglobals.current_folder + "/misc/DroidSans.ttf",
+            18
+        )
         self.pos = pos
         self.label = label
         self.value = value
@@ -168,12 +203,18 @@ class CheckBox(pygame.sprite.Sprite):
         self.focus = False
         self.enabled = enabled
         if self.enabled:
-            self.label_image = self.font.render(self.label,True,self.color)
+            self.label_image = \
+                self.font.render(self.label, True, self.color)
         else:
-            self.label_image = self.font.render(self.label,True,(self.color_disable))
+            self.label_image = \
+                self.font.render(self.label, True, (self.color_disable))
         self.label_rect = self.label_image.get_rect()
-        self.value_on = pygame.image.load(wzglobals.current_folder + '/misc/checkbox_on.gif').convert()
-        self.value_off = pygame.image.load(wzglobals.current_folder + '/misc/checkbox_off.gif').convert()
+        self.value_on = pygame.image.load(
+            wzglobals.current_folder + '/misc/checkbox_on.gif'
+        ).convert()
+        self.value_off = pygame.image.load(
+            wzglobals.current_folder + '/misc/checkbox_off.gif'
+        ).convert()
         if value:
             self.value_image = self.value_on
         else:
@@ -184,32 +225,44 @@ class CheckBox(pygame.sprite.Sprite):
         wzglobals.menu_group.add(self)
 
     def draw(self):
-
         bgrect = wzglobals.background.get_rect()
         menupos = wzglobals.menu_bg.get_rect()
         menupos.centery = wzglobals.background.get_rect().centery
+        # label X coord (left side from center)
+        self.label_rect.left = bgrect.centerx - self.label_rect.width - 7
+        self.label_rect.top = \
+            menupos.top + 50 + (self.label_rect.height + 5) * self.pos
 
-        self.label_rect.left = bgrect.centerx - self.label_rect.width - 7  #label X coord (left side from center)
-        self.label_rect.top = menupos.top + 50 + (self.label_rect.height + 5) * self.pos
-
-        self.image = pygame.Surface((self.label_rect.width + 14 + self.value_image.get_rect().width, self.font.get_linesize()), pygame.SRCALPHA)
+        self.image = pygame.Surface(
+            (
+                self.label_rect.width + 14 + self.value_image.get_rect().width,
+                self.font.get_linesize()
+            ),
+            pygame.SRCALPHA
+        )
         self.rect = self.image.get_rect()
         self.rect.left = self.label_rect.left
         self.rect.top = self.label_rect.top
-        self.image.blit(self.label_image, (0,0))
-        self.image.blit(self.value_image, (self.label_rect.width + 14,0))
+        self.image.blit(self.label_image, (0, 0))
+        self.image.blit(self.value_image, (self.label_rect.width + 14, 0))
 
         wzglobals.background.blit(self.image, self.label_rect)
+
     def update(self):
         self.draw()
+
     def enable(self):
         self.enable = True
-        self.label_image = self.font.render(self.label,True,self.color)
+        self.label_image = self.font.render(self.label, True, self.color)
+
     def disable(self):
         self.enable = False
-        self.label_image = self.font.render(self.label,True,(self.color_disable))
-    def change(self): #Hot Fix
+        self.label_image = \
+            self.font.render(self.label, True, (self.color_disable))
+
+    def change(self):  # Hot Fix
         return 0
+
     def onmousedown(self):
         if self.enabled:
             if wzglobals.itemfocus:
@@ -222,15 +275,18 @@ class CheckBox(pygame.sprite.Sprite):
         else:
             self.value_image = self.value_on
             self.value = True
+
     def onmouseup(self):
         pass
+
     def onmouseout(self):
         pass
+
     def onmouse(self):
         pass
 
-def main():
 
+def main():
     pygame.init()
     wzglobals.screen = pygame.display.set_mode((800, 600))
     pygame.display.set_caption('Wizards Magic')
@@ -238,11 +294,17 @@ def main():
     wzglobals.background = wzglobals.background.convert()
     wzglobals.background.fill((250, 250, 250))
 
-    wzglobals.background = pygame.image.load(wzglobals.current_folder + '/misc/menu_bg.jpg').convert_alpha()
-    wzglobals.menu_bg = pygame.image.load(wzglobals.current_folder + '/misc/menu_selections_bg.jpg').convert_alpha()
+    wzglobals.background = pygame.image.load(
+        wzglobals.current_folder + '/misc/menu_bg.jpg'
+    ).convert_alpha()
+    wzglobals.menu_bg = pygame.image.load(
+        wzglobals.current_folder + '/misc/menu_selections_bg.jpg'
+    ).convert_alpha()
     menupos = wzglobals.menu_bg.get_rect()
-    menupos.centerx = wzglobals.background.get_rect().centerx -2 # '-2' hack due lazy designer :)
-    menupos.centery = wzglobals.background.get_rect().centery -1 # '-1' hack due lazy designer :)
+    # '-2' hack due lazy designer :)
+    menupos.centerx = wzglobals.background.get_rect().centerx - 2
+    # '-1' hack due lazy designer :)
+    menupos.centery = wzglobals.background.get_rect().centery - 1
     wzglobals.background.blit(wzglobals.menu_bg, menupos)
     wzglobals.screen.blit(wzglobals.background, (0, 0))
     pygame.display.flip()
@@ -263,4 +325,7 @@ def main():
         wzglobals.screen.blit(wzglobals.background, (0, 0))
         pygame.display.flip()
         pygame.time.wait(200)
-if __name__ == '__main__': main()
+
+
+if __name__ == '__main__':
+    main()
