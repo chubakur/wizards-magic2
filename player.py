@@ -19,11 +19,7 @@ import os
 import random
 import wzglobals
 import sockets
-try:
-    import pygame
-    yes_pygame = True
-except ImportError:
-    yes_pygame = False
+import pygame
 import ai
 current_folder = os.path.dirname(os.path.abspath(__file__))
 

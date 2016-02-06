@@ -14,36 +14,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-try:
-    import pygame
-    yes_pygame = True
-except ImportError:
-    yes_pygame = False
+
+import pygame
 import os
 
 current_folder = os.path.dirname(os.path.abspath(__file__))
-if yes_pygame:
-    pygame.font.init()
-    panels = pygame.sprite.Group()
-    # Нижний уровень #Lower Level
-    interface = pygame.sprite.Group()
-    # Уровень кнопок #Button Level
-    cards_in_deck = pygame.sprite.Group()
-    # Уровень дополнительный #The level of additional
-    ccards_1 = pygame.sprite.Group()
-    # Карты, которые вывел первый игрок #Cards, which brought the first player
-    ccards_2 = pygame.sprite.Group()
-    # Карты, которые вывел второй игрок #Cards, which brought the second player
-    magic_cards = pygame.sprite.Group()
-    # Использующаяся магия #Magic Cards
-    card_info_group = pygame.sprite.Group()
-    # Группа, которая содержит спрайт, содержащий панель вывода
-    # информации о карте
-    information_group = pygame.sprite.Group()
-    # Группа, содержащая панель вывода игровой информации
-    menu_group = pygame.sprite.Group()  # menu items
-    font = pygame.font.Font(current_folder+"/misc/Neocyr.ttf", 15)
-    font2 = pygame.font.Font(current_folder+"/misc/Domestic_Manners.ttf", 15)
+pygame.font.init()
+panels = pygame.sprite.Group()
+# Нижний уровень #Lower Level
+interface = pygame.sprite.Group()
+# Уровень кнопок #Button Level
+cards_in_deck = pygame.sprite.Group()
+# Уровень дополнительный #The level of additional
+ccards_1 = pygame.sprite.Group()
+# Карты, которые вывел первый игрок #Cards, which brought the first player
+ccards_2 = pygame.sprite.Group()
+# Карты, которые вывел второй игрок #Cards, which brought the second player
+magic_cards = pygame.sprite.Group()
+# Использующаяся магия #Magic Cards
+card_info_group = pygame.sprite.Group()
+# Группа, которая содержит спрайт, содержащий панель вывода
+# информации о карте
+information_group = pygame.sprite.Group()
+# Группа, содержащая панель вывода игровой информации
+menu_group = pygame.sprite.Group()  # menu items
+font = pygame.font.Font(current_folder+"/misc/Neocyr.ttf", 15)
+font2 = pygame.font.Font(current_folder+"/misc/Domestic_Manners.ttf", 15)
 cards_of_element_shower_element = "water"  # какой элемент показывать
 # Any element to show
 selected_card = False  # Выбранная карта #Selected Card

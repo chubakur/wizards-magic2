@@ -13,14 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-try:
-    import pygame
-    # from pygame.locals import *
-    from widgets import TxtInput, CheckBox
-    import menu
-    yes_pygame = True
-except ImportError:
-    yes_pygame = False
+
+import pygame
+# from pygame.locals import *
+from widgets import TxtInput, CheckBox
+import menu
+
 import wzglobals
 import ConfigParser
 import os.path
