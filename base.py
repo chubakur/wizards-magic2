@@ -603,7 +603,7 @@ class AbsoluteDefenceSpirit(Prototype):
         self.power = card.power
         self.health = card.health
         self.field = True
-        # self.position_in_deck = card.position_in_deck
+        self.imagefile = card.imagefile
         self.image = card.image
         self.card = card
         self.cast = card.cast
