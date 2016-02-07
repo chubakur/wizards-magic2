@@ -254,6 +254,7 @@ def start_game(cli=False, ai=False):
         wzglobals.player1.enemy = None
         wzglobals.player2.enemy = None
     wzglobals.player1 = player.Player1()
+    wzglobals.player1.nickname = wzglobals.nick
     wzglobals.player2 = player.Player2()
     wzglobals.player1.enemy = wzglobals.player2
     wzglobals.player2.enemy = wzglobals.player1
@@ -333,11 +334,13 @@ def start_game(cli=False, ai=False):
         cardsofelementshower.CardsOfElementShower()
     wzglobals.nickname2 = \
         nickname_window.NicknameWindow((142, 530), 'Guest')
+    wzglobals.player2.nickname = 'Guest'
     wzglobals.nickname1 = \
         nickname_window.NicknameWindow((22, 0), wzglobals.nick)
     if ai:
         wzglobals.player2.ai = True
         wzglobals.nickname2.set_nickname('Computer')
+        wzglobals.player2.nickname = 'Computer'
     # стрелочки для сдвига карт в колоде
     # wzglobals.leftarrow = cardsofelementshower.LeftArrow((356, 489))
     # wzglobals.rightarrow = cardsofelementshower.RightArrow((739, 491))

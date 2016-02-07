@@ -28,6 +28,7 @@ class Player():  # Прототип игрока
     def __init__(self, game_id=0):
         self.health = 50
         self.name = "player"
+        self.nickname = None
         self.action_points = True  # Ходил игрок, или нет
         self.game_id = game_id
         self.get_cards()
@@ -57,7 +58,11 @@ class Player():  # Прототип игрока
             card.owner_gets_damage(damage)
         self.health -= damage
         if self.health <= 0:
-            wzglobals.gameinformationpanel.display("Game Over!")
+            wzglobals.gameinformationpanel.display(
+                _("Game Over! Player {player} loose!").format(
+                    player=self.nickname,
+                )
+            )
             wzglobals.stage = False
 
     def heal(self, health):
