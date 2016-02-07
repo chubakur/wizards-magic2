@@ -44,10 +44,10 @@ except AttributeError:
         'cards', current_folder+'/languages', languages=[wzglobals.language]
     )
 try:
-    #Python 2
+    # Python 2
     _ = t.ugettext
 except AttributeError:
-    #Python 3
+    # Python 3
     _ = t.gettext
 t.install()
 

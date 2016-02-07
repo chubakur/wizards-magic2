@@ -179,46 +179,58 @@ class Connect(threading.Thread):
                     deck_cards = []
                     deck_cards.append(
                         {
-                            "water":
-                                list(wzglobals.players[self.game_id][0]
-                                .cards['water'].keys()),
-                            "fire":
-                                list(wzglobals.players[self.game_id][0]
-                                .cards['fire'].keys()),
-                            "air":
-                                list(wzglobals.players[self.game_id][0]
-                                .cards['air'].keys()),
-                            "earth":
-                                list(wzglobals.players[self.game_id][0]
-                                .cards['earth'].keys()),
-                            "life":
-                                list(wzglobals.players[self.game_id][0]
-                                .cards['life'].keys()),
-                            "death":
-                                list(wzglobals.players[self.game_id][0]
-                                .cards['death'].keys())
+                            "water": list(
+                                wzglobals.players[self.game_id][0]
+                                .cards['water'].keys()
+                            ),
+                            "fire": list(
+                                wzglobals.players[self.game_id][0]
+                                .cards['fire'].keys()
+                            ),
+                            "air": list(
+                                wzglobals.players[self.game_id][0]
+                                .cards['air'].keys()
+                            ),
+                            "earth": list(
+                                wzglobals.players[self.game_id][0]
+                                .cards['earth'].keys()
+                            ),
+                            "life": list(
+                                wzglobals.players[self.game_id][0]
+                                .cards['life'].keys()
+                            ),
+                            "death": list(
+                                wzglobals.players[self.game_id][0]
+                                .cards['death'].keys()
+                            )
                         }
                     )
                     deck_cards.append(
                         {
-                            "water":
-                                list(wzglobals.players[self.game_id][1]
-                                .cards['water'].keys()),
-                            "fire":
-                                list(wzglobals.players[self.game_id][1]
-                                .cards['fire'].keys()),
-                            "air":
-                                list(wzglobals.players[self.game_id][1]
-                                .cards['air'].keys()),
-                            "earth":
-                                list(wzglobals.players[self.game_id][1]
-                                .cards['earth'].keys()),
-                            "life":
-                                list(wzglobals.players[self.game_id][1]
-                                .cards['life'].keys()),
-                            "death":
-                                list(wzglobals.players[self.game_id][1]
-                                .cards['death'].keys())
+                            "water": list(
+                                wzglobals.players[self.game_id][1]
+                                .cards['water'].keys()
+                            ),
+                            "fire": list(
+                                wzglobals.players[self.game_id][1]
+                                .cards['fire'].keys()
+                            ),
+                            "air": list(
+                                wzglobals.players[self.game_id][1]
+                                .cards['air'].keys()
+                            ),
+                            "earth": list(
+                                wzglobals.players[self.game_id][1]
+                                .cards['earth'].keys()
+                            ),
+                            "life": list(
+                                wzglobals.players[self.game_id][1]
+                                .cards['life'].keys()
+                            ),
+                            "death": list(
+                                wzglobals.players[self.game_id][1]
+                                .cards['death'].keys()
+                            )
                         }
                     )
                     for connection in connections[self.game_id]:
