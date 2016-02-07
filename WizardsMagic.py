@@ -49,7 +49,7 @@ import menu
 import options
 import sockets
 import nickname_window
-import thread
+import threading
 import important_message
 current_folder = os.path.dirname(os.path.abspath(__file__))
 wzglobals.current_folder = current_folder
@@ -64,9 +64,9 @@ def server_handler():
         # print si
         # print "RETURN:"
         # print get_package()
-        print gi
+        print(gi)
         if gi['action'] == 'join':
-            print("Join to Game with Player_id " + str(gi['id']))
+            print(("Join to Game with Player_id " + str(gi['id'])))
             wzglobals.player_id = gi['id']
             if wzglobals.player_id == 1:
                 player.switch_position()
@@ -95,7 +95,7 @@ def server_handler():
                 wzglobals.player2.cards_generated == 0 and
                 wzglobals.player1.cards_generated == 0
             ):
-                print "Выдаем карты"
+                print("Выдаем карты")
                 wzglobals.player1.get_cards(gi['deck_cards'][0])
                 wzglobals.player1.cards_generated = True
                 # а теперь второму
@@ -358,7 +358,8 @@ def start_game(cli=False, ai=False):
             )
         sockets.query = sockets.query_
         wzglobals.cli = True
-        thread.start_new_thread(server_handler, ())
+        server_thread = threading.Thread(target=server_handler)
+        server_thread.start()
     if not wzglobals.cli:
         player.switch_position()
     # **************************************************************************
@@ -426,7 +427,8 @@ clock = pygame.time.Clock()
 # read configuration file
 options.read_configuration()
 if wzglobals.music == "Y":
-    thread.start_new_thread(load_and_start_bg_music, ())
+    music_thread = threading.Thread(target=load_and_start_bg_music)
+    music_thread.start()
 menu.menu_main()
 
 wzglobals.event_handler = eventhandler.Event_handler()

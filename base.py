@@ -483,7 +483,7 @@ class Prototype(pygame.sprite.Sprite):
                 wzglobals.current_folder + '/misc/sounds/card_die.ogg'
             )
         except:
-            print "Unexpected error: while trying load die sound"
+            print("Unexpected error: while trying load die sound")
         wzglobals.playmusic()
         del self.image
 
@@ -584,7 +584,7 @@ class AbsoluteDefenceSpirit(Prototype):
         Prototype.__init__(self)
 
     def damage(self, damage, enemy, cast=False):
-        print "RESIST", damage, cast
+        print("RESIST", damage, cast)
         return
 
     def attack(self):

@@ -311,13 +311,13 @@ def main():
             if event.type == QUIT:
                 return
 
-            print event
+            print(event)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_ESCAPE:
-                    print "qqqqqqqqqqqqqqqqqq"
+                    print("qqqqqqqqqqqqqqqqqq")
                 else:
-                    print event.key
-                    print pygame.key.name(event.key)
+                    print(event.key)
+                    print(pygame.key.name(event.key))
         wzglobals.screen.blit(wzglobals.background, (0, 0))
         pygame.display.flip()
         pygame.time.wait(200)

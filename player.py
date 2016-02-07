@@ -75,7 +75,7 @@ class Player():  # Прототип игрока
         ]
         random.shuffle(manas)  # раскидываем массив рендомно
         sum = 0
-        for mana_id in xrange(0, len(manas)):
+        for mana_id in range(0, len(manas)):
             if mana_id != len(manas) - 1:
                 rand = random.randint(2, 5)
                 sum += rand
@@ -101,7 +101,7 @@ class Player():  # Прототип игрока
         for element in ['water', 'fire', 'air', 'earth', 'life', 'death']:
             tmpcards[element] = {}
             cards_for_sort[element] = []
-            for i in xrange(0, 4):
+            for i in range(0, 4):
                 # получаем карту элемента воды
                 if not server_cards:
                     randnum = random.randint(
@@ -125,8 +125,8 @@ class Player():  # Прототип игрока
                     tmpcards[element][card] = card
 
             if self.game_id == 0:
-                cards_for_sort[element].sort()
-                for i in xrange(0, 4):
+                cards_for_sort[element].sort(key=lambda item: item[0])
+                for i in range(0, 4):
                     cards_for_sort[element][i][1].position_in_deck = i
         self.cards = tmpcards.copy()
 
@@ -170,7 +170,7 @@ def me_finish_turn():
     try:
         pygame.mixer.music.load(current_folder+'/misc/sounds/card_attack.ogg')
     except:
-        print "Unexpected error: while trying play attack sound"
+        print("Unexpected error: while trying play attack sound")
     wzglobals.playmusic()
     if wzglobals.player.id == 1:
         wzglobals.player = wzglobals.player2

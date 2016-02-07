@@ -100,7 +100,7 @@ class Hydra(Prototype):
         self.level = 13
         self.power = 5
         self.cast = True
-        print sys.getrefcount(self.cast)
+        print(sys.getrefcount(self.cast))
         self.focus_cast = True
         self.health = 29
         self.info = _(
@@ -109,11 +109,11 @@ class Hydra(Prototype):
             "CAST: Consumes friendly unit, receiving up "
             "to 50% of his health."
         )
-        print sys.getrefcount(self.info)
+        print(sys.getrefcount(self.info))
         self.image = pygame.image.load(
             wzglobals.current_folder + '/misc/cards/water/hydra.gif'
         )
-        print sys.getrefcount(self.image)
+        print(sys.getrefcount(self.image))
         Prototype.__init__(self)
 
     def attack(self):

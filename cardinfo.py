@@ -61,7 +61,7 @@ class CardInfo(pygame.sprite.Sprite):
             rows = len(ptext) / self.symbols_in_row
             if len(ptext) % self.symbols_in_row:
                 rows += 1
-            for row in xrange(0, rows):
+            for row in range(0, rows):
                 text = wzglobals.font.render(
                     ptext[
                         row * self.symbols_in_row:

@@ -17,10 +17,10 @@ import socket
 import wzglobals
 try:
     import json
-    print 'JSON'
+    print('JSON')
 except ImportError:
     import simplejson as json
-    print 'SIMPLEJSON'
+    print('SIMPLEJSON')
 # host = "drakmail.ru"
 # port = 7712
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,7 +30,7 @@ def connect():
     global sock
     host = wzglobals.server
     port = wzglobals.port
-    print host, port
+    print(host, port)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         sock.connect((host, int(port)))
@@ -52,8 +52,8 @@ def get_package():
     while len(answ) < MSGLEN:
         answ += sock.recv(MSGLEN - len(answ))
         # return answ
-    print "GET_PACKAGE RETURN"
-    print answ
+    print("GET_PACKAGE RETURN")
+    print(answ)
     return json.loads(answ)
 
 

@@ -43,7 +43,12 @@ except AttributeError:
     t = gettext.translation(
         'cards', current_folder+'/languages', languages=[wzglobals.language]
     )
-_ = t.ugettext
+try:
+    #Python 2
+    _ = t.ugettext
+except AttributeError:
+    #Python 3
+    _ = t.gettext
 t.install()
 
 
@@ -72,5 +77,5 @@ for deck in (
 ):
     for cardname in deck.cards:
         class_to_load = deck.__name__ + '.' + cardname
-        print cardname, class_to_load
+        print(cardname, class_to_load)
         links_to_cards[cardname] = eval(class_to_load)

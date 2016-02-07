@@ -102,7 +102,7 @@ def playmusic(time=None):
             if time is not None:
                 pygame.mixer.music.fadeout(time)
         except:
-            print "Unexpected error: while trying play sound"
+            print("Unexpected error: while trying play sound")
 
 
 def set_element_sound(element):
@@ -117,5 +117,5 @@ def set_element_sound(element):
                 )
             )
         except pygame.error as e:
-            print "Unexpected error: while trying load %s sound" % element
-            print e
+            print("Unexpected error: while trying load %s sound" % element)
+            print(e)

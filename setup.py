@@ -27,7 +27,7 @@ modules = [
     for x in glob('*.py')
     if x != 'setup.py'
 ]
-print modules
+print(modules)
 for f in modules:
     os.environ['PYTHONOPTIMIZE'] = "0"
     py_compile.compile(f, f+'c')
@@ -43,7 +43,7 @@ for d in ('misc', 'languages'):
         if files:
             data_files.append((root, [os.path.join(root, f) for f in files]))
 
-print data_files
+print(data_files)
 
 setup(
     name='WizardsMagic',

@@ -20,8 +20,13 @@ from widgets import TxtInput, CheckBox
 import menu
 
 import wzglobals
-import ConfigParser
 import os.path
+
+try:
+    import configparser
+except ImportError:
+    # Fallback on ConfigParser for python 2.7 support
+    import ConfigParser as configparser
 
 
 def launcher():
@@ -38,7 +43,7 @@ def launcher():
 
 
 def save():
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     config.add_section('WizardsMagic')
     for item in wzglobals.menu_group:
         if item.type == 'txtinput':
@@ -59,7 +64,7 @@ def cancel():
 
 
 def read_configuration():
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     config.read(wzglobals.current_folder + '/wizardsmagic.cfg')
 
     try:
@@ -138,7 +143,7 @@ def options_main():
     # Configuration file:
     # create default configuration file
     if not os.path.isfile(wzglobals.current_folder + '/wizardsmagic.cfg'):
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.add_section('WizardsMagic')
         config.set('WizardsMagic', 'music', 'Y')
         config.set('WizardsMagic', 'sound', 'Y')
