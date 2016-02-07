@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -34,14 +35,18 @@ import water_cards_deck
 current_folder = os.path.dirname(os.path.abspath(__file__))
 __author__ = "chubakur"
 __date__ = "$13.02.2011 18:46:32$"
+
+
+LANGDIR = os.path.join(current_folder, 'languages')
+
 try:
     t = gettext.translation(
-        'cards', current_folder+'/languages', languages=[wzglobals.language]
+        'cards', LANGDIR, languages=[wzglobals.language]
     )
 except AttributeError:
     read_configuration()
     t = gettext.translation(
-        'cards', current_folder+'/languages', languages=[wzglobals.language]
+        'cards', LANGDIR, languages=[wzglobals.language]
     )
 try:
     # Python 2
@@ -60,10 +65,14 @@ class CastLabel(pygame.sprite.Sprite):
 
     def __init__(self):
         self.cast_active = pygame.image.load(
-            current_folder + "/misc/card_cast_logo_active.png"
+            os.path.join(
+                current_folder, 'misc', 'card_cast_logo_active.png'
+            )
         ).convert_alpha()
         self.cast_disabled = pygame.image.load(
-            current_folder + "/misc/card_cast_logo_disabled.png"
+            os.path.join(
+                current_folder, 'misc', 'card_cast_logo_disabled.png'
+            )
         ).convert_alpha()
 
 links_to_cards = {}
@@ -77,5 +86,4 @@ for deck in (
 ):
     for cardname in deck.cards:
         class_to_load = deck.__name__ + '.' + cardname
-        print(cardname, class_to_load)
         links_to_cards[cardname] = eval(class_to_load)
