@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,8 +17,6 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import gettext
-
-import pygame
 
 from base import Magic
 from base import Prototype
@@ -49,9 +48,7 @@ class BlackWind(Magic):
         self.element = "air"
         self.name = "BlackWind"
         self.level = 8
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/black_wind.gif'
-        )
+        self.imagefile = 'black_wind.gif'
         self.info = _(
             "Winds away strongest enemy creature. "
             "Perfect against high-level enemy creatures. "
@@ -78,9 +75,7 @@ class ChainLightning(Magic):
         self.element = "air"
         self.name = "ChainLightning"
         self.level = 9
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/chain_lightning.gif'
-        )
+        self.imagefile = 'chain_lightning.gif'
         self.info = _(
             "First enemy creature suffers damage equal to owner's Air+2. "
             "Lightning travels forth and hits each enemy creature, losing "
@@ -114,9 +109,7 @@ class Fairy(Prototype):
         self.power = 3
         self.cast = True
         self.health = 7
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/fairy.gif'
-        )
+        self.imagefile = 'fairy.gif'
         Prototype.__init__(self)
 
     def turn(self):
@@ -162,9 +155,7 @@ class Gargoyle(Prototype):
         self.power = 4
         self.cast = True
         self.health = 15
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/gargoyle.gif'
-        )
+        self.imagefile = 'gargoyle.gif'
         self.stone = False
         Prototype.__init__(self)
 
@@ -215,9 +206,7 @@ class Manticore(Prototype):
         self.cast = True
         self.focus_cast = True
         self.health = 19
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/manticore.gif'
-        )
+        self.imagefile = 'manticore.gif'
         Prototype.__init__(self)
 
     def attack(self):
@@ -281,9 +270,7 @@ class Nymph(Prototype):
             "Owner receives 1 Air at the beginning of Owners turn."
         )
         self.health = 12
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/nymph.gif'
-        )
+        self.imagefile = 'nymph.gif'
         Prototype.__init__(self)
 
     def turn(self):
@@ -305,9 +292,7 @@ class Phoenix(Prototype):
         self.cast = False
         self.health = 20
         self.recovered = 0  # Восстанавливалась ли карта
-        self.image = pygame.image.load(
-            wzglobals.current_folder+'/misc/cards/air/phoenix.gif'
-        )
+        self.imagefile = 'phoenix.gif'
         Prototype.__init__(self)
 
     def ai(self, type='summon', enemy=None):
@@ -347,9 +332,7 @@ class Plague(Magic):
         self.element = "air"
         self.name = "Plague"
         self.level = 12
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/plague.gif'
-        )
+        self.imagefile = 'plague.gif'
         self.info = _(
             "Every creature on a field plagued - loses all hit "
             "points except one. "
@@ -371,9 +354,7 @@ class Spellbreaker(Magic):
         self.element = "air"
         self.name = "Spellbreaker"
         self.level = 7
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/spellbreaker.gif'
-        )
+        self.imagefile = 'spellbreaker.gif'
         self.info = _(
             "Owner's creatures become permanently immune to all "
             "damaging spells, spell effects, and poison. "
@@ -399,9 +380,7 @@ class Titan(Prototype):
             "Owner loses 1 Air."
         )
         self.health = 28
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/titan.gif'
-        )
+        self.imagefile = 'titan.gif'
         Prototype.__init__(self)
 
     def summon(self):
@@ -434,9 +413,7 @@ class Zeus(Prototype):
             "Costs 1 Air and inflicts 8 damage. "
             "Cannot strike creatures of level 7 and highter."
         )
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/air/zeus.gif'
-        )
+        self.imagefile = 'zeus.gif'
         Prototype.__init__(self)
 
     def attack(self):

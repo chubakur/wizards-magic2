@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,8 +19,6 @@
 import gettext
 from math import ceil
 from math import floor
-
-import pygame
 
 from base import Magic
 from base import Prototype
@@ -53,9 +52,7 @@ class Armageddon(Magic):
         self.element = "fire"
         self.name = "Armageddon"
         self.level = 11
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/armageddon.gif'
-        )
+        self.imagefile = 'armageddon.gif'
         self.info = _(
             "All units on a field suffer 25 damage. "
             "Each player suffers 25 damage. "
@@ -86,9 +83,7 @@ class Cerberus(Prototype):
         )
         self.cast = False
         self.health = 6
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/cerberus.gif'
-        )
+        self.imagefile = 'cerberus.gif'
         Prototype.__init__(self)
 
     def attack(self):
@@ -137,9 +132,7 @@ class Demon(Prototype):
         )
         self.cast = True
         self.health = 12
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/demon.gif'
-        )
+        self.imagefile = 'demon.gif'
         Prototype.__init__(self)
 
     def cast_action(self):
@@ -167,9 +160,7 @@ class Devil(Prototype):
         self.cast = True
         self.focus_cast = True
         self.health = 27
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/devil.gif'
-        )
+        self.imagefile = 'devil.gif'
         Prototype.__init__(self)
 
     def die(self):
@@ -236,9 +227,7 @@ class Efreet(Prototype):
             "Fire Shield burns creature from inside, damaging it for 2 "
             "points per turn, unless it`s a Fire creature."
         )
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/efreet.gif'
-        )
+        self.imagefile = 'efreet.gif'
         Prototype.__init__(self)
 
     def summon(self):
@@ -262,9 +251,7 @@ class Fireball(Magic):
         self.element = "fire"
         self.name = "Fireball"
         self.level = 8
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/fireball.gif'
-        )
+        self.imagefile = 'fireball.gif'
         self.info = _(
             "Each enemy creature suffers damage equal to owner's "
             "Fire + 3. "
@@ -294,9 +281,7 @@ class Firelord(Prototype):
             "Upon dying, Firelord brings 8 damage to each player."
         )
         self.health = 21
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/firelord.gif'
-        )
+        self.imagefile = 'firelord.gif'
         Prototype.__init__(self)
 
     def turn(self):
@@ -315,9 +300,7 @@ class FireSpikes(Magic):
         self.element = "fire"
         self.name = "FireSpikes"
         self.level = 3
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/fire_spikes.gif'
-        )
+        self.imagefile = 'fire_spikes.gif'
         self.info = _(
             "Deals 3 damage to each enemy creature. "
             "Cheap and still good. Pure Fire."
@@ -335,9 +318,7 @@ class FlamingArrow(Magic):
         self.element = "fire"
         self.name = "FlamingArrow"
         self.level = 4
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/flaming_arrow.gif'
-        )
+        self.imagefile = 'flaming_arrow.gif'
         self.info = _(
             "If enemy has less Fire than owner does, enemy suffers "
             "damage, equal to this difference, multiplied by 2. "
@@ -373,9 +354,7 @@ class RedDrake(Prototype):
         self.power = 5
         self.cast = False
         self.health = 16
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/red_drake.gif'
-        )
+        self.imagefile = 'red_drake.gif'
         Prototype.__init__(self)
 
     def summon(self):
@@ -407,9 +386,7 @@ class RitualFlame(Magic):
         self.element = "fire"
         self.name = "RitualFlame"
         self.level = 5
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/ritual_flame.gif'
-        )
+        self.imagefile = 'ritual_flame.gif'
         self.info = _(
             "Destroys all spell effects from all creatures, "
             "both owner's and enemy's. "
@@ -439,9 +416,7 @@ class Salamander(Prototype):
             "Increases damage from owner player's spellcastings by 2."
         )
         self.health = 15
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/salamander.gif'
-        )
+        self.imagefile = 'salamander.gif'
         Prototype.__init__(self)
 
     def additional_turn_action(self):
@@ -473,9 +448,7 @@ class Vulcan(Prototype):
             "to 50% of Vulcan`s health."
         )
         self.health = 27
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/fire/vulcan.gif'
-        )
+        self.imagefile = 'vulcan.gif'
         Prototype.__init__(self)
 
     def summon(self):

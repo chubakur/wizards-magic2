@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,8 +19,6 @@
 import gettext
 from math import ceil
 from math import floor
-
-import pygame
 
 from base import Magic
 from base import Prototype
@@ -53,9 +52,7 @@ class ChaosVortex(Magic):
         self.element = "death"
         self.name = "ChaosVortex"
         self.level = 13
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/chaos_vortex.gif'
-        )
+        self.imagefile = 'chaos_vortex.gif'
         self.info = _(
             "Banishes each creature into hell. "
             "Each banished creature gives caster 1 Death. "
@@ -77,10 +74,7 @@ class CoverOfDarkness(Magic):
         self.element = "death"
         self.name = "CoverOfDarkness"
         self.level = 11
-        self.image = pygame.image.load(
-            wzglobals.current_folder +
-            '/misc/cards/death/cover_of_darkness.gif'
-        )
+        self.imagefile = 'cover_of_darkness.gif'
         self.info = _(
             "All living creatures suffer 13 damage. "
             "All undead creatures heal for 5. "
@@ -104,9 +98,7 @@ class Curse(Magic):
         self.element = "death"
         self.name = "Curse"
         self.level = 4
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/curse.gif'
-        )
+        self.imagefile = 'curse.gif'
         self.info = _(
             "Reduces all enemy elements by 1. "
             "Curse and Doom are now your enemy's only guests."
@@ -144,9 +136,7 @@ class Banshee(Prototype):
         self.cast = False
         self.power = 5
         self.health = 12
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/banshee.gif'
-        )
+        self.imagefile = 'banshee.gif'
         Prototype.__init__(self)
 
     def attack(self):
@@ -182,9 +172,7 @@ class Darklord(Prototype):
         self.power = 4
         self.cast = False
         self.health = 14
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/darklord.gif'
-        )
+        self.imagefile = 'darklord.gif'
         Prototype.__init__(self)
 
     def card_died(self, card):
@@ -208,9 +196,7 @@ class Ghost(Prototype):
         self.cast = True
         self.power = 3
         self.health = 13
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/ghost.gif'
-        )
+        self.imagefile = 'ghost.gif'
         Prototype.__init__(self)
 
     def damage(self, damage, enemy, cast=False):
@@ -241,9 +227,7 @@ class GrimReaper(Prototype):
         self.cast = True
         self.focus_cast = True
         self.health = 22
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/grim_reaper.gif'
-        )
+        self.imagefile = 'grim_reaper.gif'
         Prototype.__init__(self)
 
     def cast_action(self):
@@ -283,9 +267,7 @@ class Lich(Prototype):
         self.cast = False
         self.power = 7
         self.health = 18
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/lich.gif'
-        )
+        self.imagefile = 'lich.gif'
         Prototype.__init__(self)
 
     def summon(self):
@@ -325,9 +307,7 @@ class StealLife(Magic):
         self.element = "death"
         self.name = "StealLife"
         self.level = 6
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/steal_life.gif'
-        )
+        self.imagefile = 'steal_life.gif'
         self.info = _(
             "If owner's Death less than 8, steals 5 health from enemy "
             "player. Otherwise steals Death + 5. Death's cold vampiric "
@@ -352,9 +332,7 @@ class TotalWeakness(Magic):
         self.element = "death"
         self.name = "TotalWeakness"
         self.level = 8
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/total_weakness.gif'
-        )
+        self.imagefile = 'total_weakness.gif'
         self.info = _(
             "Every enemy creature suffers effect of Weakness: its attack "
             "decreased by 50% (rounded down). Make the strongest the "
@@ -382,9 +360,7 @@ class Vampire(Prototype):
             "When attacks living creature, restores health equal to "
             "50% of damage dealt. Maximum 30 health."
         )
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/vampire.gif'
-        )
+        self.imagefile = 'vampire.gif'
         Prototype.__init__(self)
 
     def attack(self):
@@ -415,9 +391,7 @@ class Werewolf(Prototype):
             "but owner loses 3 Death points on casting."
         )
         self.health = 16
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/werewolf.gif'
-        )
+        self.imagefile = 'werewolf.gif'
         Prototype.__init__(self)
 
     def die(self):
@@ -453,9 +427,7 @@ class Zombie(Prototype):
             "totally health and his health increases by 3."
         )
         self.cast = False
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/death/zombie.gif'
-        )
+        self.imagefile = 'zombie.gif'
         Prototype.__init__(self)
 
     def enemy_die(self):

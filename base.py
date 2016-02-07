@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,25 +17,25 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
+import os
 import pygame
 
 import animations
 import wzglobals
 
+IMAGESDIR = os.path.join(wzglobals.current_folder, 'misc', 'cards')
 
-# МАГИЯ
-# *************************************************************************
-# -------------------------------------------------------------------------
-# 1728378w7dsfhdshuifedhsghfgfhdsghjsdgfhdsgdfyugdhsghfgdhsghjlfdsghgsdujha
-# dhujgghsdgfs
-# _________________________________________________________________________
+
 class Magic(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.type = "magic_card"
         self.magic = True
-        # self.image = ""
         self.field = False
+        if self.imagefile:
+            self.image = pygame.image.load(
+                os.path.join(IMAGESDIR, self.element, self.imagefile)
+            )
         self.image = self.image.convert_alpha()
         self.surface_backup = self.image.copy()
         self.font = pygame.font.Font(None, 19)
@@ -55,7 +56,9 @@ class Magic(pygame.sprite.Sprite):
 
     def cast(self):
         pygame.mixer.music.load(
-            wzglobals.current_folder + '/misc/sounds/card_cast.ogg'
+            os.path.join(
+                wzglobals.current_folder, 'misc', 'sounds', 'card_cast.ogg'
+            )
         )
         wzglobals.playmusic()
 
@@ -158,14 +161,23 @@ class Magic(pygame.sprite.Sprite):
 class Prototype(pygame.sprite.Sprite):
 
     def __init__(self):
+        # image
+        if self.imagefile:
+            self.image = pygame.image.load(
+                os.path.join(IMAGESDIR, self.element, self.imagefile)
+            )
+        else:
+            print("DEBUG: %s has no imagefile" % self.name)
         pygame.sprite.Sprite.__init__(self)
         # cardbox where card is
         self.parent = 0
         self.light = False
-        # image
+
         self.image = self.image.convert_alpha()
         self.light_image = pygame.image.load(
-            wzglobals.current_folder + '/misc/light.gif'
+            os.path.join(
+                wzglobals.current_folder, 'misc', 'light.gif'
+            )
         ).convert_alpha()
         self.surface_backup = self.image.copy()
         self.font = pygame.font.Font(None, 19)
@@ -228,7 +240,9 @@ class Prototype(pygame.sprite.Sprite):
     # play cast sound if sounds turned on in options
     def play_cast_sound(self):
         pygame.mixer.music.load(
-            wzglobals.current_folder + '/misc/sounds/card_cast.ogg'
+            os.path.join(
+                wzglobals.current_folder, 'misc', 'sounds', 'card_cast.ogg'
+            )
         )
         wzglobals.playmusic()
         return
@@ -236,7 +250,9 @@ class Prototype(pygame.sprite.Sprite):
     # play summon sound if sounds turned on in options
     def play_summon_sound(self):
         pygame.mixer.music.load(
-            wzglobals.current_folder + '/misc/sounds/card_summon.ogg'
+            os.path.join(
+                wzglobals.current_folder, 'misc', 'sounds', 'card_summon.ogg'
+            )
         )
         wzglobals.playmusic()
         return
@@ -246,7 +262,7 @@ class Prototype(pygame.sprite.Sprite):
         if self.parent.position < 5:
             attack_position = self.parent.position + 5
         else:
-            attack_position = self.parent.position-5
+            attack_position = self.parent.position - 5
         return attack_position
 
     # returns array of cards of player, who has this card
@@ -370,6 +386,12 @@ class Prototype(pygame.sprite.Sprite):
             wzglobals.cardboxes[self.parent.position].rect[0],
             wzglobals.cardboxes[self.parent.position].rect[1]
         )
+        if not self.image:
+            print(
+                'ERROR: run_attack_animation has been called '
+                'without a valid image'
+            )
+            return
         attack_animation = animations.CustomAnimation(
             self.image, cardbox_location
         )  # Instantiating a animation object
@@ -471,6 +493,7 @@ class Prototype(pygame.sprite.Sprite):
 
     # function which calls when card in Die Phase
     def die(self):
+        print("DEBUG: %s died" % self.name)
         for spell in self.spells:
             spell.unset(self)
         self.parent.card = self.parent.player
@@ -480,12 +503,15 @@ class Prototype(pygame.sprite.Sprite):
             card.card_died(self)
         try:
             pygame.mixer.music.load(
-                wzglobals.current_folder + '/misc/sounds/card_die.ogg'
+                os.path.join(
+                    wzglobals.current_folder, 'misc', 'sounds', 'card_die.ogg'
+                )
             )
         except:
             print("Unexpected error: while trying load die sound")
         wzglobals.playmusic()
-        del self.image
+        if self.image:
+            del self.image
 
     # function which calls when card kill card in opposite cardbox
     def enemy_die(self):  # когда карта убивает противолежащего юнита

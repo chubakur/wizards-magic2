@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,10 +17,7 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import gettext
-import sys
 from math import ceil
-
-import pygame
 
 from base import Magic
 from base import Prototype
@@ -52,9 +50,7 @@ class AcidStorm(Magic):
         self.element = "water"
         self.name = "AcidStorm"
         self.level = 9
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/acid_storm.gif'
-        )
+        self.imagefile = 'acid_storm.gif'
         self.info = _(
             "Each creature suffers up to 16 points of damage. "
             "If a player has Poseidon on a field, "
@@ -100,7 +96,6 @@ class Hydra(Prototype):
         self.level = 13
         self.power = 5
         self.cast = True
-        print(sys.getrefcount(self.cast))
         self.focus_cast = True
         self.health = 29
         self.info = _(
@@ -109,11 +104,7 @@ class Hydra(Prototype):
             "CAST: Consumes friendly unit, receiving up "
             "to 50% of his health."
         )
-        print(sys.getrefcount(self.info))
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/hydra.gif'
-        )
-        print(sys.getrefcount(self.image))
+        self.imagefile = 'hydra.gif'
         Prototype.__init__(self)
 
     def attack(self):
@@ -162,9 +153,7 @@ class IceBolt(Magic):
         self.element = "water"
         self.name = "IceBolt"
         self.level = 7
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/ice_bolt.gif'
-        )
+        self.imagefile = 'ice_bolt.gif'
         self.info = _(
             "Inflicts 10 + Water/2 damage to enemy player. "
             "Caster suffers 6 damage as a side effect. "
@@ -196,9 +185,7 @@ class IceGuard(Prototype):
         self.power = 4
         self.cast = False
         self.health = 19
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/ice_guard.gif'
-        )
+        self.imagefile = 'ice_guard.gif'
         Prototype.__init__(self)
 
     def ai(self, type='summon', enemy=None):
@@ -237,9 +224,7 @@ class IceWizard(Prototype):
         self.power = 4
         self.cast = True
         self.health = 22
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/ice_wizard.gif'
-        )
+        self.imagefile = 'ice_wizard.gif'
         Prototype.__init__(self)
 
     def ai(self, type='summon', enemy=None):
@@ -280,9 +265,7 @@ class Leviathan(Prototype):
         self.power = 6
         self.cast = True
         self.health = 37
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/leviathan.gif'
-        )
+        self.imagefile = 'leviathan.gif'
         self.info = _(
             "When attacking, each enemy creature suffers 1 damage "
             "in addition to standard attack. \n"
@@ -314,9 +297,7 @@ class Nixie(Prototype):
         self.power = 3
         self.health = 10
         self.cast = True
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/nixie.gif'
-        )
+        self.imagefile = 'nixie.gif'
         self.info = _(
             "Causes 200% of damage to fire creatures. "
             "Gives owner 1 Water in the beginning of owner's turn. \n"
@@ -379,9 +360,7 @@ class Paralyze(Magic):
         self.element = "water"
         self.name = "Paralyze"
         self.level = 10
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/paralyze.gif'
-        )
+        self.imagefile = 'paralyze.gif'
         self.info = _(
             "Paralyzes enemy player and creatures for one turn, "
             "so they skip one turn."
@@ -405,9 +384,7 @@ class Poison(Magic):
         self.element = "water"
         self.name = "Poison"
         self.level = 3
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/poison.gif'
-        )
+        self.imagefile = 'poison.gif'
         self.info = _(
             "Poisons all enemy units so that they lose health every turn, "
             "also hits them with 1 damage. "
@@ -461,9 +438,7 @@ class Poseidon(Prototype):
         )
         self.cast = False
         self.health = 25
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/poseidon.gif'
-        )
+        self.imagefile = 'poseidon.gif'
         Prototype.__init__(self)
 
     def spell_used(self, spell):
@@ -485,9 +460,7 @@ class SeaJustice(Magic):
         self.info = _(
             "Every enemy creature suffers damage equal to its attack -1"
         )
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/sea_justice.gif'
-        )
+        self.imagefile = 'sea_justice.gif'
         Magic.__init__(self)
         # Атакует каждую карту противника с силой равной силе карты-1
 
@@ -526,9 +499,7 @@ class Waterfall(Prototype):
         self.power = 1
         self.cast = False
         self.health = 33
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/water/waterfall.gif'
-        )
+        self.imagefile = 'waterfall.gif'
         self.info = _(
             "One of the toughest Elementals. "
             "Health itself for 3 whenever any player casts water "

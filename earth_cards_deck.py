@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,8 +17,6 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import gettext
-
-import pygame
 
 from base import AbsoluteDefenceSpirit
 from base import Magic
@@ -52,9 +51,7 @@ class AbsoluteDefence(Magic):
         self.element = "earth"
         self.name = "AbsoluteDefence"
         self.level = 7
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/absolute_defence.gif'
-        )
+        self.imagefile = 'absolute_defence.gif'
         self.info = _(
             "Owner's creatures gain protection from all attacks. "
             "This defence only lasts one turn and lasts till next "
@@ -94,9 +91,7 @@ class Centaur(Prototype):
         self.power = 5
         self.cast = True
         self.health = 14
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/centaur.gif'
-        )
+        self.imagefile = 'centaur.gif'
         Prototype.__init__(self)
         self.moves_alive = 1
 
@@ -121,9 +116,7 @@ class Dryad(Prototype):
             "and if it`s Earth creature, by 2 whenever anyone casts "
             "Earth spell or summons Earth creature."
         )
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/dryad.gif'
-        )
+        self.imagefile = 'dryad.gif'
         Prototype.__init__(self)
 
     def additional_turn_action(self):
@@ -144,9 +137,7 @@ class Earthquake(Magic):
         self.element = "earth"
         self.name = "Earthquake"
         self.level = 10
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/earthquake.gif'
-        )
+        self.imagefile = 'earthquake.gif'
         self.info = _(
             "Hits each creature for 15 damage. "
             "Doesn't affect owner's creatures, if onwer's Earth > 12. "
@@ -179,9 +170,7 @@ class Echidna(Prototype):
             "In the beginning og owner`s turn, "
             "Echidna hits all poisoned creatures for 1."
         )
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/echidna.gif'
-        )
+        self.imagefile = 'echidna.gif'
         Prototype.__init__(self)
 
 
@@ -199,9 +188,7 @@ class Elemental(Prototype):
             "That creature gain 1 point of defence from all attacks "
             "greater than 1.")
         self.health = 45
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/elemental.gif'
-        )
+        self.imagefile = 'elemental.gif'
         Prototype.__init__(self)
 
     def summon(self):
@@ -227,9 +214,7 @@ class Ent(Prototype):
         )
         self.cast = True
         self.health = 22
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/ent.gif'
-        )
+        self.imagefile = 'ent.gif'
         Prototype.__init__(self)
 
     def attack(self):
@@ -261,9 +246,7 @@ class ForestSpirit(Prototype):
         self.power = 2
         self.cast = True
         self.health = 3
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/forest_spirit.gif'
-        )
+        self.imagefile = 'forest_spirit.gif'
         Prototype.__init__(self)
 
     def damage(self, damage, enemy, cast=False):
@@ -292,9 +275,7 @@ class Golem(Prototype):
             "Regenerates 3 health every turn. "
             "While owner's Earth less than 3, it suffers 3 damage instead."
         )
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/golem.gif'
-        )
+        self.imagefile = 'golem.gif'
         Prototype.__init__(self)
 
     def turn(self):
@@ -310,9 +291,7 @@ class Quicksands(Magic):
         self.element = "earth"
         self.name = "Quicksands"
         self.level = 6
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/quicksands.gif'
-        )
+        self.imagefile = 'quicksands.gif'
         self.info = _(
             "Kills all enemy creatures of level less than 5. "
             "Only the skilled one can survive the swamp's most "
@@ -334,9 +313,7 @@ class Restructure(Magic):
         self.element = "earth"
         self.name = "Restructure"
         self.level = 6
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/restructure.gif'
-        )
+        self.imagefile = 'restructure.gif'
         self.info = _(
             "All onwer's creatures gain +3 health to their maximum, "
             "healing for 6 in the same time. "
@@ -357,9 +334,7 @@ class Revival(Magic):
         self.element = "earth"
         self.name = "Revival"
         self.level = 5
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/revival.gif'
-        )
+        self.imagefile = 'revival.gif'
         self.info = _(
             "Heals all friendly creatures for 4. "
             "Gives owner 2 health for each of his creatures on a field. "
@@ -388,9 +363,7 @@ class Satyr(Prototype):
             "If there`s no creature, damage dealt to enemy player."
         )
         self.health = 10
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/earth/satyr.gif'
-        )
+        self.imagefile = 'satyr.gif'
         Prototype.__init__(self)
 
     def turn(self):

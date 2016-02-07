@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,8 +17,6 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import gettext
-
-import pygame
 
 from base import Magic
 from base import Prototype
@@ -58,9 +57,7 @@ class Apostate(Prototype):
         self.cast = True
         self.power = 4
         self.health = 14
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/apostate.gif'
-        )
+        self.imagefile = 'apostate.gif'
         Prototype.__init__(self)
 
     def turn(self):
@@ -85,7 +82,7 @@ class Apostate(Prototype):
                 self.cast_action()
 
     def cast_action(self):
-        from cards import Banshee
+        from death_cards_deck import Banshee
         card = Banshee()
         card.parent = self.parent
         card.field = True
@@ -103,9 +100,7 @@ class Bless(Magic):  # TODO: restore of health
         self.element = "life"
         self.name = "Bless"
         self.level = 5
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/bless.gif'
-        )
+        self.imagefile = 'bless.gif'
         self.info = _(
             "All owner's creatures Blessed: "
             "receive +1 to attack, restore 1 point of health every "
@@ -152,9 +147,7 @@ class Chimera(Prototype):
         self.power = 11
         self.cast = False
         self.health = 30
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/chimera.gif'
-        )
+        self.imagefile = 'chimera.gif'
         Prototype.__init__(self)
 
     def card_summoned(self, card):
@@ -169,9 +162,7 @@ class GodsWrath(Magic):
         self.element = "life"
         self.name = "GodsWrath"
         self.level = 10
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/gods_wrath.gif'
-        )
+        self.imagefile = 'gods_wrath.gif'
         self.info = _(
             "All undead on a field are destroyed. "
             "Owner receives 3 Life and 1 health for each "
@@ -197,9 +188,7 @@ class LifeSacrifice(Magic):
         self.element = "life"
         self.name = "LifeSacrifice"
         self.level = 8
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/life_sacrifice.gif'
-        )
+        self.imagefile = 'life_sacrifice.gif'
         self.info = _(
             "Owner loses health equal to his Life. "
             "Enemy suffers damage, double of this amount. "
@@ -231,9 +220,7 @@ class MagicHealer(Prototype):
         self.cast = False
         self.health = 10
         self.security_slots = []
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/magic_healer.gif'
-        )
+        self.imagefile = 'magic_healer.gif'
         Prototype.__init__(self)
 
     def owner_gets_damage(self, damage):
@@ -257,9 +244,7 @@ class Paladin(Prototype):
         # self.level = 1
         self.power = 4
         self.health = 20
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/paladin.gif'
-        )
+        self.imagefile = 'paladin.gif'
         Prototype.__init__(self)
 
     def ai(self, type='summon', enemy=None):
@@ -324,9 +309,7 @@ class Pegasus(Prototype):
         )
         self.cast = True
         self.focus_cast = True
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/pegasus.gif'
-        )
+        self.imagefile = 'pegasus.gif'
         Prototype.__init__(self)
 
     def summon(self):
@@ -377,9 +360,7 @@ class Priest(Prototype):
             "Decreases owner`s Life by 3 every time owner "
             "casts Death spells."
         )
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/priest.gif'
-        )
+        self.imagefile = 'priest.gif'
         Prototype.__init__(self)
 
     def turn(self):
@@ -400,9 +381,7 @@ class Purify(Magic):
         self.element = "life"
         self.name = "Purify"
         self.level = 7
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/purify.gif'
-        )
+        self.imagefile = 'purify.gif'
         self.info = _(
             "If owner has Life creatures in play, "
             "heals owner for 5 and steals 4 health from each enemy "
@@ -438,9 +417,7 @@ class Rejuvenation(Magic):
         self.element = "life"
         self.name = "Rejuvenation"
         self.level = 6
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/rejuvenation.gif'
-        )
+        self.imagefile = 'rejuvenation.gif'
         self.info = _(
             "Heals owner equal to his Life*3. "
             "Owner loses all Life elements. "
@@ -474,7 +451,5 @@ class Unicorn(Prototype):
             " Costs 2 Life."
         )
         self.health = 25
-        self.image = pygame.image.load(
-            wzglobals.current_folder + '/misc/cards/life/unicorn.gif'
-        )
+        self.imagefile = 'unicorn.gif'
         Prototype.__init__(self)
