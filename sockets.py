@@ -1,4 +1,5 @@
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -17,12 +18,12 @@ import socket
 import wzglobals
 try:
     import json
-    print('JSON')
+    print('DEBUG: using json library')
 except ImportError:
     import simplejson as json
-    print('SIMPLEJSON')
-# host = "drakmail.ru"
-# port = 7712
+    print('DEBUG: using simplejson library')
+
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
@@ -40,8 +41,6 @@ def connect():
 
 
 def get_package():
-    # print "SERVICE:"
-    # print service_package
     try:
         MSGLEN, answ = int(sock.recv(8)), ''
     except ValueError:  # empty string (socked closed?)
@@ -63,6 +62,3 @@ def query_(query):
     sock.send(service)
     sock.send(query)
 query = lambda x: x
-#    # print sock.recv(1)
-#    # return
-#    # return get_package()62.176.21.105
