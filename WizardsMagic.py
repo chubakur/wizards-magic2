@@ -244,12 +244,12 @@ def start_game(cli=False, ai=False):
     # wzglobals.background.fill((0, 0, 0))
     background_backup = wzglobals.background.copy()
     # font.set_bold(0)
-    wzglobals.games_cards[0]['water'] = cards.water_cards_deck[:]
-    wzglobals.games_cards[0]['fire'] = cards.fire_cards_deck[:]
-    wzglobals.games_cards[0]['air'] = cards.air_cards_deck[:]
-    wzglobals.games_cards[0]['earth'] = cards.earth_cards_deck[:]
-    wzglobals.games_cards[0]['life'] = cards.life_cards_deck[:]
-    wzglobals.games_cards[0]['death'] = cards.death_cards_deck[:]
+    wzglobals.games_cards[0]['water'] = cards.water_cards_deck.cards[:]
+    wzglobals.games_cards[0]['fire'] = cards.fire_cards_deck.cards[:]
+    wzglobals.games_cards[0]['air'] = cards.air_cards_deck.cards[:]
+    wzglobals.games_cards[0]['earth'] = cards.earth_cards_deck.cards[:]
+    wzglobals.games_cards[0]['life'] = cards.life_cards_deck.cards[:]
+    wzglobals.games_cards[0]['death'] = cards.death_cards_deck.cards[:]
     if wzglobals.player1:
         wzglobals.player1.enemy = None
         wzglobals.player2.enemy = None
