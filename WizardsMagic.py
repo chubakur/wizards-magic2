@@ -1,6 +1,5 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
-import pygame.sprite
 # Wizards Magic
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
@@ -25,32 +24,39 @@ import pygame.sprite
 # После этого они заменяются
 # Caution! To chtosby layers are layered, I use an object surface_backup,
 # which is a copy of the image. After that, they are replaced
-__author__ = "chubakur"
-__date__ = "$12.02.2011 12:11:42$"
-import pygame
-# from pygame.locals import *
+
 import os
-import cards
+import threading
 import time
-import player
-if pygame.version.vernum < (1, 9, 1):
-    import copy
+
+import pygame
+import pygame.sprite
+
 import animations
-import wzglobals
-import elementbutton
+import cardbox
 import cardinfo
+import cards
 import cardsofelementshower
 import completethecoursebutton
-import healthwindow
-import cardbox
+import elementbutton
 import eventhandler
 import gameinformation
-import menu
-import options
-import sockets
-import nickname_window
-import threading
+import healthwindow
 import important_message
+import menu
+import nickname_window
+import options
+import player
+import sockets
+import wzglobals
+
+if pygame.version.vernum < (1, 9, 1):
+    import copy
+
+
+__author__ = "chubakur"
+__date__ = "$12.02.2011 12:11:42$"
+
 current_folder = os.path.dirname(os.path.abspath(__file__))
 wzglobals.current_folder = current_folder
 

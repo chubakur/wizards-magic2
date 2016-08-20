@@ -15,9 +15,13 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # vim: set fileencoding=utf-8 :
+
 import pygame
-from pygame.locals import K_RETURN, QUIT
+
 from pygame import draw
+from pygame.locals import K_RETURN
+from pygame.locals import QUIT
+
 import wzglobals
 
 

@@ -1,4 +1,3 @@
-import pygame.sprite
 # Wizards Magic
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
@@ -14,10 +13,14 @@ import pygame.sprite
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import pygame
+import pygame.sprite
+
+import wzglobals
+
 __author__ = "chubakur"
 __date__ = "$17.03.2011 16:55:19$"
-import pygame
-import wzglobals
 
 
 class MessageWindow(pygame.sprite.Sprite):

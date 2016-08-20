@@ -17,17 +17,18 @@
 # vim: set fileencoding=utf-8 :
 
 
+import gettext
+import os
+import socket
+import sys
+import time
+
 import pygame
 
-import sys
-import os
-import time
-import socket
+import options
 import sockets
 import WizardsMagicServer
 import wzglobals
-import options
-import gettext
 
 current_folder = os.path.dirname(os.path.abspath(__file__))
 

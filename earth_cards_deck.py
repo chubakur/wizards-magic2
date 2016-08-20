@@ -18,11 +18,12 @@
 
 import gettext
 
+import wzglobals
+
+
 from base import AbsoluteDefenceSpirit
 from base import Magic
 from base import Prototype
-
-import wzglobals
 
 
 def _(m):

@@ -14,8 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 import socket
+
 import wzglobals
+
 try:
     import json
     print('DEBUG: using json library')
@@ -61,4 +64,7 @@ def query_(query):
     service = '%08i' % len(query)
     sock.send(service)
     sock.send(query)
-query = lambda x: x
+
+
+def query(x):
+    return x

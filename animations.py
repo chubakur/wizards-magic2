@@ -21,7 +21,6 @@
 
 import wzglobals
 
-
 animations_running = []
 cards_attacking = []
 cards_dying = []

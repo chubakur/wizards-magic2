@@ -17,10 +17,11 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import pygame
-import wzglobals
 import os
 
+import pygame
+
+import wzglobals
 
 current_folder = os.path.dirname(os.path.abspath(__file__))
 

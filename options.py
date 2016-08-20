@@ -14,13 +14,15 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import pygame
-# from pygame.locals import *
-from widgets import TxtInput, CheckBox
-import menu
-
-import wzglobals
 import os.path
+
+import pygame
+
+import menu
+import wzglobals
+
+from widgets import CheckBox
+from widgets import TxtInput
 
 try:
     import configparser

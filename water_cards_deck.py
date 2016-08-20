@@ -17,13 +17,16 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import gettext
-from math import ceil
 
-from base import Magic
-from base import Prototype
+
+from math import ceil
 
 import player
 import wzglobals
+
+
+from base import Magic
+from base import Prototype
 
 
 def _(m):

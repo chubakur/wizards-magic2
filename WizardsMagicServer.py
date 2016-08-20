@@ -30,18 +30,20 @@
 # 300 - ping packag
 # 400 - service message
 
+import select
+import socket
+import threading
+
+import cards
+import options
 import player
+import wzglobals
+
 try:
     import json
 except ImportError:
     import simplejson as json
 
-import socket
-import select
-import threading
-import cards
-import wzglobals
-import options
 
 # host = ""
 # port = 7712

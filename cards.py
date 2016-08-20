@@ -17,13 +17,11 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import pygame.sprite
-import pygame
-
-import os
 import gettext
-from options import read_configuration
-import wzglobals
+import os
+
+import pygame
+import pygame.sprite
 
 import air_cards_deck
 import death_cards_deck
@@ -31,6 +29,10 @@ import earth_cards_deck
 import fire_cards_deck
 import life_cards_deck
 import water_cards_deck
+import wzglobals
+
+from options import read_configuration
+
 
 current_folder = os.path.dirname(os.path.abspath(__file__))
 __author__ = "chubakur"
