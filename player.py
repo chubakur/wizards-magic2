@@ -153,7 +153,8 @@ class Player2(Player):
 
 def switch_position():
     # wzglobals.attack_started = False
-    wzglobals.attack_started.pop()
+    if wzglobals.attack_started:
+        wzglobals.attack_started.pop()
     n = wzglobals.nickname1.name
     wzglobals.nickname1.set_nickname(wzglobals.nickname2.name)
     wzglobals.nickname2.set_nickname(n)
