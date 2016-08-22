@@ -16,8 +16,9 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import wzglobals
 import random
+
+import wzglobals
 
 
 def select_cardbox():
@@ -66,12 +67,12 @@ def select_cardbox():
 def select_card(enemy_card):
     player = wzglobals.player
     self_cards = (
-        player.cards['water'].values() +
-        player.cards['fire'].values() +
-        player.cards['air'].values() +
-        player.cards['earth'].values() +
-        player.cards['life'].values() +
-        player.cards['death'].values()
+        list(player.cards['water'].values()) +
+        list(player.cards['fire'].values()) +
+        list(player.cards['air'].values()) +
+        list(player.cards['earth'].values()) +
+        list(player.cards['life'].values()) +
+        list(player.cards['death'].values())
     )
     random.shuffle(self_cards)
     item = None

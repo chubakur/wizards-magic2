@@ -16,26 +16,25 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # vim: set fileencoding=utf-8 :
 
-try:
-    import pygame
-    from pygame.locals import _
-    yes_pygame = True
-except ImportError:
-    yes_pygame = False
-import sys
+
+import gettext
 import os
-import time
 import socket
+import sys
+import time
+
+import pygame
+
+import options
 import sockets
 import WizardsMagicServer
 import wzglobals
-import options
+
 current_folder = os.path.dirname(os.path.abspath(__file__))
-# t = gettext.translation(
-#   'interface', current_folder + '/languages', languages=['ru']
-# )
-# _ = t.ugettext
-# t.install()
+
+
+def _(m):
+    return gettext.dgettext(message=m, domain='wizards-magic')
 
 
 class MenuButton(pygame.sprite.Sprite):

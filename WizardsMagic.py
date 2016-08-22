@@ -1,6 +1,5 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
-import pygame.sprite
 # Wizards Magic
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
@@ -25,32 +24,39 @@ import pygame.sprite
 # После этого они заменяются
 # Caution! To chtosby layers are layered, I use an object surface_backup,
 # which is a copy of the image. After that, they are replaced
-__author__ = "chubakur"
-__date__ = "$12.02.2011 12:11:42$"
-import pygame
-# from pygame.locals import *
+
 import os
-import cards
+import threading
 import time
-import player
-if pygame.version.vernum < (1, 9, 1):
-    import copy
+
+import pygame
+import pygame.sprite
+
 import animations
-import wzglobals
-import elementbutton
+import cardbox
 import cardinfo
+import cards
 import cardsofelementshower
 import completethecoursebutton
-import healthwindow
-import cardbox
+import elementbutton
 import eventhandler
 import gameinformation
-import menu
-import options
-import sockets
-import nickname_window
-import thread
+import healthwindow
 import important_message
+import menu
+import nickname_window
+import options
+import player
+import sockets
+import wzglobals
+
+if pygame.version.vernum < (1, 9, 1):
+    import copy
+
+
+__author__ = "chubakur"
+__date__ = "$12.02.2011 12:11:42$"
+
 current_folder = os.path.dirname(os.path.abspath(__file__))
 wzglobals.current_folder = current_folder
 
@@ -64,9 +70,9 @@ def server_handler():
         # print si
         # print "RETURN:"
         # print get_package()
-        print gi
+        print(gi)
         if gi['action'] == 'join':
-            print("Join to Game with Player_id " + str(gi['id']))
+            print(("Join to Game with Player_id " + str(gi['id'])))
             wzglobals.player_id = gi['id']
             if wzglobals.player_id == 1:
                 player.switch_position()
@@ -95,7 +101,7 @@ def server_handler():
                 wzglobals.player2.cards_generated == 0 and
                 wzglobals.player1.cards_generated == 0
             ):
-                print "Выдаем карты"
+                print("Выдаем карты")
                 wzglobals.player1.get_cards(gi['deck_cards'][0])
                 wzglobals.player1.cards_generated = True
                 # а теперь второму
@@ -244,16 +250,17 @@ def start_game(cli=False, ai=False):
     # wzglobals.background.fill((0, 0, 0))
     background_backup = wzglobals.background.copy()
     # font.set_bold(0)
-    wzglobals.games_cards[0]['water'] = cards.water_cards_deck[:]
-    wzglobals.games_cards[0]['fire'] = cards.fire_cards_deck[:]
-    wzglobals.games_cards[0]['air'] = cards.air_cards_deck[:]
-    wzglobals.games_cards[0]['earth'] = cards.earth_cards_deck[:]
-    wzglobals.games_cards[0]['life'] = cards.life_cards_deck[:]
-    wzglobals.games_cards[0]['death'] = cards.death_cards_deck[:]
+    wzglobals.games_cards[0]['water'] = cards.water_cards_deck.cards[:]
+    wzglobals.games_cards[0]['fire'] = cards.fire_cards_deck.cards[:]
+    wzglobals.games_cards[0]['air'] = cards.air_cards_deck.cards[:]
+    wzglobals.games_cards[0]['earth'] = cards.earth_cards_deck.cards[:]
+    wzglobals.games_cards[0]['life'] = cards.life_cards_deck.cards[:]
+    wzglobals.games_cards[0]['death'] = cards.death_cards_deck.cards[:]
     if wzglobals.player1:
         wzglobals.player1.enemy = None
         wzglobals.player2.enemy = None
     wzglobals.player1 = player.Player1()
+    wzglobals.player1.nickname = wzglobals.nick
     wzglobals.player2 = player.Player2()
     wzglobals.player1.enemy = wzglobals.player2
     wzglobals.player2.enemy = wzglobals.player1
@@ -333,11 +340,13 @@ def start_game(cli=False, ai=False):
         cardsofelementshower.CardsOfElementShower()
     wzglobals.nickname2 = \
         nickname_window.NicknameWindow((142, 530), 'Guest')
+    wzglobals.player2.nickname = 'Guest'
     wzglobals.nickname1 = \
         nickname_window.NicknameWindow((22, 0), wzglobals.nick)
     if ai:
         wzglobals.player2.ai = True
         wzglobals.nickname2.set_nickname('Computer')
+        wzglobals.player2.nickname = 'Computer'
     # стрелочки для сдвига карт в колоде
     # wzglobals.leftarrow = cardsofelementshower.LeftArrow((356, 489))
     # wzglobals.rightarrow = cardsofelementshower.RightArrow((739, 491))
@@ -358,7 +367,8 @@ def start_game(cli=False, ai=False):
             )
         sockets.query = sockets.query_
         wzglobals.cli = True
-        thread.start_new_thread(server_handler, ())
+        server_thread = threading.Thread(target=server_handler)
+        server_thread.start()
     if not wzglobals.cli:
         player.switch_position()
     # **************************************************************************
@@ -426,7 +436,8 @@ clock = pygame.time.Clock()
 # read configuration file
 options.read_configuration()
 if wzglobals.music == "Y":
-    thread.start_new_thread(load_and_start_bg_music, ())
+    music_thread = threading.Thread(target=load_and_start_bg_music)
+    music_thread.start()
 menu.menu_main()
 
 wzglobals.event_handler = eventhandler.Event_handler()

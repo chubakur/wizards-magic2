@@ -15,14 +15,27 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import wzglobals
-import pygame
-import cards
 import os
-import sockets
+
+import pygame
+
+
+from pygame.locals import K_0
+from pygame.locals import K_9
+from pygame.locals import K_PERIOD
+from pygame.locals import K_RETURN
+from pygame.locals import MOUSEBUTTONDOWN
+from pygame.locals import MOUSEBUTTONUP
+from pygame.locals import MOUSEMOTION
+from pygame.locals import QUIT
+from pygame.locals import K_a
+from pygame.locals import K_z
+
+import cards
 import menu
-from pygame.locals import QUIT, K_0, K_9, K_a, K_z, K_PERIOD, K_RETURN, \
-    MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION
+import sockets
+import wzglobals
+
 current_folder = os.path.dirname(os.path.abspath(__file__))
 
 

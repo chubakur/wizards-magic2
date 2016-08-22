@@ -30,18 +30,20 @@
 # 300 - ping packag
 # 400 - service message
 
+import select
+import socket
+import threading
+
+import cards
+import options
 import player
+import wzglobals
+
 try:
     import json
 except ImportError:
     import simplejson as json
 
-import socket
-import select
-import threading
-import cards
-import wzglobals
-import options
 
 # host = ""
 # port = 7712
@@ -77,7 +79,7 @@ class Connect(threading.Thread):
                     return dict(action='socket_error')
                 # print "ANSW",answ
                 return json.loads(answ)
-        print "Closing client connection"
+        print("Closing client connection")
         return dict(action='server_close')
 
     def __init__(self, sock, addr):
@@ -133,7 +135,7 @@ class Connect(threading.Thread):
 
                 # num_players+=1
                 self.nickname = query['nickname']
-                print "Nick: ", self.nickname
+                print("Nick: ", self.nickname)
                 wzglobals.players[self.game_id].append(
                     player.Player(self.game_id)
                 )
@@ -179,46 +181,58 @@ class Connect(threading.Thread):
                     deck_cards = []
                     deck_cards.append(
                         {
-                            "water":
+                            "water": list(
                                 wzglobals.players[self.game_id][0]
-                                .cards['water'].keys(),
-                            "fire":
+                                .cards['water'].keys()
+                            ),
+                            "fire": list(
                                 wzglobals.players[self.game_id][0]
-                                .cards['fire'].keys(),
-                            "air":
+                                .cards['fire'].keys()
+                            ),
+                            "air": list(
                                 wzglobals.players[self.game_id][0]
-                                .cards['air'].keys(),
-                            "earth":
+                                .cards['air'].keys()
+                            ),
+                            "earth": list(
                                 wzglobals.players[self.game_id][0]
-                                .cards['earth'].keys(),
-                            "life":
+                                .cards['earth'].keys()
+                            ),
+                            "life": list(
                                 wzglobals.players[self.game_id][0]
-                                .cards['life'].keys(),
-                            "death":
+                                .cards['life'].keys()
+                            ),
+                            "death": list(
                                 wzglobals.players[self.game_id][0]
                                 .cards['death'].keys()
+                            )
                         }
                     )
                     deck_cards.append(
                         {
-                            "water":
+                            "water": list(
                                 wzglobals.players[self.game_id][1]
-                                .cards['water'].keys(),
-                            "fire":
+                                .cards['water'].keys()
+                            ),
+                            "fire": list(
                                 wzglobals.players[self.game_id][1]
-                                .cards['fire'].keys(),
-                            "air":
+                                .cards['fire'].keys()
+                            ),
+                            "air": list(
                                 wzglobals.players[self.game_id][1]
-                                .cards['air'].keys(),
-                            "earth":
+                                .cards['air'].keys()
+                            ),
+                            "earth": list(
                                 wzglobals.players[self.game_id][1]
-                                .cards['earth'].keys(),
-                            "life":
+                                .cards['earth'].keys()
+                            ),
+                            "life": list(
                                 wzglobals.players[self.game_id][1]
-                                .cards['life'].keys(),
-                            "death":
+                                .cards['life'].keys()
+                            ),
+                            "death": list(
                                 wzglobals.players[self.game_id][1]
                                 .cards['death'].keys()
+                            )
                         }
                     )
                     for connection in connections[self.game_id]:
@@ -369,7 +383,7 @@ class Connect(threading.Thread):
                             }
                         )
                 except IndexError:
-                    print 'Player has left, not waiting for another'
+                    print('Player has left, not waiting for another')
                 # print "Client ",query['player_id'],"disconnected"
                 self.sock.close()
                 break
@@ -388,7 +402,7 @@ class Connect(threading.Thread):
                 self.sock.close()
                 break
             elif query['action'] == 'value_error':
-                print 'Socket value error'
+                print('Socket value error')
                 try:
                     self.send(self.sock, {"answ": 200, "action": "bye"})
                 except:
@@ -396,14 +410,14 @@ class Connect(threading.Thread):
                 self.sock.close()
                 break
             elif query['action'] == 'socket_error':
-                print 'Socket error. Closing.'
+                print('Socket error. Closing.')
                 try:
                     self.sock.close()
                 except:
                     pass
                 break
             else:
-                print query['action']
+                print(query['action'])
                 self.send(self.sock, {"answ": 300})
         self.sock.close()
 
@@ -412,15 +426,15 @@ class Server(threading.Thread):
     socket = None
 
     def __init__(self):
-        print "starting server"
+        print("starting server")
         self.socket = get_socket()
         threading.Thread.__init__(self)
 
     def run(self):
         while wzglobals.running:
-            print "waiting for client"
+            print("waiting for client")
             sock, addr = self.socket.accept()
-            print "Client connected"
+            print("Client connected")
             if wzglobals.running:
                 Connect(sock, addr).start()
 #        print "Closing connections"
@@ -437,7 +451,7 @@ class Server(threading.Thread):
 #                    )
 #                except:
 #                    pass
-        print "Closing server"
+        print("Closing server")
         self.socket.close()
 
 
@@ -450,11 +464,11 @@ def get_socket():
 
 
 def main():
-    print "Starting server..."
+    print("Starting server...")
     options.read_configuration()
     socket = get_socket()
     while True:
-        print "Waiting for clients on TCP port "+wzglobals.port
+        print("Waiting for clients on TCP port "+wzglobals.port)
         sock, addr = socket.accept()
         Connect(sock, addr).start()
 

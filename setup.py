@@ -17,17 +17,20 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-from setuptools import setup
-from glob import glob
-import py_compile
 import os
+import py_compile
+
+
+from glob import glob
+
+from setuptools import setup
 
 modules = [
     x
     for x in glob('*.py')
     if x != 'setup.py'
 ]
-print modules
+print(modules)
 for f in modules:
     os.environ['PYTHONOPTIMIZE'] = "0"
     py_compile.compile(f, f+'c')
@@ -43,7 +46,7 @@ for d in ('misc', 'languages'):
         if files:
             data_files.append((root, [os.path.join(root, f) for f in files]))
 
-print data_files
+print(data_files)
 
 setup(
     name='WizardsMagic',

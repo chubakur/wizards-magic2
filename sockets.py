@@ -1,4 +1,5 @@
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -13,16 +14,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 import socket
+
 import wzglobals
+
 try:
     import json
-    print 'JSON'
+    print('DEBUG: using json library')
 except ImportError:
     import simplejson as json
-    print 'SIMPLEJSON'
-# host = "drakmail.ru"
-# port = 7712
+    print('DEBUG: using simplejson library')
+
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
@@ -30,7 +34,7 @@ def connect():
     global sock
     host = wzglobals.server
     port = wzglobals.port
-    print host, port
+    print(host, port)
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         sock.connect((host, int(port)))
@@ -40,8 +44,6 @@ def connect():
 
 
 def get_package():
-    # print "SERVICE:"
-    # print service_package
     try:
         MSGLEN, answ = int(sock.recv(8)), ''
     except ValueError:  # empty string (socked closed?)
@@ -52,8 +54,8 @@ def get_package():
     while len(answ) < MSGLEN:
         answ += sock.recv(MSGLEN - len(answ))
         # return answ
-    print "GET_PACKAGE RETURN"
-    print answ
+    print("GET_PACKAGE RETURN")
+    print(answ)
     return json.loads(answ)
 
 
@@ -62,7 +64,7 @@ def query_(query):
     service = '%08i' % len(query)
     sock.send(service)
     sock.send(query)
-query = lambda x: x
-#    # print sock.recv(1)
-#    # return
-#    # return get_package()62.176.21.105
+
+
+def query(x):
+    return x

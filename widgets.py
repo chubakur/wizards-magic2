@@ -15,13 +15,13 @@
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # vim: set fileencoding=utf-8 :
-try:
-    import pygame
-    from pygame.locals import K_RETURN, QUIT
-    from pygame import draw
-    yes_pygame = True
-except ImportError:
-    yes_pygame = False
+
+import pygame
+
+from pygame import draw
+from pygame.locals import K_RETURN
+from pygame.locals import QUIT
+
 import wzglobals
 
 
@@ -315,13 +315,13 @@ def main():
             if event.type == QUIT:
                 return
 
-            print event
+            print(event)
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_ESCAPE:
-                    print "qqqqqqqqqqqqqqqqqq"
+                    print("qqqqqqqqqqqqqqqqqq")
                 else:
-                    print event.key
-                    print pygame.key.name(event.key)
+                    print(event.key)
+                    print(pygame.key.name(event.key))
         wzglobals.screen.blit(wzglobals.background, (0, 0))
         pygame.display.flip()
         pygame.time.wait(200)

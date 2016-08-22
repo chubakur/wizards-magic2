@@ -14,17 +14,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-import cards
+
 import os
 import random
-import wzglobals
-import sockets
-try:
-    import pygame
-    yes_pygame = True
-except ImportError:
-    yes_pygame = False
+
+import pygame
+
 import ai
+import cards
+import sockets
+import wzglobals
+
+
 current_folder = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -32,6 +33,7 @@ class Player():  # Прототип игрока
     def __init__(self, game_id=0):
         self.health = 50
         self.name = "player"
+        self.nickname = None
         self.action_points = True  # Ходил игрок, или нет
         self.game_id = game_id
         self.get_cards()
@@ -61,7 +63,11 @@ class Player():  # Прототип игрока
             card.owner_gets_damage(damage)
         self.health -= damage
         if self.health <= 0:
-            wzglobals.gameinformationpanel.display("Game Over!")
+            wzglobals.gameinformationpanel.display(
+                _("Game Over! Player {player} loose!").format(
+                    player=self.nickname,
+                )
+            )
             wzglobals.stage = False
 
     def heal(self, health):
@@ -79,7 +85,7 @@ class Player():  # Прототип игрока
         ]
         random.shuffle(manas)  # раскидываем массив рендомно
         sum = 0
-        for mana_id in xrange(0, len(manas)):
+        for mana_id in range(0, len(manas)):
             if mana_id != len(manas) - 1:
                 rand = random.randint(2, 5)
                 sum += rand
@@ -105,7 +111,7 @@ class Player():  # Прототип игрока
         for element in ['water', 'fire', 'air', 'earth', 'life', 'death']:
             tmpcards[element] = {}
             cards_for_sort[element] = []
-            for i in xrange(0, 4):
+            for i in range(0, 4):
                 # получаем карту элемента воды
                 if not server_cards:
                     randnum = random.randint(
@@ -129,8 +135,8 @@ class Player():  # Прототип игрока
                     tmpcards[element][card] = card
 
             if self.game_id == 0:
-                cards_for_sort[element].sort()
-                for i in xrange(0, 4):
+                cards_for_sort[element].sort(key=lambda item: item[0])
+                for i in range(0, 4):
                     cards_for_sort[element][i][1].position_in_deck = i
         self.cards = tmpcards.copy()
 
@@ -152,7 +158,8 @@ class Player2(Player):
 
 def switch_position():
     # wzglobals.attack_started = False
-    wzglobals.attack_started.pop()
+    if wzglobals.attack_started:
+        wzglobals.attack_started.pop()
     n = wzglobals.nickname1.name
     wzglobals.nickname1.set_nickname(wzglobals.nickname2.name)
     wzglobals.nickname2.set_nickname(n)
@@ -174,7 +181,7 @@ def me_finish_turn():
     try:
         pygame.mixer.music.load(current_folder+'/misc/sounds/card_attack.ogg')
     except:
-        print "Unexpected error: while trying play attack sound"
+        print("Unexpected error: while trying play attack sound")
     wzglobals.playmusic()
     if wzglobals.player.id == 1:
         wzglobals.player = wzglobals.player2

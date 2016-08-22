@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wizards Magic
+# Copyright (C) 2016 Sandro Bonazzola <sandro.bonazzola@gmail.com>
 # Copyright (C) 2011-2014  https://code.google.com/p/wizards-magic/
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -16,10 +17,11 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-import pygame
-import wzglobals
 import os
 
+import pygame
+
+import wzglobals
 
 current_folder = os.path.dirname(os.path.abspath(__file__))
 
@@ -30,12 +32,14 @@ class CardInfo(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.type = 'cardinfo'
         self.image = pygame.image.load(
-            current_folder+'/misc/card_information.gif'
+            os.path.join(current_folder, 'misc', 'card_information.gif')
         ).convert_alpha()
         self.surface_backup = self.image.copy()
         self.rect = (
-            wzglobals.screen.get_size()[0] / 2-self.image.get_size()[0] / 2,
-            wzglobals.screen.get_size()[1] / 2-self.image.get_size()[1] / 2
+            wzglobals.screen.get_size()[0] // 2 -
+            self.image.get_size()[0] // 2,
+            wzglobals.screen.get_size()[1] // 2 -
+            self.image.get_size()[1] // 2
         )
         self.show = False
         self.text = ""
@@ -43,7 +47,7 @@ class CardInfo(pygame.sprite.Sprite):
         self.symbol_size = 8  # Размер символа по Х.
         # Нужно для расчета переноса строк
         self.distance_between_rows = 20  # расстояние между строками
-        self.symbols_in_row = int(self.image.get_size()[0] / self.symbol_size)
+        self.symbols_in_row = int(self.image.get_size()[0] // self.symbol_size)
 
     def draw(self):
         self.text = self.card.info
@@ -58,10 +62,10 @@ class CardInfo(pygame.sprite.Sprite):
         self.text = self.text.split('\n')
         last_y_offset = 0
         for ptext in self.text:
-            rows = len(ptext) / self.symbols_in_row
+            rows = len(ptext) // self.symbols_in_row
             if len(ptext) % self.symbols_in_row:
                 rows += 1
-            for row in xrange(0, rows):
+            for row in range(0, rows):
                 text = wzglobals.font.render(
                     ptext[
                         row * self.symbols_in_row:
