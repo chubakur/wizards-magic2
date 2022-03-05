@@ -25,11 +25,11 @@ def select_cardbox():
     s_cardboxes = []
     if wzglobals.player.id == 1:
         for cardbox in wzglobals.cardboxes[0:5]:
-            if cardbox.card.name is "player":  # если есть карта
+            if cardbox.card.name == "player":  # если есть карта
                 s_cardboxes.append(cardbox)
     else:
         for cardbox in wzglobals.cardboxes[5:10]:
-            if cardbox.card.name is "player":
+            if cardbox.card.name == "player":
                 s_cardboxes.append(cardbox)
     e_cardboxes = []
     if wzglobals.player.id == 2:
@@ -80,7 +80,7 @@ def select_card(enemy_card):
     if enemy_card != "player":
         # If opponent has more of not void  cardboxes
         for card in self_cards:
-            if card.type is 'warrior_card':
+            if card.type ==a 'warrior_card':
                 eff = card.ai('summon', enemy_card)
                 if eff >= max_eff:
                     max_eff = eff
