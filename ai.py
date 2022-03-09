@@ -80,7 +80,7 @@ def select_card(enemy_card):
     if enemy_card != "player":
         # If opponent has more of not void  cardboxes
         for card in self_cards:
-            if card.type ==a 'warrior_card':
+            if card.type == 'warrior_card':
                 eff = card.ai('summon', enemy_card)
                 if eff >= max_eff:
                     max_eff = eff
