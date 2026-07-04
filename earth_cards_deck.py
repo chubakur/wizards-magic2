@@ -18,6 +18,7 @@
 
 import gettext
 
+import pygame
 import wzglobals
 
 
@@ -124,9 +125,9 @@ class Dryad(Prototype):
         ids = self.get_adjacent_position()
         if ids:
             for id in ids:
-                wzglobals.cardboxes[id].card.set_power(
-                    wzglobals.cardboxes[id].card.power + 1
-                )
+                adj_card = wzglobals.cardboxes[id].card
+                bonus = 2 if adj_card.element == 'earth' else 1
+                adj_card.set_power(adj_card.power + bonus)
 
     def summon(self):
         Prototype.summon(self)
