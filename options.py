@@ -53,7 +53,7 @@ def save():
         if item.type == 'checkbox':
             config.set('WizardsMagic', item.key, (item.value and 'Y' or 'N'))
     config.set('WizardsMagic', 'language', wzglobals.language)
-    configfile = open(wzglobals.current_folder + '/wizardsmagic.cfg', 'wb')
+    configfile = open(wzglobals.current_folder + '/wizardsmagic.cfg', 'w')
     config.write(configfile)
     configfile.close()
     read_configuration()
@@ -155,7 +155,7 @@ def options_main():
         config.set('WizardsMagic', 'language', 'en')
         # config.set('WizardsMagic', 'ai', 'Y')
         config.set('WizardsMagic', 'animation', 'Y')
-        configfile = open(wzglobals.current_folder + '/wizardsmagic.cfg', 'wb')
+        configfile = open(wzglobals.current_folder + '/wizardsmagic.cfg', 'w')
         config.write(configfile)
         configfile.close()
 
