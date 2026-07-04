@@ -19,6 +19,7 @@
 import json
 import os
 import random
+import threading
 import urllib.request
 
 import wzglobals
@@ -26,6 +27,10 @@ import wzglobals
 
 DEEPSEEK_API_URL = "https://api.deepseek.com/chat/completions"
 DEEPSEEK_MODEL = "deepseek-chat"
+
+# Background thread state
+_thread = None
+_result = {}  # set by background thread: {'action': ...} or {'error': ...}
 
 SYSTEM_PROMPT = (
     "You are the AI opponent in Wizards Magic, a turn-based card game.\n\n"
@@ -304,25 +309,60 @@ def execute_action(action):
 
 
 # ---------------------------------------------------------------------------
-# Main AI entry point
+# Main AI entry point  (async – does not block the game loop)
 # ---------------------------------------------------------------------------
 
-def take_turn():
-    """LLM-powered AI turn. Falls back to heuristic on any failure."""
-    if not os.environ.get('DEEPSEEK_API_KEY'):
-        _heuristic_turn()
-        return
+def _async_worker(state):
+    """Background thread: call DeepSeek and store result in _result."""
+    global _result
+    try:
+        action = call_deepseek(state)
+        _result = {'action': action}
+    except Exception as e:
+        _result = {'error': str(e)}
 
+
+def start_async_turn():
+    """Snapshot game state and start LLM call in a daemon thread.
+    Returns True if the thread was launched, False on error (caller falls back).
+    """
+    global _thread, _result
+    _result = {}
     try:
         state = get_game_state()
-        action = call_deepseek(state)
+    except Exception as e:
+        print("LLM AI error getting state:", e)
+        return False
+    _thread = threading.Thread(target=_async_worker, args=(state,), daemon=True)
+    _thread.start()
+    return True
+
+
+def is_thinking():
+    """Return True while the background LLM thread is still running."""
+    return _thread is not None and _thread.is_alive()
+
+
+def execute_pending_action():
+    """Called from the game loop once thinking is done.
+    Executes the LLM's action (or falls back to heuristic on error/reject).
+    """
+    if 'error' in _result:
+        print("LLM AI error:", _result['error'])
+        _heuristic_turn()
+    elif 'action' in _result:
+        action = _result['action']
         print("LLM AI action:", action)
         if not execute_action(action):
             print("LLM action rejected, falling back to heuristic")
             _heuristic_turn()
-    except Exception as e:
-        print("LLM AI error:", e)
+    else:
         _heuristic_turn()
+
+
+def take_turn():
+    """Synchronous AI turn used when DEEPSEEK_API_KEY is not set."""
+    _heuristic_turn()
 
 
 def _heuristic_turn():

@@ -72,6 +72,7 @@ answer_cmd = ""  # function to execute when stoke ENTER
 itemfocus = None  # input object with focus
 running = True  # while true, signal to threads that main is still running
 server_thread = None  # server thread object
+ai_turn_pending = False  # True while LLM is thinking in background thread
 
 # configuration global variables
 music = 'Y'  # enable background music

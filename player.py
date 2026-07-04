@@ -216,8 +216,13 @@ def me_finish_turn():
         for card in wzglobals.ccards_1:
             card.additional_turn_action()
     if wzglobals.player.ai:
-        ai.take_turn()
-        finish_turn()
+        if os.environ.get('DEEPSEEK_API_KEY') and ai.start_async_turn():
+            # LLM thinking started — game loop will call finish_turn() when done
+            wzglobals.ai_turn_pending = True
+        else:
+            # No API key or failed to snapshot state: use heuristic synchronously
+            ai.take_turn()
+            finish_turn()
 
 
 def finish_turn():
