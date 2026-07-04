@@ -511,6 +511,14 @@ class Waterfall(Prototype):
         )
         Prototype.__init__(self)
 
+    def spell_used(self, spell):
+        if spell.element == 'water':
+            self.heal(3, self.max_health)
+
+    def card_summoned(self, card):
+        if card.element == 'water':
+            self.heal(3, self.max_health)
+
     def turn(self):
         Prototype.turn(self)
         self.power = self.parent.player.mana['water']
