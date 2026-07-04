@@ -139,14 +139,17 @@ class Demon(Prototype):
         self.imagefile = 'demon.gif'
         Prototype.__init__(self)
 
+    def damage(self, damage, enemy, cast=False):
+        if cast and enemy.element in ('fire', 'earth'):
+            return 0
+        Prototype.damage(self, damage, enemy, cast)
+
     def cast_action(self):
         if self.parent.player.mana['earth']:
             self.parent.player.mana['earth'] -= 1
             self.parent.player.mana['fire'] += 2
             self.play_cast_sound()
             self.used_cast = True
-        # Не получает повреждения от заклинаний огня и земли
-        # cast: владелец теряет один элемент земли и получает 2 огня
 
 
 class Devil(Prototype):
@@ -504,6 +507,11 @@ class Vulcan(Prototype):
         self.health = 27
         self.imagefile = 'vulcan.gif'
         Prototype.__init__(self)
+
+    def damage(self, damage, enemy, cast=False):
+        if cast and enemy.element == 'fire':
+            return 0
+        Prototype.damage(self, damage, enemy, cast)
 
     def summon(self):
         Prototype.summon(self)
