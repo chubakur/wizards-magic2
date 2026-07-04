@@ -181,7 +181,8 @@ class Elemental(Prototype):
         self.element = "earth"
         self.level = 13
         self.power = 1
-        self.cast = False
+        self.cast = True
+        self.focus_cast = True
         self.info = _(
             "Attack equal to owner`s Earth. Increases Earth by 2 "
             "every turn. Fire spells deal additional 10 damage. \n"
@@ -200,6 +201,22 @@ class Elemental(Prototype):
         Prototype.turn(self)
         self.parent.player.mana['earth'] += 2
         self.set_power(self.parent.player.mana[self.element])
+
+    def cast_action(self):
+        Prototype.cast_action(self)
+        for card in self.get_self_cards():
+            if card != self:
+                card.light_switch(True)
+
+    def focus_cast_action(self, target):
+        if target.name != 'player':
+            if target.parent.player.id == self.parent.player.id:
+                target.stone_skin = True
+                self.used_cast = True
+                wzglobals.cast_focus = False
+                self.play_cast_sound()
+                for card in self.get_self_cards():
+                    card.light_switch(False)
 
 
 class Ent(Prototype):
