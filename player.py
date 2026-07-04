@@ -216,19 +216,7 @@ def me_finish_turn():
         for card in wzglobals.ccards_1:
             card.additional_turn_action()
     if wzglobals.player.ai:
-        cb = ai.select_cardbox()
-        if cb:
-            c = ai.select_card(cb.card)
-            # print 'SELECTED',c
-            cb.card = c()
-            cb.card.field = True
-            wzglobals.player.mana[cb.card.element] -= cb.card.level
-            cb.card.parent = cb
-            if wzglobals.player.id == 1:
-                wzglobals.ccards_1.add(cb.card)
-            else:
-                wzglobals.ccards_2.add(cb.card)
-            cb.card.summon()
+        ai.take_turn()
         finish_turn()
 
 
