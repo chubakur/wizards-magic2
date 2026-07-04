@@ -286,7 +286,7 @@ class Leviathan(Prototype):
     def cast_action(self):
         if self.parent.player.mana['water'] >= 6:
             self.play_cast_sound()
-            self.parent.player.mana -= 1
+            self.parent.player.mana['water'] -= 1
             self.parent.player.heal(4)
             self.used_cast = True
 
