@@ -157,6 +157,13 @@ class Chimera(Prototype):
             if card != self:
                 self.parent.player.heal(card.level)
 
+    def spell_used(self, spell):
+        if hasattr(spell, 'player') and spell.player is self.parent.player:
+            # Refund 50% of the spell's mana cost to the owner
+            refund = spell.level // 2
+            if refund > 0:
+                self.parent.player.mana[spell.element] += refund
+
 
 class GodsWrath(Magic):
     def __init__(self):
@@ -261,6 +268,16 @@ class Paladin(Prototype):
         elif type == 'cast':
             return 0
 
+    def attack(self):
+        if self.moves_alive:
+            attack_position = self.get_attack_position()
+            target = wzglobals.cardboxes[attack_position].card
+            multiplier = 3 if target.element == 'death' else 1
+            kill = target.damage(self.power * multiplier, self)
+            self.run_attack_animation()
+            return kill
+        return 0
+
     def cast_action(self):
         if self.parent.player.mana['life'] >= 2:
             # если хватает маны, то активируем фокус
@@ -317,6 +334,13 @@ class Pegasus(Prototype):
         Prototype.summon(self)
         for card in self.get_self_cards():
             card.heal(3, card.max_health)
+            # Remove harmful spells (no player, or cast by enemy)
+            for spell in card.spells[:]:
+                spell_player = getattr(spell, 'player', None)
+                if spell_player is None or spell_player.id != self.parent.player.id:
+                    spell.unset(card)
+                    if spell in card.spells:
+                        card.spells.remove(spell)
 
     def cast_action(self):
         if self.parent.player.mana['life'] >= 2:  # если хватает маны
@@ -443,7 +467,7 @@ class Unicorn(Prototype):
         self.element = "life"
         self.level = 9
         self.power = 8
-        self.cast = False
+        self.cast = True
         self.info = _(
             "Unicorn reduces damage from spells to owner's creatures "
             "by 50%. Cures poison from owner's creatures. \n"
@@ -454,3 +478,50 @@ class Unicorn(Prototype):
         self.health = 25
         self.imagefile = 'unicorn.gif'
         Prototype.__init__(self)
+
+    def _apply_spell_resist(self, card):
+        card.spell_resist = 0.5
+
+    def _remove_spell_resist(self, card):
+        card.spell_resist = 0.0
+
+    def summon(self):
+        Prototype.summon(self)
+        for card in self.get_self_cards():
+            self._apply_spell_resist(card)
+
+    def die(self):
+        for card in self.get_self_cards():
+            self._remove_spell_resist(card)
+        Prototype.die(self)
+
+    def card_summoned(self, card):
+        # Apply spell resist to new friendly cards when Unicorn is on field
+        if (self.alive() and
+                card.parent.player.id == self.parent.player.id and
+                card != self):
+            self._apply_spell_resist(card)
+
+    def turn(self):
+        Prototype.turn(self)
+        # Cure poison from all friendly creatures
+        for card in self.get_self_cards():
+            for spell in card.spells[:]:
+                if getattr(spell, 'name', None) == 'Poison':
+                    spell.unset(card)
+                    if spell in card.spells:
+                        card.spells.remove(spell)
+
+    def cast_action(self):
+        if self.parent.player.mana['life'] >= 2:
+            self.parent.player.mana['life'] -= 2
+            for card in self.get_enemy_cards():
+                for spell in card.spells[:]:
+                    # Remove spells owned by the enemy (beneficial to them)
+                    if (hasattr(spell, 'player') and
+                            spell.player.id == card.parent.player.id):
+                        spell.unset(card)
+                        if spell in card.spells:
+                            card.spells.remove(spell)
+            self.used_cast = True
+            self.play_cast_sound()

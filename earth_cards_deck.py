@@ -18,6 +18,7 @@
 
 import gettext
 
+import pygame
 import wzglobals
 
 
@@ -124,9 +125,9 @@ class Dryad(Prototype):
         ids = self.get_adjacent_position()
         if ids:
             for id in ids:
-                wzglobals.cardboxes[id].card.set_power(
-                    wzglobals.cardboxes[id].card.power + 1
-                )
+                adj_card = wzglobals.cardboxes[id].card
+                bonus = 2 if adj_card.element == 'earth' else 1
+                adj_card.set_power(adj_card.power + bonus)
 
     def summon(self):
         Prototype.summon(self)
@@ -157,6 +158,37 @@ class Earthquake(Magic):
             card.damage(15, self, True)
 
 
+class Poison(pygame.sprite.Sprite):
+    """Periodic poison debuff applied by Echidna on attack.
+    Deals 2 damage per turn to the target (at the start of target owner's
+    turn). Removed automatically when the target card leaves the field.
+    """
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.name = "Poison"
+        self.element = "earth"
+        self.level = 0
+        self.cards = []
+
+    def set(self, card):
+        self.cards.append(card)
+
+    def unset(self, card):
+        if card in self.cards:
+            self.cards.remove(card)
+
+    def periodical_cast(self):
+        # Remove dead cards first
+        self.cards = [c for c in self.cards if c.alive()]
+        if not self.cards:
+            self.kill()
+            return
+        for card in self.cards[:]:
+            # Fire when the poisoned card's owner becomes the active player
+            if card.parent.player.id == wzglobals.player.id:
+                card.damage(2, self, True)
+
+
 class Echidna(Prototype):
     def __init__(self):
         self.name = "Echidna"
@@ -173,6 +205,32 @@ class Echidna(Prototype):
         )
         self.imagefile = 'echidna.gif'
         Prototype.__init__(self)
+
+    def attack(self):
+        if self.moves_alive:
+            attack_position = self.get_attack_position()
+            target = wzglobals.cardboxes[attack_position].card
+            kill = target.damage(self.power, self)
+            if not kill and target.name != 'player':
+                # Poison the target if not already poisoned
+                if not any(getattr(s, 'name', None) == 'Poison'
+                           for s in target.spells):
+                    poison = Poison()
+                    poison.set(target)
+                    target.spells.append(poison)
+                    wzglobals.magic_cards.add(poison)
+            self.run_attack_animation()
+            return kill
+        return 0
+
+    def turn(self):
+        Prototype.turn(self)
+        # Hit all poisoned creatures on the field for 1
+        all_cards = self.get_self_cards() + self.get_enemy_cards()
+        for card in all_cards:
+            if card.alive() and any(getattr(s, 'name', None) == 'Poison'
+                                    for s in card.spells):
+                card.damage(1, self, True)
 
 
 class Elemental(Prototype):

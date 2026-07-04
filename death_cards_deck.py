@@ -261,6 +261,9 @@ class GrimReaper(Prototype):
         self.imagefile = 'grim_reaper.gif'
         Prototype.__init__(self)
 
+    def card_died(self, card):
+        self.parent.player.mana['death'] += 1
+
     def cast_action(self):
         if self.parent.player.mana['death'] >= 3:
             Prototype.cast_action(self)
