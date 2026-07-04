@@ -364,6 +364,11 @@ class Spellbreaker(Magic):
         )
         Magic.__init__(self)
 
+    def cast(self):
+        Magic.cast(self)
+        for card in self.get_self_cards():
+            card.spell_immune = True
+
 
 class Titan(Prototype):
     def __init__(self):
@@ -405,7 +410,8 @@ class Zeus(Prototype):
         self.element = "air"
         self.level = 9
         self.power = 3
-        self.cast = False
+        self.cast = True
+        self.focus_cast = True
         self.health = 24
         self.info = _(
             "Owner receives 1 air element for each enemy creature, "
@@ -427,3 +433,22 @@ class Zeus(Prototype):
                 self.parent.player.mana['air'] += 1
         else:
             return
+
+    def cast_action(self):
+        if self.parent.player.mana['air'] >= 1:
+            Prototype.cast_action(self)
+            for card in self.get_enemy_cards():
+                if card.level < 7:
+                    card.light_switch(True)
+
+    def focus_cast_action(self, target):
+        if target.name != 'player':
+            if target.parent.player.id != self.parent.player.id:
+                if target.level < 7:
+                    self.parent.player.mana['air'] -= 1
+                    target.damage(8, self, True)
+                    self.used_cast = True
+                    wzglobals.cast_focus = False
+                    self.play_cast_sound()
+                    for card in self.get_enemy_cards():
+                        card.light_switch(False)
