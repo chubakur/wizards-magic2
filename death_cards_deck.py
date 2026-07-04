@@ -173,7 +173,8 @@ class Darklord(Prototype):
         )
         self.level = 8
         self.power = 4
-        self.cast = False
+        self.cast = True
+        self.focus_cast = True
         self.health = 14
         self.imagefile = 'darklord.gif'
         Prototype.__init__(self)
@@ -181,6 +182,33 @@ class Darklord(Prototype):
     def card_died(self, card):
         self.heal(2, self.max_health)
         self.parent.player.heal(3)
+
+    def cast_action(self):
+        if self.parent.player.mana['death'] >= 1:
+            has_targets = any(
+                card.spells for card in self.get_enemy_cards()
+            )
+            if has_targets:
+                Prototype.cast_action(self)
+                for card in self.get_enemy_cards():
+                    if card.spells:
+                        card.light_switch(True)
+
+    def focus_cast_action(self, target):
+        if target.name != 'player':
+            if target.parent.player.id != self.parent.player.id:
+                if target.spells:
+                    for spell in target.spells[:]:
+                        spell.unset(target)
+                        spell.set(self)
+                        self.spells.append(spell)
+                    target.spells = []
+                    self.parent.player.mana['death'] -= 1
+                    self.used_cast = True
+                    wzglobals.cast_focus = False
+                    self.play_cast_sound()
+                    for card in self.get_enemy_cards():
+                        card.light_switch(False)
 
 
 class Ghost(Prototype):
