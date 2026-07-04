@@ -279,9 +279,12 @@ class Leviathan(Prototype):
         Prototype.__init__(self)
 
     def attack(self):
-        Prototype.attack(self)
+        if not self.moves_alive:
+            return 0
+        kill = Prototype.attack(self)
         for card in self.get_enemy_cards():
             card.damage(1, self, False)
+        return kill
 
     def cast_action(self):
         if self.parent.player.mana['water'] >= 6:

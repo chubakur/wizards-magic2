@@ -251,6 +251,12 @@ class Elemental(Prototype):
         self.imagefile = 'elemental.gif'
         Prototype.__init__(self)
 
+    def damage(self, damage, enemy, cast=False):
+        if cast and enemy.element == 'fire':
+            Prototype.damage(self, damage + 10, enemy, cast)
+        else:
+            Prototype.damage(self, damage, enemy, cast)
+
     def summon(self):
         Prototype.summon(self)
         self.set_power(self.parent.player.mana[self.element] - self.level)
