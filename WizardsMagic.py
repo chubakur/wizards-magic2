@@ -32,7 +32,7 @@ import time
 import pygame
 import pygame.sprite
 
-import ai
+import ai as ai_module
 import animations
 import cardbox
 import cardinfo
@@ -420,11 +420,11 @@ def start_game(cli=False, ai=False):
         # Execute AI action once LLM thread finishes and attack animations clear
         if (
             wzglobals.ai_turn_pending and
-            not ai.is_thinking() and
+            not ai_module.is_thinking() and
             not animations.animations_running
         ):
             wzglobals.ai_turn_pending = False
-            ai.execute_pending_action()
+            ai_module.execute_pending_action()
             player.finish_turn()
         for animation_running in animations.animations_running:
             animation_running.run()
