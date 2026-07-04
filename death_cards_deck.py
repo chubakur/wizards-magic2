@@ -295,11 +295,20 @@ class Lich(Prototype):
             " Owner loses 5 Death. "
             "If owner`s Death becomes zero, he suffers 10 damage himself."
         )
-        self.cast = False
+        self.cast = True
         self.power = 7
         self.health = 18
         self.imagefile = 'lich.gif'
         Prototype.__init__(self)
+
+    def cast_action(self):
+        if self.parent.player.mana['death'] >= 5:
+            self.parent.player.mana['death'] -= 5
+            self.parent.player.enemy.damage(7, self, True)
+            if self.parent.player.mana['death'] == 0:
+                self.parent.player.damage(10, self, True)
+            self.used_cast = True
+            self.play_cast_sound()
 
     def summon(self):
         Prototype.summon(self)
