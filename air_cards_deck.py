@@ -167,13 +167,15 @@ class Gargoyle(Prototype):
             Prototype.attack(self)
 
     def damage(self, damage, enemy, cast=False):
+        if cast and enemy.element in ('earth', 'air'):
+            return 0
         if self.stone:
             if damage - 2 > 0:
-                Prototype.damage(self, damage - 2, enemy)
+                Prototype.damage(self, damage - 2, enemy, cast)
             else:
-                Prototype.damage(self, 0, enemy)
+                Prototype.damage(self, 0, enemy, cast)
         else:
-            Prototype.damage(self, damage, enemy)
+            Prototype.damage(self, damage, enemy, cast)
 
     def cast_action(self):
         if (
@@ -228,6 +230,12 @@ class Manticore(Prototype):
                     self.power, self
                 )
             self.run_attack_animation()
+
+    def damage(self, damage, enemy, cast=False):
+        if cast:
+            Prototype.damage(self, max(1, damage // 2), enemy, cast)
+        else:
+            Prototype.damage(self, damage, enemy, cast)
 
     def cast_action(self):
         if self.parent.player.mana['air'] >= 2:
@@ -394,6 +402,12 @@ class Titan(Prototype):
         self.parent.player.enemy.mana['air'] -= 3
         if self.parent.player.enemy.mana['air'] < 0:
             self.parent.player.enemy.mana['air'] = 0
+
+    def turn(self):
+        Prototype.turn(self)
+        all_cards = self.get_self_cards() + self.get_enemy_cards()
+        air_count = sum(1 for c in all_cards if c.element == 'air')
+        self.set_power(self.default_power + air_count)
 
     def cast_action(self):
         self.play_cast_sound()
