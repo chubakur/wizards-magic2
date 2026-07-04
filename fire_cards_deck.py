@@ -22,6 +22,7 @@ import gettext
 from math import ceil
 from math import floor
 
+import pygame
 import wzglobals
 
 
@@ -212,13 +213,42 @@ class Devil(Prototype):
                             card.light_switch(False)
 
 
+class FireShield(pygame.sprite.Sprite):
+    """Periodic burn effect applied by Efreet to an enemy creature.
+    Deals 2 damage per turn to the target unless it is a Fire creature.
+    """
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.name = "FireShield"
+        self.element = "fire"
+        self.level = 0
+        self.cards = []
+
+    def set(self, card):
+        self.cards.append(card)
+
+    def unset(self, card):
+        if card in self.cards:
+            self.cards.remove(card)
+
+    def periodical_cast(self):
+        if self.cards:
+            if self.player.id != wzglobals.player.id:
+                for card in self.cards[:]:
+                    if card.element != 'fire':
+                        card.damage(2, self, True)
+        else:
+            self.kill()
+
+
 class Efreet(Prototype):
     def __init__(self):
         self.name = "Efreet"
         self.element = "fire"
         self.level = 10  # 10
         self.power = 6
-        self.cast = False
+        self.cast = True
+        self.focus_cast = True
         self.health = 33
         self.info = _(
             "Whenever any creature attacks Efreet, that creature suffers "
@@ -247,6 +277,27 @@ class Efreet(Prototype):
             Prototype.damage(enemy, damage / 2, self, cast)
         else:
             Prototype.damage(self, damage, enemy, cast)
+
+    def cast_action(self):
+        if self.parent.player.mana['fire'] >= 2:
+            Prototype.cast_action(self)
+            for card in self.get_enemy_cards():
+                card.light_switch(True)
+
+    def focus_cast_action(self, target):
+        if target.name != 'player':
+            if target.parent.player.id != self.parent.player.id:
+                self.parent.player.mana['fire'] -= 2
+                shield = FireShield()
+                shield.player = self.parent.player
+                shield.set(target)
+                target.spells.append(shield)
+                wzglobals.magic_cards.add(shield)
+                self.used_cast = True
+                wzglobals.cast_focus = False
+                self.play_cast_sound()
+                for card in self.get_enemy_cards():
+                    card.light_switch(False)
 
 
 class Fireball(Magic):
