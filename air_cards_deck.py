@@ -364,6 +364,11 @@ class Spellbreaker(Magic):
         )
         Magic.__init__(self)
 
+    def cast(self):
+        Magic.cast(self)
+        for card in self.get_self_cards():
+            card.spell_immune = True
+
 
 class Titan(Prototype):
     def __init__(self):

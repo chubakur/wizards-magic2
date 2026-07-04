@@ -195,6 +195,10 @@ class Prototype(pygame.sprite.Sprite):
         self.default_power = self.power
         # Boolean. Card in field, on in deck.
         self.field = False
+        # Permanent immunity to spell damage (set by Spellbreaker)
+        self.spell_immune = False
+        # Reduces incoming physical damage by 1 if > 1 (set by Elemental Stone Skin)
+        self.stone_skin = False
         # True if card has cast action
         self.used_cast = False
         if (
@@ -480,6 +484,10 @@ class Prototype(pygame.sprite.Sprite):
 
     # function which calls when card in damage phase.
     def damage(self, damage, enemy, cast=False):
+        if cast and self.spell_immune:
+            return 0
+        if not cast and self.stone_skin and damage > 1:
+            damage -= 1
         self.health -= damage
         self.update()
         if self.health <= 0:
